@@ -2029,6 +2029,66 @@ img{ display:block; max-width:100%; }
 .btn-go:hover{ background:var(--g-d); transform:translateY(-2px); box-shadow:0 20px 34px -14px rgba(18,133,76,.95); }
 .btn-go:hover::after{ animation:shine .85s cubic-bezier(.3,.7,.4,1) forwards; }
 @keyframes shine{ to{ left:130%; } }
+
+/* ===== EL BOTÓN QUE CONVIERTE: "Apartar mi cupo" =========================
+   Toda la ficha —las fotos, el abono, el precio, las tres pestañas— existe
+   para que se toque este botón. Y venía con medida de botón cualquiera: 43px
+   de alto y letra de 14,5. Más bajo que la caja del abono que tiene encima y
+   bastante más callado que el "Próxima excursión" que tiene debajo, que es
+   teal, grande y a dos renglones. El ojo bajaba por la ficha y se iba a seguir
+   mirando excursiones en vez de reservar la que ya estaba viendo.
+
+   Lo que cambia es el CUERPO, no el estilo: mismo verde y misma silueta de
+   siempre (la página entera está montada sobre ese verde), pero con el alto de
+   un dedo, letra que se lee con el móvil en la mano y una sombra que lo
+   despega del papel. */
+.btn.btn-go{
+  min-height:58px;
+  padding:16px 22px;
+  border-radius:16px;
+  gap:12px;
+  /* vertical y suave: da volumen sin que se note el truco. En diagonal el
+     punto claro caía en mitad del botón y parecía un reflejo pegado encima. */
+  background:linear-gradient(180deg,#199e56 0%,var(--g) 100%);
+  box-shadow:0 16px 32px -14px rgba(18,133,76,.95), 0 0 0 0 rgba(18,133,76,.40);
+  animation:ctaLatido 2.9s ease-in-out infinite;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn.btn-go b{ font-weight:800; font-size:17px; letter-spacing:-.005em; }
+.btn.btn-go svg{ width:20px; height:20px; }
+
+/* El latido es un aro que sale del propio botón y se apaga. Llama la atención
+   SIN mover nada de sitio: un botón que crece y encoge se falla al tocarlo,
+   porque el pulgar apunta a donde estaba hace medio segundo. */
+@keyframes ctaLatido{
+  0%,100%{ box-shadow:0 16px 32px -14px rgba(18,133,76,.95), 0 0 0 0 rgba(18,133,76,.40); }
+  60%    { box-shadow:0 16px 32px -14px rgba(18,133,76,.95), 0 0 0 14px rgba(18,133,76,0); }
+}
+.btn.btn-go:hover{ animation:none; box-shadow:0 22px 38px -14px rgba(18,133,76,1); }
+.btn.btn-go:active{ transform:scale(.985); }
+@media (prefers-reduced-motion:reduce){ .btn.btn-go{ animation:none; } }
+
+/* En el teléfono es donde se decide la reserva y donde el pulgar tiene que
+   acertar a la primera: 64px es el ancho cómodo de un dedo con margen. */
+@media (max-width:767.98px){
+  .btn.btn-go{ min-height:64px; padding:19px 22px; border-radius:18px; }
+  .btn.btn-go b{ font-size:18.5px; }
+  .btn.btn-go svg{ width:22px; height:22px; }
+  /* aire alrededor: pegado al precio y al bloque de WhatsApp se leía como un
+     renglón más de la lista, no como el final del camino */
+  #ivm-modal-inner .card .btns{ margin-top:22px !important; margin-bottom:6px; }
+}
+
+/* El mismo "Apartar mi cupo" sale en las tarjetas de paquetes de escritorio.
+   Si allí se queda en 43px mientras en excursiones mide 58, el sitio parece de
+   dos manos distintas — y es literalmente el mismo botón. */
+.btn.btn-green{
+  min-height:54px;
+  justify-content:center;
+  gap:10px;
+  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16px;
+}
 .btn-alt{ background:#fff; color:var(--ink); border:1.5px solid #cfe4d7; justify-content:space-between; }
 .btn-alt small{ color:var(--muted); }
 .btn-alt svg{ color:var(--g); background:#eef7f1; border-radius:50%; padding:6px; width:28px; height:28px; box-sizing:border-box; transition:.3s; }
@@ -2238,6 +2298,13 @@ img{ display:block; max-width:100%; }
   color:#1b241e;
   text-align:left;
   transition:.2s;
+  /* manipulation = el navegador puede seguir haciendo scroll y pellizco sobre
+     esta fila, pero se salta la espera del doble-toque para hacer zoom. Sin
+     esto el toque llega tarde y da sensación de botón atascado. */
+  touch-action:manipulation;
+  /* el recuadro gris que pinta Android al rozar la fila mientras se baja hacía
+     creer que se había abierto algo aunque no se abriera nada */
+  -webkit-tap-highlight-color:transparent;
 }
 .acc-head:hover{ background:#f7fbf6; }
 
@@ -2771,6 +2838,14 @@ img{ display:block; max-width:100%; }
   overflow-y:scroll;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
+  /* Al cambiar de excursión se reemplaza TODO el contenido del carril. Chrome
+     intenta ser amable y "ancla" el scroll a un elemento del contenido viejo
+     para que no salte, pero aquí lo que queremos es justo lo contrario: ficha
+     nueva, arriba del todo. Ese anclaje era el que dejaba la excursión
+     siguiente unos píxeles abajo, con el nombre cortado por la barra pegada. */
+  overflow-anchor:none;
+  /* que el reseteo a 0 nunca se anime */
+  scroll-behavior:auto;
 }
 .ivmodal.ivm-open{
   display:block;
@@ -3879,14 +3954,18 @@ img{ display:block; max-width:100%; }
     color:#64748b;
   }
   .tpk-cupo i{ width:6px; height:6px; border-radius:50%; background:var(--o); flex-shrink:0; }
+  /* El "Apartar mi cupo" de los paquetes: mismo botón y misma misión que el de
+     excursiones, así que la misma presencia. Estaba en 13px con 12 de relleno,
+     que en la mano es un renglón subrayado más que un botón. */
   .tpk-book{
-    width:100%; margin-top:12px;
-    display:inline-flex; align-items:center; justify-content:center; gap:7px;
-    border:none; border-radius:100px; padding:12px;
-    font-family:'Plus Jakarta Sans'; font-weight:800; font-size:13px;
+    width:100%; margin-top:14px; min-height:56px;
+    display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    border:none; border-radius:100px; padding:16px;
+    font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16px;
     color:#fff; background:linear-gradient(100deg,#0d9488,#14b8a6);
-    box-shadow:0 8px 18px -8px rgba(13,148,136,.7);
+    box-shadow:0 12px 24px -9px rgba(13,148,136,.85);
     -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
   }
   .tpk-book:active{ opacity:.85; }
 }
@@ -7417,9 +7496,41 @@ render('punta-cana');
   // DESPUÉS de abrir el modal. Por eso se sincroniza en vivo con visualViewport
   // en vez de congelar window.innerHeight al abrir (eso cortaba el final).
   const vv = window.visualViewport || null;
+  let ivmVH = 0;
   function ivmSyncHeight(){
-    modal.style.height = (vv ? vv.height : window.innerHeight) + 'px';
+    const h = Math.round(vv ? vv.height : window.innerHeight);
+    // La barra de URL del teléfono entra y sale MIENTRAS se hace scroll, y en
+    // ese rato dispara este evento fotograma a fotograma. Reescribir el alto en
+    // cada uno reflowea el modal entero justo cuando se está cambiando de
+    // ficha: ahí es donde el carril se quedaba unos píxeles corrido. Con el
+    // umbral solo se toca cuando el alto cambió de verdad, no por el temblor
+    // de la barra. En las pantallas donde ya se veía bien sale el mismo número.
+    if(Math.abs(h - ivmVH) < 2) return;
+    ivmVH = h;
+    modal.style.height = h + 'px';
   }
+
+  /* Dejar la ficha nueva pegada arriba del todo.
+     No basta con hacerlo una vez: entre que se pinta el HTML nuevo y que el
+     navegador móvil termina de acomodar su barra de URL hay varios reflows, y
+     alguno de ellos devolvía el carril hacia abajo — el nombre de la excursión
+     quedaba tapado por la barra pegada y había que subir a mano. Se repite
+     durante el cuarto de segundo que dura ese acomodo.
+     Si el usuario ya empezó a moverse por su cuenta, se le suelta enseguida:
+     nadie quiere que la página le quite el dedo del scroll. */
+  let ivmTops = [];
+  function ivmSoltarTope(){ ivmTops.forEach(clearTimeout); ivmTops = []; }
+  function ivmATope(){
+    ivmSoltarTope();
+    modal.scrollTop = 0;
+    ivmTops.push(setTimeout(() => { modal.scrollTop = 0; }, 0));
+    ivmTops.push(setTimeout(() => { modal.scrollTop = 0; }, 60));
+    ivmTops.push(setTimeout(() => { modal.scrollTop = 0; ivmSoltarTope(); }, 250));
+    requestAnimationFrame(() => { if(ivmTops.length) modal.scrollTop = 0; });
+  }
+  modal.addEventListener('touchstart', ivmSoltarTope, {passive:true});
+  modal.addEventListener('wheel',      ivmSoltarTope, {passive:true});
+
   function ivmBindVH(){
     if(vv){ vv.addEventListener('resize', ivmSyncHeight); vv.addEventListener('scroll', ivmSyncHeight); }
     else   { window.addEventListener('resize', ivmSyncHeight); }
@@ -7434,8 +7545,10 @@ render('punta-cana');
     // si habia un video corriendo, cortarlo ya (el innerHTML se limpia 300ms despues)
     inner.querySelectorAll('video').forEach(v => v.pause());
     ivmUnbindVH();
+    ivmSoltarTope();
     modal.classList.remove('ivm-open');
     modal.style.height = '';
+    ivmVH = 0;              // la próxima apertura vuelve a medir de cero
     // El <html> tiene scroll-behavior:smooth. Al quitar el body fijo la página
     // queda en scroll 0, y el scrollTo de vuelta se ANIMA de arriba hacia abajo
     // (parecía que la página se recargaba). Se apaga el smooth solo para esto.
@@ -7512,7 +7625,7 @@ render('punta-cana');
     btnPrev.disabled = idx <= 0;
     btnNext.disabled = idx >= currentLista.length - 1;
     inner.innerHTML = cardHTML(t) + navPieHTML(idx);
-    modal.scrollTop = 0;
+    ivmATope();
 
     // Wirear INMEDIATAMENTE — el innerHTML ya está disponible en el mismo tick
     const card = inner.querySelector('.card');
@@ -7523,9 +7636,20 @@ render('punta-cana');
 
     // Acordeón — max-height medida del contenido real (el tope fijo de 340px
     // del CSS recortaba el texto en pantallas angostas).
-    // Va por touchstart Y click: con el dedo abre al instante, y con el raton
-    // (DevTools sin emulacion tactil, o un movil con teclado/raton) tambien.
-    // El flag evita que el click sintetico que sigue al touch lo cierre de una.
+    //
+    // Antes abría en el touchstart, o sea en el instante en que el dedo tocaba
+    // el cristal. Pero bajar a leer la ficha empieza EXACTAMENTE igual: el dedo
+    // se posa en algún sitio y arrastra. Si ese sitio era una fila del acordeón
+    // — y ocupan media ficha — se desplegaba sola. La persona iba a "Qué
+    // incluye" y llegaba con el panel abierto sin haberlo pedido.
+    //
+    // Ahora no se decide al posar el dedo, sino al levantarlo: se mira cuánto
+    // se movió por el camino. Si se fue de MOVER px, era scroll y no se toca
+    // nada; solo cuenta como toque si se levanta casi en el mismo punto y sin
+    // haberse quedado apoyado. Con el ratón sigue yendo por click de toda la
+    // vida, que ahí no hay ambigüedad posible.
+    const MOVER = 10;    // px de tolerancia: por debajo es un toque, por encima es scroll
+    const APOYO = 700;   // ms: más que esto es el dedo apoyado, no un toque
     card.querySelectorAll('.acc-head').forEach(h => {
       let tocado = false;
       const abrirCerrar = () => {
@@ -7535,14 +7659,29 @@ render('punta-cana');
         panel.style.maxHeight = item.classList.contains('open')
           ? panel.scrollHeight + 'px' : '0px';
       };
+
+      let x0 = 0, y0 = 0, t0 = 0, arrastro = false;
       h.addEventListener('touchstart', e => {
+        const p = e.touches[0];
+        x0 = p.clientX; y0 = p.clientY; t0 = Date.now(); arrastro = false;
+      }, {passive:true});
+      h.addEventListener('touchmove', e => {
+        if(arrastro) return;
+        const p = e.touches[0];
+        if(Math.abs(p.clientX - x0) > MOVER || Math.abs(p.clientY - y0) > MOVER)
+          arrastro = true;
+      }, {passive:true});
+      h.addEventListener('touchend', e => {
+        if(arrastro || Date.now() - t0 > APOYO) return;   // era scroll: se deja pasar
+        e.preventDefault();          // corta el click sintético que viene detrás
         e.stopPropagation();
         tocado = true; setTimeout(() => { tocado = false; }, 600);
         abrirCerrar();
-      }, {passive:true});
+      }, {passive:false});
+
       h.addEventListener('click', e => {
         e.stopPropagation();
-        if(tocado) return;   // el touch ya lo abrio
+        if(tocado) return;   // el toque ya lo abrió
         abrirCerrar();
       });
     });

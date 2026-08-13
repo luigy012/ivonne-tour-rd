@@ -3250,7 +3250,6 @@ img{ display:block; max-width:100%; }
 
      La píldora "✦ PLANES DE VARIOS DÍAS" se quita solo en el móvil: dice lo
      mismo que el titular que va justo debajo, y son 44px que hacen falta. */
-  #planes .shead .pill-o{ display:none; }
   #planes .shead{ margin-bottom:10px; }
   #planes .h-sec{ font-size:26px; margin-bottom:8px; }
   /* El párrafo va ENTERO. Se probó a cortarlo en dos líneas para hacer sitio y
@@ -3342,17 +3341,23 @@ img{ display:block; max-width:100%; }
     height:176px; min-height:0; border-radius:14px;
   }
   .tpk-card .ivm-mini-body{ justify-content:flex-start; }
-  .tpk-card .ivm-mini-name{ font-size:17px; margin-bottom:5px; }
-  .tpk-card .ivm-mini-meta{ font-size:12.5px; gap:5px; margin-bottom:8px; }
+  /* TAMAÑOS DE LA TARJETA EN EL TELÉFONO
+     Se leen en la mano, a un brazo de distancia y muchas veces al sol. Todo
+     esto estuvo un tiempo dos puntos más abajo (el botón en 11,5px, el
+     acordeón en 10px) para hacer sitio a dos cajones que ya estaban dentro de
+     Ver Info. Quitados esos cajones, el sitio se gasta aquí: en que se lea. */
+  .tpk-card .ivm-mini-name{ font-size:18.5px; margin-bottom:6px; }
+  .tpk-card .ivm-mini-meta{ font-size:13.5px; gap:5px; margin-bottom:9px; }
   /* a lo ancho el precio y el botón vuelven a caber en la misma línea */
-  .tpk-card .ivm-mini-bottom{ margin-top:10px; }
-  .tpk-card .ivm-mini-btn{ padding:11px 22px; font-size:13px; }
+  .tpk-card .ivm-mini-bottom{ margin-top:12px; }
+  /* el aspecto del botón (tamaño incluido) se define más abajo, junto al
+     precio, que es con quien comparte fila — buscar `.tpk-card .ivm-mini-btn` */
 
   /* el gancho: una frase, la idea importante de primera. Cortado a dos
      renglones — el tercero se comía el sitio del botón de "siguiente plan" y
      la frase completa está en Ver Info. */
   .tpk-hook{
-    font-size:13.5px; line-height:1.5; color:#475569; margin-bottom:9px;
+    font-size:14.5px; line-height:1.5; color:#475569; margin-bottom:10px;
     display:-webkit-box; -webkit-line-clamp:2; line-clamp:2;
     -webkit-box-orient:vertical; overflow:hidden;
   }
@@ -3364,8 +3369,8 @@ img{ display:block; max-width:100%; }
     padding:9px 11px; margin-bottom:7px;
   }
   .tpk-mini-itin-h{
-    font-family:'Plus Jakarta Sans'; font-weight:800; font-size:10px;
-    letter-spacing:.11em; text-transform:uppercase; color:#0f766e; margin-bottom:8px;
+    font-family:'Plus Jakarta Sans'; font-weight:800; font-size:12.5px;
+    letter-spacing:.08em; text-transform:uppercase; color:#0f766e; margin-bottom:8px;
   }
   /* el titulo pasa a ser el botón: cerrado no lleva margen debajo */
   .tpk-mini-itin-btn{
@@ -3469,11 +3474,11 @@ img{ display:block; max-width:100%; }
   }
 
   /* teléfonos angostos: solo se aprieta un poco */
-  /* Pantallas BAJAS (un Android de 640 de alto). Ahí no hay sitio para las
-     tres cosas, y entre perder el párrafo o perder la foto, se pierde el
-     párrafo: el titular ya dice de qué va la sección. */
+  /* Pantallas BAJAS (un Android normal con la barra de URL se queda en unos
+     600px de alto). Aquí solo se aprieta el aire: el párrafo y la píldora se
+     quedan. Se probó a esconderlos para hacer sitio y fue un error — era
+     quitarle texto al sitio para tapar un problema que estaba en otro lado. */
   @media (max-height:700px){
-    #planes .lead{ display:none; }
     #planes .shead{ margin-bottom:8px; }
   }
 
@@ -3544,16 +3549,22 @@ img{ display:block; max-width:100%; }
      cabia en los 222px del cuerpo y se montaban uno encima del otro. Se
      aprieta el par y se deja que baje de linea si aun asi no cabe. */
   .tpk-card .ivm-mini-bottom{ gap:6px; flex-wrap:wrap; }
-  .tpk-card .ivm-mini-price{ color:#0f766e; font-size:15px; white-space:nowrap; }
-  .tpk-card .ivm-mini-price small{ font-size:10px; }
+  .tpk-card .ivm-mini-price{ color:#0f766e; font-size:17px; white-space:nowrap; }
+  .tpk-card .ivm-mini-price small{ font-size:11px; }
   .tpk-was{
-    font-family:'Plus Jakarta Sans'; font-size:11px; font-weight:600;
-    color:#94a3b8; text-decoration:line-through; margin-right:4px;
+    font-family:'Plus Jakarta Sans'; font-size:12px; font-weight:600;
+    color:#94a3b8; text-decoration:line-through; margin-right:5px;
   }
+  /* ESTE es el botón que decide la visita, y estuvo en 11,5px con 8px de
+     relleno: en la mano no se leía y costaba acertarle. Ahora mide 44px de
+     alto, que es el ancho de un dedo, y se lee de un vistazo. Si el precio y
+     el botón no caben en la misma línea, el .ivm-mini-bottom de arriba ya
+     lleva flex-wrap y el botón baja solo — antes esa era la razón de
+     apretarlo, y no hacía falta. */
   .tpk-card .ivm-mini-btn{
     background:linear-gradient(100deg,#0d9488,#14b8a6);
     box-shadow:0 4px 12px -4px rgba(13,148,136,.5);
-    padding:8px 13px; font-size:11.5px; white-space:nowrap;
+    padding:13px 22px; font-size:14.5px; white-space:nowrap;
   }
 
   /* ── detalle: la misma información de la tarjeta grande, pero servida a
@@ -7195,8 +7206,12 @@ render('punta-cana');
             </div>
           </div>` : ''}
           ${h ? `<div class="tpk-hotel">${BED}<span>Duermes en <span class="tpk-hotel-link">${h.name}</span> ${'★'.repeat(h.stars)}</span></div>` : ''}
-          ${typeof sinHotelHTML === 'function' ? sinHotelHTML(true) : ''}
-          ${typeof plusHTML === 'function' ? plusHTML(t, true) : ''}
+          <!-- "¿Ya tienes dónde quedarte?" y "Lo que pasa cuando te quedas" NO
+               van aquí: los pinta detHTML dentro de Ver Info, que es donde hay
+               sitio para leerlos. Aquí eran dos cajones cerrados más, 100px de
+               tarjeta que obligaban a dejar el botón en 11,5px y los acordeones
+               en 10px. En el teléfono la tarjeta tiene que servir para DECIDIR
+               (qué es, dónde duermes, cuánto cuesta); el detalle es un toque. -->
           <div class="ivm-mini-deal"><span>${SHIELD} Aparta con <b>${TPRE(t, t.abono)}</b></span></div>
           <div class="ivm-mini-bottom">
             <span class="ivm-mini-price">${TOFERTA(t) ? `<span class="tpk-was">${TPRE(t, t.was)}</span>` : ''}${TPRE(t, t.now)}<small>/p</small></span>

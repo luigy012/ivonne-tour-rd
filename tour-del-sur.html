@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="es-DO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Tour del Sur a Punta Cana · 2 días y una amanecida | Ivonne Tour RD</title>
+<meta name="description" content="Te busco en Duvergé, Barahona, Azua, Baní o San Cristóbal y te llevo a Punta Cana. Dos días, una amanecida, hotel y playa. RD$5,900 por persona, todo incluido. Aparta con RD$1,500.">
+
+<!-- Página de campaña: no compite en Google con el sitio principal, que
+     vende otra cosa a otro público. Quitar si algún día se quiere posicionar. -->
+<meta name="robots" content="noindex, follow">
+
+<!-- Cómo se ve al compartirla por WhatsApp, que es por donde va a circular -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dos días en Punta Cana. Y una amanecida.">
+<meta property="og:description" content="Salgo de Duvergé y voy recogiendo por todo el sur. Guagua, hotel, playa y discoteca por RD$5,900.">
+<meta property="og:image" content="images/grupo-palapa-2.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   TOUR DEL SUR A PUNTA CANA
+
+   NO es una landing suelta: es UNA EXCURSIÓN MÁS del sitio, la que
+   aparece en "Tours de varios días" del index. Por eso lleva el mismo
+   menú (#ivnMenu), la misma barra de arriba y las mismas tarjetas de
+   video de "Historias de la Tribu". Desde aquí siempre se puede volver
+   a Inicio, a Excursiones o a Escápate por Días.
+
+   Archivo autocontenido a propósito. El CSS del sitio son ~3.000 líneas
+   dentro de un <style>; extraerlo para compartirlo arriesga romper lo
+   que ya funciona. Aquí se copian los patrones que hacen falta, con los
+   MISMOS nombres de clase (.ivm-*, .sl-*) para que el día que se extraiga
+   a un .css común encaje sin tocar el HTML.
+
+   Lenguaje visual del sitio: turquesa #0d9488→#14b8a6, terracota #c4693d,
+   Plus Jakarta para titulares y Be Vietnam para texto.
+
+   REGLA DE ORO heredada del sitio: UN SOLO elemento en peso 800 por
+   pantalla. Cuando todo pesa, nada pesa.
+
+   REGLA DE ESTA PÁGINA: nada de párrafos largos. Todo lo que se pueda
+   contar con una foto, un video o un slider, va en slider. El texto que
+   quede es el que de verdad hace falta para decidir.
+   ══════════════════════════════════════════════════════════════════ */
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+:root{
+  --tur:#0d9488; --tur-cl:#14b8a6; --tur-d:#0f766e;
+  --terra:#c4693d; --terra-cl:#e88b52;
+  --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+  --sand:#fbf7ef; --dark:#0b1f1a;
+  --topbar:60px;
+  /* Lo que hay que dejar libre abajo para que la barra fija de WhatsApp no
+     tape el final de la página. En los iPhone con barrita de inicio la
+     propia barra crece por el safe-area, así que el hueco tiene que crecer
+     con ella; si no, el pie quedaba medio tapado. */
+  --barra-h:calc(84px + env(safe-area-inset-bottom, 0px));
+}
+
+html{ scroll-behavior:smooth; }
+body{
+  font-family:'Be Vietnam Pro',sans-serif;
+  background:var(--sand); color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  /* el botón fijo de abajo no puede tapar el final de la página */
+  padding-bottom:var(--barra-h);
+  /* Red de seguridad: con tantos sliders a sangre, cualquier descuido de
+     un píxel hacía que la página se moviera de lado en el teléfono. */
+  overflow-x:hidden;
+}
+img{ display:block; max-width:100%; }
+
+/* El grueso del tráfico viene del teléfono, así que la lectura manda:
+   columna estrecha SIEMPRE. .wide solo se abre cuando de verdad cabe algo
+   al lado (desde 900px, ver el bloque de escritorio del final): antes,
+   en una tablet, estas secciones se estiraban a 1120px en una sola
+   columna y salían renglones de punta a punta de la pantalla. */
+.wrap{ max-width:620px; margin:0 auto; padding:0 20px; }
+.wide{ max-width:620px; }
+
+.sec{ padding:38px 0; }
+.sec-alt{ background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+/* la barra de arriba es fija: los anclajes tienen que parar más abajo */
+section[id]{ scroll-margin-top:calc(var(--topbar) + 12px); }
+
+/* ── Tipografía: la escalera ───────────────────────────────────── */
+h1,h2,h3,.num{ font-family:'Plus Jakarta Sans',sans-serif; }
+
+h2{
+  font-size:24px; font-weight:800; line-height:1.2;
+  letter-spacing:-.02em; margin-bottom:8px;
+}
+h2 .ac{
+  background:linear-gradient(100deg,var(--tur),var(--tur-cl));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.sec-lead{ font-size:15px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
+
+.eyebrow{
+  display:inline-block;
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;
+  font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--tur-d); background:rgba(13,148,136,.1);
+  padding:6px 13px; border-radius:100px; margin-bottom:12px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BARRA DE ARRIBA — la que amarra esta página con el sitio
+   Arranca transparente sobre el hero y se vuelve sólida al bajar.
+   ══════════════════════════════════════════════════════════════ */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:150;
+  height:var(--topbar);
+  display:flex; align-items:center; gap:14px;
+  padding:0 18px;
+  transition:background .3s, box-shadow .3s, border-color .3s;
+  border-bottom:1px solid transparent;
+}
+.topbar.solid{
+  background:rgba(11,31,26,.92);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+  border-bottom-color:rgba(255,255,255,.08);
+}
+.tb-brand{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:13.5px; letter-spacing:.12em; color:#fff;
+  text-decoration:none; white-space:nowrap;
+}
+.tb-links{ display:none; margin-left:auto; gap:26px; }
+.tb-links a{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:13.5px;
+  color:rgba(255,255,255,.78); text-decoration:none; position:relative;
+  padding:4px 0; transition:color .2s;
+}
+.tb-links a:hover{ color:#fff; }
+.tb-links a.on{ color:#5eead4; }
+.tb-links a.on::after{
+  content:''; position:absolute; left:0; right:0; bottom:-2px; height:2px;
+  border-radius:2px; background:linear-gradient(90deg,var(--tur),var(--tur-cl));
+}
+.tb-cta{
+  display:none;
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:12.5px;
+  letter-spacing:.04em; text-transform:uppercase; text-decoration:none;
+  color:#fff; background:linear-gradient(100deg,#0d9488,#14b8a6);
+  padding:11px 20px; border-radius:100px;
+  box-shadow:0 10px 24px -14px rgba(13,148,136,.95);
+}
+/* Hamburguesa: mismas medidas que en el sitio (44px de área de toque) */
+.burger{
+  margin-left:auto;
+  display:flex; flex-direction:column; justify-content:center; gap:5px;
+  width:44px; height:44px; background:transparent; border:0; padding:0;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.burger span{
+  display:block; width:26px; height:2.5px; background:#fff; border-radius:3px;
+  transition:transform .3s ease, opacity .3s ease;
+}
+.burger.open span:nth-child(1){ transform:translateY(7.5px) rotate(45deg); }
+.burger.open span:nth-child(2){ opacity:0; }
+.burger.open span:nth-child(3){ transform:translateY(-7.5px) rotate(-45deg); }
+
+/* ══════════════════════════════════════════════════════════════
+   MENÚ A PANTALLA COMPLETA — copiado del #ivnMenu del sitio
+   Mismos nombres de clase a propósito (ver nota de arriba).
+   ══════════════════════════════════════════════════════════════ */
+@keyframes ivm-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes ivm-shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes ivm-spin-slow{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes ivm-pulse-ring{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.6);opacity:0}}
+@keyframes ivm-fadeUp{to{opacity:1;transform:translateY(0)}}
+
+#ivnMenu{
+  display:none; position:fixed; inset:0; z-index:200;
+  height:100%; height:100dvh; overflow-y:auto; overflow-x:hidden;
+  background:linear-gradient(160deg,#0c1e1d 0%,#091312 45%,#0d1f1e 100%);
+  color:#fff;
+}
+#ivnMenu.open{ display:block; }
+.menu-overlay{ display:none; position:fixed; inset:0; z-index:190; background:rgba(0,0,0,.55); }
+.menu-overlay.open{ display:block; }
+
+.ivm-bg{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.ivm-grid{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:28px 28px;
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);
+  mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);
+}
+.ivm-blob1{ position:absolute; top:-60px; right:-50px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(13,148,136,.45),transparent 70%); filter:blur(8px); }
+.ivm-blob2{ position:absolute; bottom:120px; left:-40px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle,rgba(196,105,61,.28),transparent 70%); filter:blur(6px); }
+.ivm-blob3{ position:absolute; top:40%; right:-60px; width:140px; height:140px; border-radius:50%; background:radial-gradient(circle,rgba(20,184,166,.2),transparent 70%); }
+
+.ivm-inner{
+  position:relative; z-index:2;
+  padding:20px 24px 28px; display:flex; flex-direction:column;
+  min-height:100%; min-height:100dvh;
+  max-width:420px; margin:0 auto;
+}
+.ivm-close{
+  align-self:flex-end; width:40px; height:40px; border-radius:50%;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+  display:flex; align-items:center; justify-content:center; color:#fff;
+  cursor:pointer; transition:transform .25s, background .25s; flex-shrink:0;
+}
+.ivm-close:hover,.ivm-close:active{ transform:rotate(90deg); background:rgba(255,255,255,.16); }
+
+.ivm-profile{ text-align:center; margin-bottom:22px; }
+.ivm-avatar-wrap{ display:inline-block; position:relative; animation:ivm-float 4s ease-in-out infinite; }
+.ivm-ring-spin{
+  position:absolute; inset:-8px; border-radius:50%;
+  border:2px dashed transparent; border-top-color:rgba(13,148,136,.6);
+  border-right-color:rgba(196,105,61,.4); animation:ivm-spin-slow 6s linear infinite;
+}
+.ivm-grad-border{
+  width:100px; height:100px; border-radius:50%; padding:3px;
+  background:linear-gradient(135deg,#0d9488,#c4693d,#14b8a6,#0d9488);
+  background-size:300% 300%; animation:ivm-shimmer 4s linear infinite;
+}
+.ivm-avatar-img{ width:100%; height:100%; border-radius:50%; object-fit:cover; object-position:center top; }
+.ivm-status-outer{
+  position:absolute; bottom:4px; right:4px; width:24px; height:24px; border-radius:50%;
+  background:#0a1514; display:flex; align-items:center; justify-content:center;
+}
+.ivm-status-dot{ width:14px; height:14px; border-radius:50%; background:#22c55e; position:relative; }
+.ivm-status-dot::after{ content:''; position:absolute; inset:0; border-radius:50%; background:#22c55e; animation:ivm-pulse-ring 2s ease-out infinite; opacity:.5; }
+.ivm-name{ font-size:22px; font-weight:800; margin:14px 0 3px; letter-spacing:-.01em; }
+.ivm-name span{ background:linear-gradient(100deg,#14b8a6,#c4693d); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.ivm-tagline{ color:rgba(255,255,255,.75); font-size:13px; font-weight:500; }
+.ivm-stats{ display:flex; justify-content:center; gap:18px; margin-top:16px; }
+.ivm-stat{ text-align:center; }
+.ivm-stat-num{ font-size:16px; font-weight:700; }
+.ivm-stat-label{ color:rgba(255,255,255,.65); font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
+.ivm-stat-sep{ width:1px; background:rgba(255,255,255,.1); align-self:stretch; }
+.ivm-divider{ height:1px; margin-top:20px; background:linear-gradient(90deg,transparent,rgba(13,148,136,.5),rgba(196,105,61,.4),transparent); }
+
+.ivm-items{ display:flex; flex-direction:column; gap:5px; flex:1; margin-top:6px; }
+.ivm-item{
+  display:flex; align-items:center; gap:13px; padding:13px 14px;
+  border-radius:15px; text-decoration:none; position:relative; overflow:hidden;
+  /* El color hay que decirlo: el navegador pinta TODO <a> de azul por su
+     cuenta y el `color:#fff` de #ivnMenu no lo tumba (el estilo propio del
+     navegador gana sobre lo heredado). Sin esta línea el menú salía con
+     los nombres en azul chillón sobre el fondo oscuro. */
+  color:#fff;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .3s cubic-bezier(.4,0,.2,1), transform .3s cubic-bezier(.4,0,.2,1);
+}
+.ivm-item::before{
+  content:''; position:absolute; left:0; top:50%;
+  transform:translateY(-50%) scaleY(0); width:4px; height:60%;
+  background:linear-gradient(180deg,#0d9488,#14b8a6); border-radius:0 6px 6px 0;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.ivm-item:hover::before,.ivm-item:active::before,.ivm-item.here::before{ transform:translateY(-50%) scaleY(1); }
+.ivm-item:hover,.ivm-item:active{
+  background:linear-gradient(90deg,rgba(13,148,136,.18),rgba(13,148,136,.05) 60%,transparent);
+  transform:translateX(5px);
+}
+/* la página en la que estás: se marca y no se mueve */
+.ivm-item.here{ background:linear-gradient(90deg,rgba(13,148,136,.22),rgba(13,148,136,.05) 60%,transparent); }
+.ivm-icon{
+  width:42px; height:42px; border-radius:13px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.ivm-item:hover .ivm-icon,.ivm-item:active .ivm-icon{ transform:scale(1.1) rotate(-5deg); }
+.ivm-icon-teal{ background:linear-gradient(135deg,rgba(13,148,136,.35),rgba(13,148,136,.15)); border:1px solid rgba(20,184,166,.3); color:#2dd4bf; box-shadow:0 4px 14px rgba(13,148,136,.25); }
+.ivm-icon-orange{ background:linear-gradient(135deg,rgba(196,105,61,.3),rgba(196,105,61,.1)); border:1px solid rgba(232,139,82,.25); color:#f0a060; }
+.ivm-icon-green{ background:linear-gradient(135deg,rgba(34,197,94,.35),rgba(34,197,94,.1)); border:1px solid rgba(34,197,94,.3); color:#4ade80; box-shadow:0 4px 14px rgba(34,197,94,.2); }
+.ivm-icon-muted{ background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.75); }
+.ivm-item-body{ flex:1; }
+.ivm-item-title{ font-weight:700; font-size:16px; letter-spacing:.01em; }
+.ivm-item-sub{ color:rgba(255,255,255,.65); font-size:11.5px; margin-top:1px; }
+.ivm-badge{
+  background:linear-gradient(135deg,#c4693d,#e88b52); box-shadow:0 2px 10px rgba(196,105,61,.4);
+  padding:2px 7px; border-radius:999px; color:#fff; font-size:8.5px; font-weight:800;
+  letter-spacing:.05em; flex-shrink:0;
+}
+.ivm-badge.aqui{ background:linear-gradient(135deg,#0d9488,#14b8a6); box-shadow:0 2px 10px rgba(13,148,136,.4); }
+.ivm-arrow{ color:rgba(255,255,255,.65); opacity:.65; flex-shrink:0; transition:transform .3s, opacity .3s; }
+.ivm-item:hover .ivm-arrow,.ivm-item:active .ivm-arrow{ transform:translateX(4px); opacity:1; }
+
+.ivm-cta{
+  display:flex; align-items:center; justify-content:center; gap:11px;
+  width:100%; margin-top:20px; padding:18px 20px; border-radius:20px;
+  color:#fff; font-size:15px; font-weight:900; letter-spacing:.06em;
+  text-transform:uppercase; text-decoration:none; position:relative; overflow:hidden;
+  background:linear-gradient(130deg,#0b7a70 0%,#0d9488 30%,#12c4b0 65%,#0d9488 100%);
+  background-size:250% 250%; animation:ivm-shimmer 3s linear infinite;
+  box-shadow:0 8px 32px rgba(13,148,136,.55),0 2px 8px rgba(0,0,0,.3),
+             0 0 0 1px rgba(20,184,166,.4) inset,0 1px 0 rgba(255,255,255,.15) inset;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.ivm-cta:active{ transform:scale(.98); }
+.ivm-socials{ display:flex; justify-content:center; gap:12px; margin-top:18px; }
+.ivm-social{
+  width:38px; height:38px; border-radius:50%;
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+  display:flex; align-items:center; justify-content:center;
+  color:rgba(255,255,255,.7); text-decoration:none;
+  transition:transform .3s, background .3s, border-color .3s, color .3s;
+}
+.ivm-social:hover,.ivm-social:active{
+  transform:translateY(-3px); color:#fff;
+  background:linear-gradient(135deg,rgba(13,148,136,.4),rgba(20,184,166,.3));
+  border-color:rgba(20,184,166,.5);
+}
+.ivm-r1{ opacity:0; transform:translateY(18px); animation:ivm-fadeUp .5s ease .05s forwards; }
+.ivm-r2{ opacity:0; transform:translateY(18px); animation:ivm-fadeUp .5s ease .12s forwards; }
+.ivm-r3{ opacity:0; transform:translateY(18px); animation:ivm-fadeUp .5s ease .19s forwards; }
+.ivm-r4{ opacity:0; transform:translateY(18px); animation:ivm-fadeUp .5s ease .26s forwards; }
+.ivm-r5{ opacity:0; transform:translateY(18px); animation:ivm-fadeUp .5s ease .33s forwards; }
+.ivm-r6{ opacity:0; transform:translateY(18px); animation:ivm-fadeUp .5s ease .40s forwards; }
+.ivm-r7{ opacity:0; transform:translateY(18px); animation:ivm-fadeUp .5s ease .47s forwards; }
+
+/* Teléfonos bajitos (los 640px de alto de tanto Android, o un iPhone SE):
+   el menú cabía, pero el botón de apartar quedaba tan abajo que había que
+   buscarlo con scroll. Se le quita aire a la ficha de arriba y a las filas
+   para que lo importante entre de una vez. */
+@media (max-height:700px){
+  .ivm-inner{ padding:14px 20px 20px; }
+  .ivm-grad-border{ width:74px; height:74px; }
+  .ivm-name{ font-size:19px; margin:10px 0 2px; }
+  .ivm-tagline{ display:none; }
+  .ivm-stats{ margin-top:11px; }
+  .ivm-divider{ margin-top:13px; }
+  .ivm-profile{ margin-bottom:14px; }
+  .ivm-item{ padding:9px 12px; }
+  .ivm-icon{ width:36px; height:36px; border-radius:11px; }
+  .ivm-item-sub{ font-size:11px; }
+  .ivm-cta{ margin-top:14px; padding:15px 18px; }
+  .ivm-socials{ margin-top:12px; }
+  .ivm-social{ width:34px; height:34px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDER GENÉRICO (.sl)
+   Un solo componente para todo lo que se desliza: fotos, videos,
+   días del viaje y reseñas. Va con scroll nativo + scroll-snap
+   (igual que los sliders del sitio): el dedo lo mueve sin JS y el
+   script solo pinta los puntitos y mueve las flechas.
+   ══════════════════════════════════════════════════════════════ */
+.sl{ position:relative; }
+.sl-track{
+  display:flex; gap:12px; overflow-x:auto;
+  scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  cursor:grab;
+  /* El slider va a sangre, pero su primera tarjeta tiene que arrancar en la
+     misma línea que el título de la sección, que vive en la columna de
+     620px centrada. En el teléfono son los 20px de siempre; en una pantalla
+     ancha se calcula el margen. Sin esto, en tablet la fila de videos
+     empezaba setenta píxeles a la izquierda del titular. */
+  padding:2px max(20px, calc((100% - 620px) / 2)) 4px;
+  scroll-padding-left:max(20px, calc((100% - 620px) / 2));
+}
+.sl-track::-webkit-scrollbar{ display:none; }
+.sl-track > *{ flex:0 0 auto; scroll-snap-align:start; }
+/* cuando el slider vive dentro de una .wrap, no hace falta el padding lateral */
+.sl-in .sl-track{ padding-left:0; padding-right:0; scroll-padding-left:0; }
+
+.sl-nav{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:8px; }
+.sl-dots{ display:flex; align-items:center; }
+/* El puntito se ve de 6px pero se toca en 16x24: el relleno es zona de
+   toque y el color se queda dentro (background-clip), así que a la vista
+   no cambia nada y con el dedo ya no se falla. box-sizing:content-box
+   porque el * de arriba lo pone todo en border-box y el relleno se
+   comería el punto. */
+.sl-dots i{
+  box-sizing:content-box;
+  width:6px; height:6px; padding:9px 5px;
+  border-radius:50%; background:rgba(15,23,42,.18);
+  background-clip:content-box;
+  transition:width .25s, background .25s; cursor:pointer;
+}
+.sl-dots i.on{
+  width:20px; border-radius:100px;
+  background:linear-gradient(90deg,var(--tur),var(--tur-cl));
+  background-clip:content-box;
+}
+.sl-arrow{
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  background:#fff; border:1px solid var(--line); color:var(--tur-d);
+  display:none; align-items:center; justify-content:center; cursor:pointer;
+  transition:transform .15s, opacity .2s;
+}
+.sl-arrow:active{ transform:scale(.9); }
+.sl-arrow:disabled{ opacity:.35; cursor:default; }
+/* en oscuro (la sección de la amanecida) */
+.noche .sl-dots i{ background:rgba(255,255,255,.22); }
+.noche .sl-dots i.on{ background:linear-gradient(90deg,var(--terra-cl),#f6c177); }
+.noche .sl-arrow{ background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.18); color:#fff; }
+
+/* ── Botones ───────────────────────────────────────────────────── */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:15px;
+  padding:15px 26px; border-radius:100px; border:0;
+  text-decoration:none; cursor:pointer;
+  transition:transform .15s, box-shadow .25s;
+}
+.btn:active{ transform:scale(.98); }
+.btn-wa{
+  background:linear-gradient(100deg,#0d9488,#14b8a6); color:#fff;
+  box-shadow:0 10px 26px -12px rgba(13,148,136,.95);
+  width:100%;
+}
+.btn-wa-line{
+  background:#fff; color:var(--tur-d);
+  border:1.5px solid rgba(13,148,136,.3); width:100%;
+}
+.btn svg{ flex-shrink:0; }
+
+/* ══════════════════════════════════════════════════════════════
+   HERO
+   Quien llega de un anuncio trae tres preguntas: qué es, desde dónde
+   sale y cuánto cuesta. Las tres se responden antes del primer scroll.
+   El fondo va cambiando de foto solo: enseña el viaje sin gastar texto.
+   ══════════════════════════════════════════════════════════════ */
+.hero{
+  position:relative; color:#fff; overflow:hidden;
+  background:linear-gradient(165deg,#0b3b33 0%,#0b1f1a 100%);
+}
+.fade-set{ position:absolute; inset:0; z-index:0; }
+.fade-set img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  opacity:0; transition:opacity 1.4s ease;
+}
+/* La foto tiene que VERSE. Antes iba al 28% y encima llevaba un velo:
+   entre las dos cosas el hero quedaba de un gris sucio en el teléfono.
+   Ahora la foto sube y el velo solo aprieta arriba (donde va la barra) y
+   abajo (donde va el texto), dejando la franja del medio limpia. */
+.fade-set img.on{ opacity:.5; }
+.hero::after{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(11,31,26,.78) 0%,
+    rgba(11,31,26,.34) 32%,
+    rgba(11,31,26,.58) 62%,
+    rgba(11,31,26,.92) 100%);
+}
+/* OJO con el padding: .hero-in también es .wrap, y .wrap pone los 20px de
+   los lados. Si aquí se escribe el atajo `padding:X 0 Y` se borran esos
+   20px y TODO el hero (migas, titular, precio) queda pegado al borde del
+   teléfono, con las letras cortadas. Por eso van arriba y abajo por
+   separado, sin tocar los lados. */
+.hero-in{ position:relative; z-index:2; padding-top:calc(var(--topbar) + 18px); padding-bottom:34px; }
+
+/* Migas: lo primero que dice "esto es parte del sitio, no un volante suelto" */
+.crumb{
+  display:flex; align-items:center; gap:4px 7px; flex-wrap:wrap;
+  font-size:12px; color:rgba(255,255,255,.55); margin-bottom:12px;
+}
+/* con 15px de alto no había quien le diera con el dedo: se le da aire
+   arriba y abajo sin que se note en el dibujo */
+.crumb a{
+  color:rgba(255,255,255,.78); text-decoration:none;
+  padding:6px 0; -webkit-tap-highlight-color:transparent;
+}
+.crumb a:hover{ color:#5eead4; }
+.crumb b{ color:#5eead4; font-weight:600; }
+
+.hero-ruta{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;
+  font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+  line-height:1.35;
+  color:#5eead4; background:rgba(13,148,136,.22);
+  border:1px solid rgba(20,184,166,.35);
+  padding:7px 15px; border-radius:100px; margin-bottom:16px;
+}
+.hero-ruta svg{ flex-shrink:0; }
+/* En los teléfonos más estrechos esta frase no cabe de una sola línea: se
+   le quita algo de cuerpo y de separación entre letras para que entre. Si
+   aun así parte en dos, parte limpio (por eso el line-height de arriba). */
+@media (max-width:360px){
+  .hero-ruta{ font-size:10.5px; letter-spacing:.045em; padding:7px 13px; gap:7px; }
+}
+.hero h1{
+  /* en un teléfono de 320-360px, 36px fijos partían "Punta Cana." */
+  font-size:clamp(29px,8.6vw,36px);
+  font-weight:800; line-height:1.08;
+  letter-spacing:-.025em; margin-bottom:12px;
+}
+.hero h1 .ac{
+  background:linear-gradient(100deg,var(--tur-cl) 0%,var(--terra-cl) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero p{
+  font-size:16px; line-height:1.55;
+  color:rgba(255,255,255,.82); margin-bottom:22px;
+}
+
+/* El precio no se esconde: quien llega de un anuncio lo primero que
+   quiere saber es cuánto cuesta, y si no lo encuentra se va. */
+.precio-box{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px; padding:16px 18px; margin-bottom:18px;
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+}
+.precio-n{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:30px; line-height:1; color:#fff;
+}
+.precio-n small{ font-size:13px; font-weight:600; color:rgba(255,255,255,.6); }
+.precio-l{ font-size:12.5px; color:rgba(255,255,255,.7); line-height:1.45; }
+
+.hero-datos{ display:flex; align-items:center; margin-bottom:22px; }
+.hero-dato{ flex:1; }
+.hero-dato .n{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:19px; color:#fff; line-height:1;
+}
+.hero-dato .l{
+  font-size:10.5px; color:rgba(255,255,255,.5);
+  text-transform:uppercase; letter-spacing:.09em; margin-top:5px;
+}
+.hero-sep{ width:1px; height:32px; background:rgba(255,255,255,.14); margin:0 14px; }
+
+/* Prueba social en el hero: caras + estrellas, sin una línea de texto de más */
+.hero-social{
+  display:flex; align-items:center; gap:11px; margin-top:16px;
+}
+.caras{ display:flex; }
+.caras img{
+  width:30px; height:30px; border-radius:50%; object-fit:cover;
+  border:2px solid #0b1f1a; margin-left:-9px;
+}
+.caras img:first-child{ margin-left:0; }
+.hero-social span{ font-size:12px; color:rgba(255,255,255,.72); line-height:1.35; }
+.hero-social b{ color:#fff; font-family:'Plus Jakarta Sans',sans-serif; }
+
+/* La foto grande del hero solo aparece en escritorio (en móvil ya está de fondo) */
+.hero-shot{ display:none; }
+
+/* ══════════════════════════════════════════════════════════════
+   TESTIMONIOS EN VIDEO — las mismas tarjetas de "Historias de la
+   Tribu" del sitio. Van ARRIBA, antes de explicar nada: a este
+   público lo convence ver a un vecino suyo montado en la guagua,
+   no un párrafo mío.
+   ══════════════════════════════════════════════════════════════ */
+.tribu{ background:#f0f7f4; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.vid-count{
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700;
+  color:var(--tur-d); text-transform:uppercase; letter-spacing:.08em;
+  margin-bottom:16px;
+}
+.vid-count span{ background:rgba(13,148,136,.12); padding:5px 13px; border-radius:999px; }
+
+/* 200 y no 168: en la tarjeta estrecha el sello "Viajó con nosotros" y la
+   duración se montaban uno encima del otro y no se leía ninguno de los dos.
+   Con 200 caben los dos en la misma fila sin que el sello parta en dos
+   renglones. Se mantiene la proporción alta (vertical, como el video del
+   teléfono). Si algún día se alarga el texto del sello, hay que subir este
+   ancho o el sello volverá a partirse. */
+.vcard{
+  position:relative; width:200px; height:282px; border-radius:22px;
+  overflow:hidden; background:#0b1f1a; cursor:pointer;
+}
+.vcard img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.vcard::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.2) 45%,rgba(0,0,0,.66) 100%);
+}
+/* Los dos sellos van en una fila, no sueltos con top/right cada uno: así
+   se reparten el ancho que haya y NUNCA se pisan, mida lo que mida el
+   texto o la duración. */
+.vc-top{
+  position:absolute; top:13px; left:13px; right:13px; z-index:2;
+  display:flex; align-items:center; justify-content:space-between; gap:7px;
+}
+.vc-ver{
+  display:inline-flex; align-items:center; gap:4px; min-width:0;
+  padding:5px 9px; border-radius:999px;
+  background:rgba(255,255,255,.92); color:#0f172a;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:9.5px; font-weight:700;
+  line-height:1.25;
+}
+.vc-ver svg{ flex-shrink:0; }
+.vc-dur{
+  flex-shrink:0;
+  background:rgba(0,0,0,.45); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  color:#fff; font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:10px; font-weight:600; padding:3px 8px; border-radius:8px;
+}
+.vc-play{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;
+  width:50px; height:50px; border-radius:50%; color:#fff;
+  background:rgba(255,255,255,.22); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.3);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .2s;
+}
+.vcard:active .vc-play{ transform:translate(-50%,-50%) scale(.92); }
+.vc-info{ position:absolute; left:0; right:0; bottom:0; padding:15px; z-index:2; }
+.vc-name{ font-family:'Plus Jakarta Sans',sans-serif; font-size:14.5px; font-weight:700; color:#fff; }
+.vc-sub{ font-size:11.5px; color:rgba(255,255,255,.85); margin-top:2px; }
+
+/* ══════════════════════════════════════════════════════════════
+   GALERÍA — "así se ve", sin adjetivos
+   ══════════════════════════════════════════════════════════════ */
+.gal img{
+  width:270px; height:190px; object-fit:cover; border-radius:18px;
+}
+.gal figure{ position:relative; }
+.gal figcaption{
+  position:absolute; left:12px; bottom:12px;
+  background:rgba(0,0,0,.5); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  color:#fff; font-size:11.5px; font-weight:500;
+  padding:5px 11px; border-radius:100px;
+}
+
+/* ── Lista de "qué incluye" ────────────────────────────────────── */
+.inc{ list-style:none; display:grid; gap:11px; }
+.inc li{
+  display:flex; gap:12px; align-items:flex-start;
+  background:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:13px 15px;
+}
+.sec-alt .inc li{ background:var(--sand); }
+.inc .ico{
+  flex:0 0 auto; width:34px; height:34px; border-radius:10px;
+  background:rgba(13,148,136,.1); color:var(--tur);
+  display:grid; place-items:center;
+}
+.inc b{
+  display:block; font-family:'Plus Jakarta Sans',sans-serif;
+  font-weight:700; font-size:14.5px; margin-bottom:2px;
+}
+.inc span{ font-size:13px; color:var(--muted); line-height:1.5; }
+
+/* ── Las paradas ───────────────────────────────────────────────
+   Línea de tiempo vertical: el punto y la raya dibujan el recorrido,
+   que es justo lo que la persona está imaginando. */
+.ruta{ list-style:none; position:relative; padding-left:2px; }
+.ruta li{
+  position:relative; display:flex; gap:14px; align-items:baseline;
+  padding:0 0 0 26px; margin-bottom:16px;
+}
+.ruta li::before{
+  content:''; position:absolute; left:0; top:6px;
+  width:11px; height:11px; border-radius:50%;
+  background:#fff; border:2.5px solid var(--tur);
+}
+/* la raya que une un pueblo con el siguiente */
+.ruta li::after{
+  content:''; position:absolute; left:5px; top:19px; bottom:-16px;
+  width:1.5px; background:rgba(13,148,136,.25);
+}
+.ruta li:last-child{ margin-bottom:0; }
+.ruta li:last-child::after{ display:none; }
+/* la llegada se marca: es el premio */
+.ruta li.fin::before{ background:var(--terra); border-color:var(--terra); }
+.ruta .hora{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:14px; color:var(--tur-d); flex:0 0 66px;
+}
+.ruta li.fin .hora{ color:var(--terra); }
+.ruta .lugar{ font-size:14.5px; font-weight:500; }
+.ruta .lugar em{
+  display:block; font-style:normal; font-size:12.5px;
+  color:var(--muted); margin-top:2px;
+}
+
+.nota{
+  display:flex; gap:10px; align-items:flex-start;
+  background:rgba(196,105,61,.08); border:1px solid rgba(196,105,61,.2);
+  border-radius:12px; padding:12px 14px; margin-top:18px;
+  font-size:13px; line-height:1.55; color:#7c4a26;
+}
+.nota svg{ flex-shrink:0; margin-top:2px; color:var(--terra); }
+
+/* ── El plan, día por día: en slider, un día por pantalla ──────── */
+.dia{
+  width:min(84vw,420px);
+  background:#fff; border:1px solid var(--line); border-radius:18px;
+  padding:18px 16px; overflow:hidden;
+}
+/* La foto sale a sangre de la tarjeta: se come el padding de los dos lados.
+   `max-width:none` es obligatorio — la regla general `img{max-width:100%}`
+   le recortaba los 34px de más y la foto se quedaba corta por la derecha,
+   dejando una franja blanca dentro de la tarjeta. */
+.dia-foto{
+  width:calc(100% + 34px); max-width:none;
+  margin:-19px -17px 14px; height:130px;
+  object-fit:cover;
+}
+.dia-h{
+  display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  padding-bottom:12px; border-bottom:1px dashed var(--line);
+}
+.dia-n{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:#fff; background:var(--tur);
+  padding:5px 11px; border-radius:7px;
+}
+.dia-h b{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; }
+.paso{ display:flex; gap:12px; margin-bottom:12px; font-size:14px; line-height:1.5; }
+.paso:last-child{ margin-bottom:0; }
+.paso .h{
+  flex:0 0 62px; font-family:'Plus Jakarta Sans',sans-serif;
+  font-weight:700; font-size:12.5px; color:var(--tur-d); padding-top:1px;
+}
+.paso .t{ color:#334155; }
+
+/* ── Hotel ─────────────────────────────────────────────────────── */
+.hotel{
+  background:#fff; border:1px solid var(--line);
+  border-radius:18px; overflow:hidden;
+}
+.hotel .sl-track{ padding:0; scroll-padding-left:0; gap:0; }
+.hotel .sl-track img{ width:100%; height:200px; object-fit:cover; }
+.hotel .sl-nav{ margin:10px 0 -4px; }
+.hotel-b{ padding:16px; }
+.hotel-b h3{ font-size:17px; font-weight:800; margin-bottom:3px; }
+.hotel-zona{ font-size:13px; color:var(--muted); margin-bottom:13px; }
+.hotel-f{ list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; }
+.hotel-f li{
+  display:flex; gap:7px; align-items:flex-start;
+  font-size:12.5px; color:#334155; line-height:1.4;
+}
+.hotel-f svg{ flex-shrink:0; color:var(--tur); margin-top:2px; }
+@media (max-width:400px){ .hotel-f{ grid-template-columns:1fr; } }
+
+/* ── La amanecida: la sección oscura, que es el gancho ─────────── */
+.noche{
+  background:linear-gradient(165deg,#131f2e 0%,#0b1420 100%);
+  color:#fff; padding:40px 0;
+}
+.noche .eyebrow{ color:#fcd9a8; background:rgba(232,139,82,.16); }
+.noche h2{ color:#fff; }
+.noche h2 .ac{
+  background:linear-gradient(100deg,var(--terra-cl),#f6c177);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.noche .sec-lead{ color:rgba(255,255,255,.7); }
+.noche .gal img{ height:210px; }
+.noche-l{ list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+.noche-l li{
+  display:flex; gap:10px; align-items:flex-start;
+  font-size:14.5px; line-height:1.5; color:rgba(255,255,255,.85);
+}
+.noche-l svg{ flex-shrink:0; color:var(--terra-cl); margin-top:3px; }
+
+/* ── Reseñas escritas (las que no quisieron salir en video) ────── */
+.qcard{
+  width:min(80vw,330px);
+  background:#fff; border:1px solid var(--line); border-radius:18px;
+  padding:17px 16px;
+  display:flex; flex-direction:column; gap:11px;
+}
+.qstars{ color:#f5a623; font-size:13px; letter-spacing:2px; }
+.qtext{ font-size:14px; line-height:1.6; color:#334155; flex:1; }
+.qwho{ display:flex; align-items:center; gap:10px; }
+.qava{
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg,var(--tur),var(--terra));
+  color:#fff; display:grid; place-items:center;
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13px;
+}
+.qname{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13.5px; }
+.qfrom{ font-size:11.5px; color:var(--muted); }
+
+/* ── Precio ────────────────────────────────────────────────────── */
+.pcard{
+  background:#fff; border:2px solid var(--tur);
+  border-radius:20px; padding:20px 18px;
+  box-shadow:0 18px 40px -28px rgba(13,148,136,.9);
+}
+.pcard-top{ text-align:center; padding-bottom:16px; border-bottom:1px dashed var(--line); }
+.pcard-n{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:38px; line-height:1; color:var(--tur-d);
+}
+.pcard-n small{ font-size:15px; color:var(--muted); font-weight:600; }
+.pcard-sub{ font-size:13px; color:var(--muted); margin-top:6px; }
+.pcard-abono{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(196,105,61,.1); color:#8a4a22;
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13px;
+  padding:9px 15px; border-radius:100px; margin-top:14px;
+}
+.pcard-row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:11px 0; border-bottom:1px solid var(--line); font-size:14px;
+}
+.pcard-row:last-of-type{ border-bottom:0; }
+.pcard-row b{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; }
+
+.noinc{ list-style:none; margin-top:18px; }
+.noinc li{
+  display:flex; gap:9px; align-items:flex-start;
+  font-size:13.5px; line-height:1.5; color:var(--muted); margin-bottom:8px;
+}
+.noinc svg{ flex-shrink:0; color:#cbd5e1; margin-top:3px; }
+.h-min{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:15px; margin:24px 0 10px; }
+
+/* ── Qué llevar ────────────────────────────────────────────────── */
+.llevar{ display:flex; flex-wrap:wrap; gap:8px; }
+.llevar span{
+  display:inline-flex; align-items:center; gap:7px;
+  background:#fff; border:1px solid var(--line);
+  border-radius:100px; padding:9px 14px;
+  font-size:13px; color:#334155;
+}
+.llevar svg{ color:var(--tur); flex-shrink:0; }
+
+/* ── Preguntas: acordeón, igual que en el sitio ────────────────── */
+.faq{
+  background:#fff; border:1px solid var(--line);
+  border-radius:14px; margin-bottom:10px; overflow:hidden;
+}
+.sec-alt .faq{ background:var(--sand); }
+.faq button{
+  width:100%; background:none; border:0; cursor:pointer;
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding:15px 16px; text-align:left;
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14.5px;
+  color:var(--ink);
+  -webkit-tap-highlight-color:transparent;
+}
+.faq .chev{
+  flex:0 0 26px; height:26px; border-radius:50%;
+  background:rgba(13,148,136,.1); color:var(--tur);
+  display:grid; place-items:center; transition:transform .25s;
+}
+.faq.open .chev{ transform:rotate(45deg); }
+.faq .a{ display:none; padding:0 16px 16px; font-size:14px; line-height:1.65; color:#475569; }
+.faq.open .a{ display:block; }
+
+/* ── Quién te lleva ────────────────────────────────────────────── */
+.ivo{ text-align:center; }
+.ivo img{
+  width:96px; height:96px; border-radius:50%; object-fit:cover;
+  margin:0 auto 14px; border:3px solid #fff;
+  box-shadow:0 14px 30px -16px rgba(0,0,0,.5);
+}
+.ivo p{ font-size:15px; line-height:1.65; color:#475569; margin-bottom:14px; }
+.ivo .firma{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:16px; }
+.ivo .rol{ font-size:12.5px; color:var(--muted); margin-bottom:18px; }
+
+/* ── Cierre ────────────────────────────────────────────────────── */
+.cierre{
+  background:linear-gradient(150deg,var(--tur-d),var(--tur));
+  color:#fff; text-align:center; padding:42px 0;
+}
+.cierre h2{ color:#fff; margin-bottom:10px; }
+.cierre p{ font-size:15px; color:rgba(255,255,255,.85); line-height:1.6; margin-bottom:20px; }
+.cierre .btn-wa{
+  background:#fff; color:var(--tur-d); box-shadow:0 14px 30px -16px rgba(0,0,0,.5);
+}
+
+/* ── Pie: la otra puerta de vuelta al sitio ────────────────────── */
+.pie{ background:#0b1f1a; color:rgba(255,255,255,.6); padding:30px 0 22px; }
+.pie-links{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:8px 10px;
+  margin-bottom:16px;
+}
+.pie-links a{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:12.5px;
+  color:rgba(255,255,255,.82); text-decoration:none;
+  border:1px solid rgba(255,255,255,.14); border-radius:100px; padding:8px 15px;
+  transition:background .2s, border-color .2s;
+}
+.pie-links a:hover{ background:rgba(13,148,136,.22); border-color:rgba(20,184,166,.4); }
+.pie small{ display:block; text-align:center; font-size:11.5px; line-height:1.7; }
+
+/* ── Barra fija de WhatsApp ────────────────────────────────────
+   Aquí sí va fija, al revés que en la sección de planes del sitio: allí
+   estorbaba porque el cliente estaba leyendo y comparando. En una página
+   de una sola excursión la decisión es una y puede tomarse en cualquier
+   momento, así que el botón tiene que estar siempre a mano. */
+.barra{
+  position:fixed; left:0; right:0; bottom:0; z-index:100;
+  background:rgba(255,255,255,.94);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  padding:11px 16px calc(11px + env(safe-area-inset-bottom));
+  display:flex; align-items:center; gap:12px;
+}
+.barra-p{ flex-shrink:0; }
+.barra-p .n{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:19px; color:var(--tur-d); line-height:1;
+}
+.barra-p .l{ font-size:10.5px; color:var(--muted); margin-top:3px; }
+.barra .btn{ flex:1; padding:13px 18px; font-size:14px; }
+
+/* ══════════════════════════════════════════════════════════════
+   ESCRITORIO
+   La versión de antes era una columna de 620px flotando en medio de
+   la pantalla: en una laptop se veía pobre. Aquí el hero se abre en
+   dos, las listas en dos columnas y las tarjetas crecen.
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width:700px){
+  .hero h1{ font-size:44px; }
+  h2{ font-size:28px; }
+  .sec{ padding:52px 0; }
+  .barra{ justify-content:center; }
+  .barra .btn{ flex:0 0 auto; min-width:300px; }
+  .vcard{ width:216px; height:304px; }
+  .gal img{ width:330px; height:230px; }
+  .sl-arrow{ display:flex; }
+}
+
+@media (min-width:900px){
+  :root{ --topbar:68px; }
+  .burger{ display:none; }
+  .tb-links{ display:flex; }
+  .tb-cta{ display:inline-flex; margin-left:24px; }
+  .topbar{ padding:0 32px; }
+  /* aquí sí: ya hay sitio para poner cosas una al lado de la otra.
+     1000 y no 1120: con dos columnas de 540px las tarjetas de "qué
+     incluye" quedaban desiertas de tanto aire. */
+  .wide{ max-width:1000px; }
+  .inc{ grid-template-columns:1fr 1fr; }
+
+  /* Hero en dos columnas: el argumento a la izquierda, la foto grande
+     a la derecha. El fondo se apaga un poco para que no compita. */
+  .hero-in{
+    display:grid; grid-template-columns:1.02fr .98fr; gap:46px;
+    align-items:center;
+    /* arriba y abajo por separado: los lados los pone .wrap (ver nota
+       en .hero-in, más arriba) */
+    padding-top:calc(var(--topbar) + 46px); padding-bottom:60px;
+  }
+  .fade-set img.on{ opacity:.28; }
+  .hero h1{ font-size:50px; }
+  .hero-shot{
+    display:block; position:relative; height:440px;
+    border-radius:26px; overflow:hidden;
+    box-shadow:0 40px 70px -40px rgba(0,0,0,.85);
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .hero-shot .fade-set{ position:absolute; }
+  .hero-shot .fade-set img.on{ opacity:1; }
+  .hero-shot-tag{
+    position:absolute; left:16px; bottom:16px; z-index:3;
+    background:rgba(0,0,0,.45); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.16);
+    color:#fff; font-size:12px; padding:8px 14px; border-radius:100px;
+  }
+
+  /* Dos columnas donde el contenido lo permite */
+  .cols2{
+    display:grid; grid-template-columns:1fr 1fr; gap:38px; align-items:start;
+    max-width:1120px;
+  }
+  .faq-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+  .ivo{ max-width:620px; }
+  .dia{ width:min(46vw,430px); }
+  .qcard{ width:340px; }
+}
+</style>
+</head>
+
+<body id="top">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     BARRA + MENÚ
+     Esto NO es una landing suelta: es la ficha de una excursión más.
+     Desde cualquier punto se vuelve a Inicio, a Excursiones o a
+     Escápate por Días, que es de donde viene la gente.
+     ═══════════════════════════════════════════════════════════ -->
+<header class="topbar" id="topbar">
+  <a class="tb-brand" href="index.html">IVONNE TOUR RD</a>
+  <!-- El menú es el del sitio y nada más. Este tour NO es una pestaña del
+       menú: es una excursión que vive dentro de "Escápate por Días", y por
+       eso esa opción es la que va marcada mientras estás aquí. -->
+  <nav class="tb-links">
+    <a href="index.html">Inicio</a>
+    <a href="index.html#excursiones">Excursiones</a>
+    <a href="index.html#planes" class="on">Escápate por Días</a>
+  </nav>
+  <a class="tb-cta" href="https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20quiero%20apartar%20mi%20cupo%20para%20el%20Tour%20del%20Sur%20a%20Punta%20Cana" target="_blank" rel="noopener">Apartar</a>
+  <button class="burger" id="burger" aria-label="Menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div id="ivnMenu" aria-hidden="true">
+  <div class="ivm-bg">
+    <div class="ivm-grid"></div>
+    <div class="ivm-blob1"></div>
+    <div class="ivm-blob2"></div>
+    <div class="ivm-blob3"></div>
+  </div>
+
+  <div class="ivm-inner">
+    <button class="ivm-close" id="ivmClose" aria-label="Cerrar menú">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="ivm-profile ivm-r1">
+      <div class="ivm-avatar-wrap">
+        <div class="ivm-ring-spin"></div>
+        <div class="ivm-grad-border">
+          <img class="ivm-avatar-img" src="images/ivonne-scape-park.jpg" alt="Ivonne, fundadora de IVONNE TOUR RD">
+        </div>
+        <div class="ivm-status-outer"><div class="ivm-status-dot"></div></div>
+      </div>
+
+      <h2 class="ivm-name">IVONNE <span>TOUR RD</span></h2>
+      <p class="ivm-tagline">🌴 Tu aventura en el Caribe</p>
+
+      <div class="ivm-stats">
+        <div class="ivm-stat"><div class="ivm-stat-num">15+</div><div class="ivm-stat-label">Excursiones</div></div>
+        <div class="ivm-stat-sep"></div>
+        <div class="ivm-stat"><div class="ivm-stat-num">6+</div><div class="ivm-stat-label">Tours</div></div>
+        <div class="ivm-stat-sep"></div>
+        <div class="ivm-stat"><div class="ivm-stat-num">4.9★</div><div class="ivm-stat-label">Valoración</div></div>
+      </div>
+
+      <div class="ivm-divider"></div>
+    </div>
+
+    <div class="ivm-items">
+
+      <a href="index.html" class="ivm-item ivm-r2">
+        <div class="ivm-icon ivm-icon-teal">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="ivm-item-body">
+          <div class="ivm-item-title">Inicio</div>
+          <div class="ivm-item-sub">Volver a la página principal</div>
+        </div>
+        <svg class="ivm-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+
+      <a href="index.html#excursiones" class="ivm-item ivm-r3">
+        <div class="ivm-icon ivm-icon-teal">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l6-11 4 7 3-5 5 9z"/><circle cx="7.5" cy="6.5" r="1.5"/></svg>
+        </div>
+        <div class="ivm-item-body">
+          <div class="ivm-item-title">Excursiones</div>
+          <div class="ivm-item-sub">+15 aventuras de un día</div>
+        </div>
+        <svg class="ivm-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+
+      <!-- Marcado como "AQUÍ" porque este tour vive dentro de esta sección.
+           El tour no es una opción del menú: es una tarjeta de aquí dentro. -->
+      <a href="index.html#planes" class="ivm-item here ivm-r4">
+        <div class="ivm-icon ivm-icon-orange">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="ivm-item-body" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div>
+            <div class="ivm-item-title">Escápate por Días</div>
+            <div class="ivm-item-sub">6+ tours de varios días</div>
+          </div>
+          <span class="ivm-badge aqui">AQUÍ</span>
+        </div>
+        <svg class="ivm-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+
+      <a href="https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20tengo%20una%20pregunta%20del%20Tour%20del%20Sur" target="_blank" rel="noopener" class="ivm-item ivm-r5">
+        <div class="ivm-icon ivm-icon-green">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+        </div>
+        <div class="ivm-item-body">
+          <div class="ivm-item-title">WhatsApp con Ivonne</div>
+          <div class="ivm-item-sub">Chat directo y rápido</div>
+        </div>
+        <svg class="ivm-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+
+      <a href="#preguntas" class="ivm-item ivm-r6">
+        <div class="ivm-icon ivm-icon-muted">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="ivm-item-body">
+          <div class="ivm-item-title">Preguntas Frecuentes</div>
+          <div class="ivm-item-sub">Todo lo de este viaje</div>
+        </div>
+        <svg class="ivm-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+
+    </div>
+
+    <a href="https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20quiero%20apartar%20mi%20cupo%20para%20el%20Tour%20del%20Sur%20a%20Punta%20Cana" target="_blank" rel="noopener" class="ivm-cta ivm-r6">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+      Apartar mi cupo
+    </a>
+
+    <div class="ivm-socials ivm-r7">
+      <a href="#" class="ivm-social" aria-label="Facebook">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg>
+      </a>
+      <a href="#" class="ivm-social" aria-label="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="#" class="ivm-social" aria-label="TikTok">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 0-1-.1z"/></svg>
+      </a>
+      <a href="https://wa.me/1809XXXXXXX" target="_blank" rel="noopener" class="ivm-social" aria-label="WhatsApp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+      </a>
+    </div>
+
+  </div><!-- /ivm-inner -->
+</div><!-- /ivnMenu -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<header class="hero">
+  <!-- FOTOS PROVISIONALES: ninguna es del sur ni de la guagua.
+       Cambiar por: el grupo montándose de madrugada, la llegada a
+       Bávaro y la amanecida. El slider aguanta las que se le pongan. -->
+  <div class="fade-set" data-fade aria-hidden="true">
+    <img class="on" src="images/grupo-palapa-2.jpg" alt="">
+    <img src="images/marina-botes.jpg" alt="">
+    <img src="images/grupo-evolution-1.jpg" alt="">
+    <img src="images/amigas-bote-1.jpg" alt="">
+  </div>
+
+  <div class="wrap wide hero-in">
+    <div>
+      <nav class="crumb" aria-label="Dónde estás">
+        <a href="index.html">Inicio</a> <span>›</span>
+        <a href="index.html#planes">Tours de varios días</a> <span>›</span>
+        <b>Tour del Sur</b>
+      </nav>
+
+      <span class="hero-ruta">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        Salgo de Duvergé y voy recogiendo
+      </span>
+
+      <h1>Dos días en Punta Cana.<br>Y una <span class="ac">amanecida</span>.</h1>
+
+      <p>Te busco en tu pueblo de madrugada y te devuelvo la noche siguiente. Guagua, hotel, playa y discoteca en un solo precio.</p>
+
+      <!-- BORRADOR: precio inventado. Revisar antes de anunciar. -->
+      <div class="precio-box">
+        <div class="precio-n">RD$5,900 <small>/persona</small></div>
+        <div class="precio-l">Todo incluido<br>Apartas con RD$1,500</div>
+      </div>
+
+      <div class="hero-datos">
+        <div class="hero-dato"><div class="n">2 días</div><div class="l">1 noche</div></div>
+        <div class="hero-sep"></div>
+        <!-- BORRADOR: cupos por salida -->
+        <div class="hero-dato"><div class="n">30</div><div class="l">cupos</div></div>
+        <div class="hero-sep"></div>
+        <div class="hero-dato"><div class="n">8</div><div class="l">paradas</div></div>
+      </div>
+
+      <a class="btn btn-wa" href="https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20quiero%20apartar%20mi%20cupo%20para%20el%20Tour%20del%20Sur%20a%20Punta%20Cana" target="_blank" rel="noopener">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+        Apartar mi cupo
+      </a>
+
+      <!-- BORRADOR: caras y número de viajeros -->
+      <div class="hero-social">
+        <div class="caras">
+          <img src="images/amigas-bote-2.jpg" alt="">
+          <img src="images/familia-safari.jpg" alt="">
+          <img src="images/grupo-cascada-1.jpg" alt="">
+          <img src="images/rio-grupo.jpg" alt="">
+        </div>
+        <span><b>+240 personas del sur</b> ya lo hicieron · ★★★★★ 4.9</span>
+      </div>
+    </div>
+
+    <!-- Escritorio: la misma tanda de fotos, pero grande y a la derecha -->
+    <div class="hero-shot">
+      <div class="fade-set" data-fade aria-hidden="true">
+        <img class="on" src="images/grupo-palapa-2.jpg" alt="Grupo del Tour del Sur en Punta Cana">
+        <img src="images/marina-botes.jpg" alt="">
+        <img src="images/grupo-evolution-1.jpg" alt="">
+        <img src="images/amigas-bote-1.jpg" alt="">
+      </div>
+      <span class="hero-shot-tag">Salida del mes pasado · Bávaro</span>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TESTIMONIOS EN VIDEO
+     Va lo primero después del hero: a este público lo convence ver a
+     un vecino suyo en la guagua, no un párrafo mío.
+
+     BORRADOR: los nombres, pueblos y duraciones son de relleno. Cuando
+     estén los videos reales, se cambia el <img> por la portada del
+     video y se le pone data-vid con el archivo (ver nota del script).
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec tribu" id="testimonios">
+  <div class="wrap">
+    <span class="eyebrow">La tribu del sur</span>
+    <h2>Míralo <span class="ac">de boca de ellos</span>.</h2>
+    <p class="sec-lead">Ninguno de estos videos lo grabé yo. Los grabaron ellos y me dieron permiso para subirlos.</p>
+    <div class="vid-count"><span>🎬 12 historias en video</span></div>
+  </div>
+
+  <div class="sl" data-sl>
+    <div class="sl-track">
+
+      <article class="vcard">
+        <img src="images/amigas-bote-1.jpg" alt="" loading="lazy">
+        <div class="vc-top"><span class="vc-ver"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Viajó con nosotros</span>
+        <span class="vc-dur">0:48</span></div>
+        <span class="vc-play"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></span>
+        <div class="vc-info"><div class="vc-name">Yohanna &amp; Ruth</div><div class="vc-sub">Se montaron en Barahona</div></div>
+      </article>
+
+      <article class="vcard">
+        <img src="images/grupo-evolution-1.jpg" alt="" loading="lazy">
+        <div class="vc-top"><span class="vc-ver"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Viajó con nosotros</span>
+        <span class="vc-dur">1:04</span></div>
+        <span class="vc-play"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></span>
+        <div class="vc-info"><div class="vc-name">Los muchachos de Azua</div><div class="vc-sub">La amanecida completa</div></div>
+      </article>
+
+      <article class="vcard">
+        <img src="images/familia-safari.jpg" alt="" loading="lazy">
+        <div class="vc-top"><span class="vc-ver"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Viajó con nosotros</span>
+        <span class="vc-dur">0:39</span></div>
+        <span class="vc-play"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></span>
+        <div class="vc-info"><div class="vc-name">Familia Féliz</div><div class="vc-sub">Duvergé · fueron con niños</div></div>
+      </article>
+
+      <article class="vcard">
+        <img src="images/marina-botes.jpg" alt="" loading="lazy">
+        <div class="vc-top"><span class="vc-ver"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Viajó con nosotros</span>
+        <span class="vc-dur">1:17</span></div>
+        <span class="vc-play"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></span>
+        <div class="vc-info"><div class="vc-name">Kenia</div><div class="vc-sub">Fue sola desde Baní</div></div>
+      </article>
+
+      <article class="vcard">
+        <img src="images/grupo-palapa-2.jpg" alt="" loading="lazy">
+        <div class="vc-top"><span class="vc-ver"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Viajó con nosotros</span>
+        <span class="vc-dur">0:52</span></div>
+        <span class="vc-play"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></span>
+        <div class="vc-info"><div class="vc-name">Grupo de Vicente Noble</div><div class="vc-sub">14 en una sola salida</div></div>
+      </article>
+
+      <article class="vcard">
+        <img src="images/grupo-evolution-2.jpg" alt="" loading="lazy">
+        <div class="vc-top"><span class="vc-ver"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Viajó con nosotros</span>
+        <span class="vc-dur">1:31</span></div>
+        <span class="vc-play"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></span>
+        <div class="vc-info"><div class="vc-name">Wilkin &amp; Yeimi</div><div class="vc-sub">San Cristóbal · aniversario</div></div>
+      </article>
+
+      <article class="vcard">
+        <img src="images/rio-grupo.jpg" alt="" loading="lazy">
+        <div class="vc-top"><span class="vc-ver"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Viajó con nosotros</span>
+        <span class="vc-dur">0:44</span></div>
+        <span class="vc-play"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></span>
+        <div class="vc-info"><div class="vc-name">Las primas</div><div class="vc-sub">La playa el segundo día</div></div>
+      </article>
+
+    </div>
+    <div class="sl-nav">
+      <button class="sl-arrow" data-dir="-1" aria-label="Anterior"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="sl-dots"></div>
+      <button class="sl-arrow" data-dir="1" aria-label="Siguiente"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     QUÉ INCLUYE
+     Va antes que el itinerario a propósito: primero hay que quitarle
+     de la cabeza la pregunta "¿y qué más tengo que pagar?".
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec sec-alt" id="incluye">
+  <div class="wrap wide">
+    <span class="eyebrow">Lo que ya está pagado</span>
+    <h2>Sales con el bulto y <span class="ac">ya está</span>.</h2>
+    <p class="sec-lead">Lo que NO cubre también te lo digo, más abajo.</p>
+
+    <ul class="inc">
+      <li>
+        <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M3 10h18M7 16v3M17 16v3"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg></span>
+        <div><b>La guagua, ida y vuelta</b><span>Con aire. Te monta en tu pueblo y te deja en el mismo sitio.</span></div>
+      </li>
+      <li>
+        <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-7h18v7M3 18v2M21 18v2M3 11V7a2 2 0 0 1 2-2h4v6M13 11V5h4a2 2 0 0 1 2 2v4" stroke-linejoin="round"/></svg></span>
+        <div><b>Una noche de hotel en Punta Cana</b><span>Habitación doble con aire y baño privado.</span></div>
+      </li>
+      <li>
+        <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3v9a3 3 0 0 0 6 0V3M7 12v9M17 3c-1.5 0-2.5 2-2.5 5s1 4 2.5 4 2.5-1 2.5-4-1-5-2.5-5zM17 12v9"/></svg></span>
+        <div><b>El desayuno del segundo día</b><span>En el hotel, antes de salir para la playa.</span></div>
+      </li>
+      <li>
+        <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
+        <div><b>La entrada a la discoteca</b><span>La amanecida va incluida. No pagas cover.</span></div>
+      </li>
+      <li>
+        <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 18c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M2 13c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><circle cx="12" cy="5" r="2.5"/></svg></span>
+        <div><b>Playa de Bávaro los dos días</b><span>Con sombra y sillas.</span></div>
+      </li>
+      <li>
+        <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.2"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></span>
+        <div><b>Alguien del equipo con el grupo</b><span>Del primer pueblo al último.</span></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     GALERÍA — el viaje contado con fotos, no con adjetivos
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec" id="fotos">
+  <div class="wrap">
+    <span class="eyebrow">Así se ve</span>
+    <h2>Fotos de <span class="ac">salidas anteriores</span>.</h2>
+    <p class="sec-lead">Sin filtros ni fotos de catálogo. Desliza.</p>
+  </div>
+
+  <!-- FOTOS PROVISIONALES: sustituir por las del Tour del Sur -->
+  <div class="sl" data-sl>
+    <div class="sl-track gal">
+      <figure><img src="images/grupo-palapa-2.jpg" alt="Grupo en la palapa de la playa" loading="lazy"><figcaption>La palapa del primer día</figcaption></figure>
+      <figure><img src="images/amigas-bote-1.jpg" alt="En el bote" loading="lazy"><figcaption>Bávaro, media tarde</figcaption></figure>
+      <figure><img src="images/grupo-evolution-1.jpg" alt="La amanecida" loading="lazy"><figcaption>La amanecida</figcaption></figure>
+      <figure><img src="images/marina-botes.jpg" alt="La marina" loading="lazy"><figcaption>La marina, camino al hotel</figcaption></figure>
+      <figure><img src="images/rio-grupo.jpg" alt="El grupo" loading="lazy"><figcaption>El grupo completo</figcaption></figure>
+      <figure><img src="images/mirador-valle-mar.jpg" alt="Parada en el camino" loading="lazy"><figcaption>Parada de café en la Sánchez</figcaption></figure>
+    </div>
+    <div class="sl-nav">
+      <button class="sl-arrow" data-dir="-1" aria-label="Anterior"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="sl-dots"></div>
+      <button class="sl-arrow" data-dir="1" aria-label="Siguiente"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LAS PARADAS + EL PLAN
+     En escritorio van lado a lado: son las dos preguntas del mismo
+     momento ("¿dónde me monto?" y "¿qué hago allá?").
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec sec-alt" id="ruta">
+  <div class="wrap wide cols2">
+
+    <div>
+      <span class="eyebrow">La ruta</span>
+      <h2>Te monto <span class="ac">en tu pueblo</span>.</h2>
+      <p class="sec-lead">Sin terminales ni carros hasta la capital. La guagua baja por la Sánchez y para aquí:</p>
+
+      <!-- BORRADOR: paradas y horas inventadas sobre la ruta lógica
+           Duvergé → Barahona → Azua → Baní → San Cristóbal → capital.
+           Añadir o quitar una parada es añadir o quitar un <li>. -->
+      <ul class="ruta">
+        <li><span class="hora">3:00 AM</span><span class="lugar">Duvergé<em>Frente al parque</em></span></li>
+        <li><span class="hora">3:45 AM</span><span class="lugar">Vicente Noble<em>Entrada del pueblo</em></span></li>
+        <li><span class="hora">4:30 AM</span><span class="lugar">Barahona<em>Parque Central</em></span></li>
+        <li><span class="hora">6:00 AM</span><span class="lugar">Azua<em>Parada de la Sánchez</em></span></li>
+        <li><span class="hora">7:00 AM</span><span class="lugar">Baní<em>Entrada, cerca de la bomba</em></span></li>
+        <li><span class="hora">7:45 AM</span><span class="lugar">San Cristóbal<em>Parada de la autopista</em></span></li>
+        <li><span class="hora">8:30 AM</span><span class="lugar">Santo Domingo<em>Última antes de coger el Este</em></span></li>
+        <li class="fin"><span class="hora">11:30 AM</span><span class="lugar">Punta Cana<em>Llegada. Directo a la playa</em></span></li>
+      </ul>
+
+      <div class="nota">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5" stroke-linecap="round"/><circle cx="12" cy="16.4" r="1" fill="currentColor" stroke="none"/></svg>
+        <span>¿Tu pueblo no está? Escríbeme igual. Si queda de paso, la guagua para — ya lo hemos hecho.</span>
+      </div>
+    </div>
+
+    <div>
+      <span class="eyebrow">Hora por hora</span>
+      <h2>Qué haces <span class="ac">cada día</span>.</h2>
+      <p class="sec-lead">Desliza para ver el segundo día.</p>
+
+      <!-- BORRADOR: horarios del plan -->
+      <div class="sl sl-in" data-sl>
+        <div class="sl-track">
+
+          <div class="dia">
+            <img class="dia-foto" src="images/grupo-evolution-2.jpg" alt="" loading="lazy">
+            <div class="dia-h"><span class="dia-n">Día 1</span><b>Salida y la amanecida</b></div>
+            <div class="paso"><span class="h">3:00 AM</span><span class="t">Arranca la guagua en Duvergé y va recogiendo pueblo por pueblo.</span></div>
+            <div class="paso"><span class="h">11:30 AM</span><span class="t">Llegada a Punta Cana. Dejas el bulto en el hotel y sales.</span></div>
+            <div class="paso"><span class="h">12:30 PM</span><span class="t">Playa de Bávaro. Sombra, silla y agua tibia toda la tarde.</span></div>
+            <div class="paso"><span class="h">6:00 PM</span><span class="t">Vuelta al hotel: te bañas, descansas y te arreglas.</span></div>
+            <div class="paso"><span class="h">10:00 PM</span><span class="t">Empieza la amanecida. Salimos juntos y volvemos juntos.</span></div>
+          </div>
+
+          <div class="dia">
+            <img class="dia-foto" src="images/amigas-bote-2.jpg" alt="" loading="lazy">
+            <div class="dia-h"><span class="dia-n">Día 2</span><b>Playa y regreso</b></div>
+            <div class="paso"><span class="h">9:00 AM</span><span class="t">Desayuno en el hotel. Sin prisa, que la noche fue larga.</span></div>
+            <div class="paso"><span class="h">10:30 AM</span><span class="t">Última mañana de playa o piscina, tú eliges.</span></div>
+            <div class="paso"><span class="h">1:00 PM</span><span class="t">Almuerzo por tu cuenta y últimas compras.</span></div>
+            <div class="paso"><span class="h">2:00 PM</span><span class="t">Sale la guagua de vuelta.</span></div>
+            <div class="paso"><span class="h">11:00 PM</span><span class="t">De vuelta en Duvergé, donde te monté.</span></div>
+          </div>
+
+        </div>
+        <div class="sl-nav">
+          <button class="sl-arrow" data-dir="-1" aria-label="Anterior"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="sl-dots"></div>
+          <button class="sl-arrow" data-dir="1" aria-label="Siguiente"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DÓNDE DUERMES
+     En el sitio principal el hotel es el enemigo ("un hotel no es
+     Punta Cana"). Aquí es al revés: para este público el hotel ES el
+     premio, y hay que enseñarlo — por eso va en slider, no en texto.
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec" id="hotel">
+  <div class="wrap">
+    <span class="eyebrow">Dónde duermes</span>
+    <h2>Un hotel de verdad, <span class="ac">no una pensión</span>.</h2>
+    <p class="sec-lead">Con aire, agua caliente y piscina, a pie de donde está el movimiento.</p>
+
+    <div class="hotel">
+      <!-- FOTOS PROVISIONALES: poner las del hotel real -->
+      <div class="sl" data-sl>
+        <div class="sl-track">
+          <img src="images/marina-botes.jpg" alt="Hotel en Bávaro, Punta Cana" loading="lazy">
+          <img src="images/grupo-palapa-2.jpg" alt="Área de piscina" loading="lazy">
+          <img src="images/amigas-bote-1.jpg" alt="La playa a 10 minutos" loading="lazy">
+        </div>
+        <div class="sl-nav">
+          <button class="sl-arrow" data-dir="-1" aria-label="Anterior"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="sl-dots"></div>
+          <button class="sl-arrow" data-dir="1" aria-label="Siguiente"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+      <div class="hotel-b">
+        <!-- BORRADOR: nombre y zona del hotel -->
+        <h3>Hotel en Bávaro ★★★</h3>
+        <div class="hotel-zona">Bávaro, Punta Cana · a 10 minutos de la playa</div>
+        <ul class="hotel-f">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Aire acondicionado</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Agua caliente</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Piscina</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Wifi</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Baño privado</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Recepción 24 horas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LA AMANECIDA — el gancho de la campaña, sección propia y oscura
+     ═══════════════════════════════════════════════════════════ -->
+<section class="noche" id="amanecida">
+  <div class="wrap">
+    <span class="eyebrow">La amanecida</span>
+    <h2>La noche <span class="ac">no se acaba a las 12</span>.</h2>
+    <p class="sec-lead">Es la parte que no se puede hacer en un pasadía. Por eso el viaje es de dos días.</p>
+  </div>
+
+  <!-- FOTOS PROVISIONALES: aquí van fotos de la noche, no de día -->
+  <div class="sl" data-sl>
+    <div class="sl-track gal">
+      <figure><img src="images/grupo-evolution-1.jpg" alt="" loading="lazy"><figcaption>Discoteca en Bávaro</figcaption></figure>
+      <figure><img src="images/grupo-evolution-2.jpg" alt="" loading="lazy"><figcaption>El grupo completo</figcaption></figure>
+      <figure><img src="images/grupo-palapa-2.jpg" alt="" loading="lazy"><figcaption>Antes de salir</figcaption></figure>
+    </div>
+    <div class="sl-nav">
+      <button class="sl-arrow" data-dir="-1" aria-label="Anterior"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="sl-dots"></div>
+      <button class="sl-arrow" data-dir="1" aria-label="Siguiente"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <ul class="noche-l">
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Discoteca en Bávaro, con la entrada ya pagada.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13.5A8 8 0 0 1 10.5 4a8 8 0 1 0 9.5 9.5z"/></svg> La playa de madrugada, que es otra cosa.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.2"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg> Vamos y volvemos en grupo. Nadie se queda tirado.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg> El hotel queda cerca: si te cansas, te vas a dormir.</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     RESEÑAS ESCRITAS
+     Las de los que no quisieron salir en video. Van en slider para
+     que no se conviertan en otro muro de texto.
+
+     BORRADOR: reseñas de relleno. Sustituir por capturas o textos
+     reales, con permiso, igual que se hace en el sitio.
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec sec-alt" id="resenas">
+  <div class="wrap">
+    <span class="eyebrow">Lo que dicen</span>
+    <h2>240 personas del sur <span class="ac">ya lo hicieron</span>.</h2>
+    <p class="sec-lead">★ 4.9 de 5 · 87 reseñas de las últimas salidas.</p>
+  </div>
+
+  <div class="sl" data-sl>
+    <div class="sl-track">
+
+      <article class="qcard">
+        <div class="qstars">★★★★★</div>
+        <p class="qtext">Yo pensaba que era mentira que buscaban a uno en el pueblo. La guagua llegó a Barahona a la hora que dijeron y ya.</p>
+        <div class="qwho"><span class="qava">Y</span><div><div class="qname">Yohanna M.</div><div class="qfrom">Barahona · salida de marzo</div></div></div>
+      </article>
+
+      <article class="qcard">
+        <div class="qstars">★★★★★</div>
+        <p class="qtext">Fui sola y no me sentí sola ni un momento. Me pusieron con una muchacha de Azua y terminamos siendo amigas.</p>
+        <div class="qwho"><span class="qava">K</span><div><div class="qname">Kenia R.</div><div class="qfrom">Baní · salida de febrero</div></div></div>
+      </article>
+
+      <article class="qcard">
+        <div class="qstars">★★★★★</div>
+        <p class="qtext">El hotel mejor de lo que esperaba por ese precio. Y la amanecida ni se diga, volvimos todos juntos.</p>
+        <div class="qwho"><span class="qava">W</span><div><div class="qname">Wilkin P.</div><div class="qfrom">San Cristóbal · salida de marzo</div></div></div>
+      </article>
+
+      <article class="qcard">
+        <div class="qstars">★★★★☆</div>
+        <p class="qtext">El viaje es largo, eso sí, no lo voy a negar. Pero con aire y con paradas se pasa. Repito en junio.</p>
+        <div class="qwho"><span class="qava">J</span><div><div class="qname">José L.</div><div class="qfrom">Azua · salida de enero</div></div></div>
+      </article>
+
+      <article class="qcard">
+        <div class="qstars">★★★★★</div>
+        <p class="qtext">Fuimos con los niños. Ivonne nos acomodó cerca de otra familia y se pasaron los dos días jugando en la playa.</p>
+        <div class="qwho"><span class="qava">F</span><div><div class="qname">Familia Féliz</div><div class="qfrom">Duvergé · salida de febrero</div></div></div>
+      </article>
+
+    </div>
+    <div class="sl-nav">
+      <button class="sl-arrow" data-dir="-1" aria-label="Anterior"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="sl-dots"></div>
+      <button class="sl-arrow" data-dir="1" aria-label="Siguiente"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PRECIO, LO QUE NO INCLUYE Y CÓMO APARTAR
+     El "no incluye" es tan importante como el "incluye": es lo que
+     evita el reclamo dentro de la guagua.
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec" id="precio">
+  <div class="wrap">
+    <span class="eyebrow">El precio</span>
+    <h2>Lo que cuesta, <span class="ac">completo</span>.</h2>
+    <p class="sec-lead">Un solo número. Sin cargos que aparecen después.</p>
+
+    <!-- BORRADOR: todos los precios de esta tarjeta -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-n">RD$5,900 <small>/persona</small></div>
+        <div class="pcard-sub">En habitación doble, los dos días completos</div>
+        <span class="pcard-abono">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" stroke-linejoin="round"/></svg>
+          Apartas con RD$1,500
+        </span>
+      </div>
+
+      <div class="pcard-row"><span>Niños hasta 10 años</span><b>RD$3,500</b></div>
+      <div class="pcard-row"><span>Habitación para ti solo</span><b>+ RD$1,800</b></div>
+      <div class="pcard-row"><span>El resto lo pagas</span><b>Al subir a la guagua</b></div>
+    </div>
+
+    <h3 class="h-min">Lo que NO va incluido</h3>
+    <ul class="noinc">
+      <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg> Los almuerzos y las cenas.</li>
+      <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg> Las bebidas de la discoteca.</li>
+      <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg> Compras, souvenirs y propinas.</li>
+      <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg> Excursiones aparte, como Saona o el catamarán.</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     QUÉ LLEVAR
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec sec-alt" id="llevar">
+  <div class="wrap">
+    <span class="eyebrow">Antes de salir</span>
+    <h2>Qué meter <span class="ac">en el bulto</span>.</h2>
+    <p class="sec-lead">Es una noche. No hace falta maleta.</p>
+    <div class="llevar">
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Cédula</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Traje de baño y toalla</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Ropa para la noche</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Bloqueador</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Cargador</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Efectivo para la comida</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Una chaqueta ligera</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PREGUNTAS
+     No son de adorno: son las objeciones que de verdad frenan a
+     alguien antes de mandar RD$1,500 por teléfono. Van cerradas para
+     que la página no parezca un muro de texto.
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec" id="preguntas">
+  <div class="wrap wide">
+    <span class="eyebrow">Sin letra chiquita</span>
+    <h2>Lo que <span class="ac">todo el mundo pregunta</span>.</h2>
+    <p class="sec-lead">Si te queda una duda que no está aquí, escríbeme y te la contesto yo.</p>
+
+    <div class="faq-grid">
+      <div class="faq">
+        <button type="button">¿Cómo aparto y a quién le mando el dinero? <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <div class="a"><p>Me escribes por WhatsApp, te digo qué cupos quedan y me mandas los RD$1,500 por transferencia. Te paso el comprobante y quedas anotado con tu nombre y tu parada. El resto lo pagas al subir.</p></div>
+      </div>
+
+      <div class="faq">
+        <button type="button">¿Y si a última hora no puedo ir? <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <!-- BORRADOR: política de cancelación. Decidir y ajustar. -->
+        <div class="a"><p>Con 5 días o más de aviso, te paso el abono para la salida siguiente sin cobrarte nada. Con menos, el cupo ya está pagado al hotel y a la guagua: solo se puede pasar a otra persona.</p></div>
+      </div>
+
+      <div class="faq">
+        <button type="button">¿Puedo llevar niños? <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <div class="a"><p>Sí. Hasta 10 años pagan RD$3,500 y duermen contigo. La discoteca es solo para mayores: esa noche te quedas en el hotel o en la playa. Dímelo antes y te acomodo cerca de otras familias.</p></div>
+      </div>
+
+      <div class="faq">
+        <button type="button">Voy solo. ¿Con quién me toca la habitación? <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <div class="a"><p>Con alguien de tu mismo sexo que también vaya solo, y te digo con quién antes de salir. Si prefieres no compartir, la habitación para ti solo cuesta RD$1,800 más.</p></div>
+      </div>
+
+      <div class="faq">
+        <button type="button">¿La guagua tiene aire? Es un viaje largo. <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <div class="a"><p>Aire y asientos reclinables. Son unas ocho horas con dos paradas de baño y café. No te voy a decir que es corto: por eso salimos de madrugada, para que llegues con el día por delante.</p></div>
+      </div>
+
+      <div class="faq">
+        <button type="button">¿A qué hora estoy de vuelta en mi casa? <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <div class="a"><p>Salimos de Punta Cana a las 2:00 PM. Santo Domingo sobre las 5:30, Baní a las 7:00, Barahona alrededor de las 9:30 y Duvergé cerca de las 11:00. Si el tránsito se pone pesado, puede correrse media hora.</p></div>
+      </div>
+
+      <div class="faq">
+        <button type="button">¿Cuántos van en el grupo? <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <div class="a"><p>Máximo 30, que es lo que lleva la guagua. Cuando se llena se cierra: no monto gente de pie ni dejo a nadie sin asiento.</p></div>
+      </div>
+
+      <div class="faq">
+        <button type="button">¿Esto es lo mismo que las excursiones del sitio? <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span></button>
+        <div class="a"><p>No. Las <a href="index.html#excursiones" style="color:var(--tur-d);font-weight:600">excursiones</a> son de un día y salen desde Punta Cana. Este es un tour de dos días que sale del sur y va hacia Punta Cana. Puedes ver los demás en <a href="index.html#planes" style="color:var(--tur-d);font-weight:600">Escápate por Días</a>.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     QUIÉN TE LLEVA
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sec sec-alt">
+  <div class="wrap ivo">
+    <img src="images/ivonne-scape-park.jpg" alt="Ivonne, de Ivonne Tour RD">
+    <p>Soy Ivonne y llevo gente a Punta Cana desde hace años. Este WhatsApp lo contesto yo: no hay call center. Si algo del viaje no te sirve, te lo digo antes de que pagues.</p>
+    <div class="firma">Ivonne</div>
+    <div class="rol">Ivonne Tour RD · Bávaro, Punta Cana</div>
+    <a class="btn btn-wa-line" href="https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20tengo%20una%20pregunta%20del%20Tour%20del%20Sur%20a%20Punta%20Cana" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+      Preguntarle a Ivonne
+    </a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CIERRE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cierre">
+  <div class="wrap">
+    <h2>Los cupos se acaban antes que las ganas.</h2>
+    <!-- BORRADOR: número de cupos restantes / próxima salida -->
+    <p>La guagua lleva 30 y sale una vez al mes. Escríbeme y te digo cuántos quedan.</p>
+    <a class="btn btn-wa" href="https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20quiero%20apartar%20mi%20cupo%20para%20el%20Tour%20del%20Sur%20a%20Punta%20Cana" target="_blank" rel="noopener">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+      Apartar mi cupo con RD$1,500
+    </a>
+  </div>
+</section>
+
+<!-- El pie es la otra puerta de vuelta al sitio, para quien llega
+     hasta abajo y no usó el menú. -->
+<footer class="pie">
+  <div class="wrap">
+    <div class="pie-links">
+      <a href="index.html">Inicio</a>
+      <a href="index.html#excursiones">Excursiones de un día</a>
+      <a href="index.html#planes">Tours de varios días</a>
+      <a href="index.html#tribu">Historias de la Tribu</a>
+    </div>
+    <small>
+      © 2026 Ivonne Tour RD · Bávaro, Punta Cana<br>
+      Salidas desde Duvergé, Barahona, Azua, Baní, San Cristóbal y Santo Domingo.
+    </small>
+  </div>
+</footer>
+
+
+<!-- Barra fija: aquí sí, al revés que en la sección de planes del sitio. -->
+<div class="barra">
+  <div class="barra-p">
+    <div class="n">RD$5,900</div>
+    <div class="l">por persona</div>
+  </div>
+  <a class="btn btn-wa" href="https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20quiero%20apartar%20mi%20cupo%20para%20el%20Tour%20del%20Sur%20a%20Punta%20Cana" target="_blank" rel="noopener">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+    Apartar mi cupo
+  </a>
+</div>
+
+<script>
+/* ── Acordeón de las preguntas ──────────────────────────────────
+   Delegado en el documento para no colgar un listener por pregunta:
+   añadir una nueva es solo pegar el HTML. */
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.faq > button');
+  if(!btn) return;
+  btn.parentElement.classList.toggle('open');
+});
+
+/* ── Menú ───────────────────────────────────────────────────────
+   Mismo comportamiento que en el sitio: pantalla completa, con el
+   fondo bloqueado mientras está abierto. */
+(function(){
+  var burger  = document.getElementById('burger');
+  var menu    = document.getElementById('ivnMenu');
+  var overlay = document.getElementById('menuOverlay');
+  var cerrar  = document.getElementById('ivmClose');
+  var sy = 0;
+
+  function abrir(){
+    sy = window.scrollY || window.pageYOffset;
+    menu.classList.add('open');
+    overlay.classList.add('open');
+    burger.classList.add('open');
+    burger.setAttribute('aria-expanded','true');
+    menu.setAttribute('aria-hidden','false');
+    // se fija el body para que el fondo no se mueva bajo el menú
+    document.body.style.cssText = 'overflow:hidden;position:fixed;top:-'+sy+'px;left:0;right:0;width:100%;padding-bottom:var(--barra-h);';
+  }
+  function cerrarMenu(){
+    menu.classList.remove('open');
+    overlay.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded','false');
+    menu.setAttribute('aria-hidden','true');
+    // el <html> lleva scroll-behavior:smooth; al soltar el body fijo, el
+    // scrollTo de vuelta se animaba y parecía que la página se recargaba
+    var html = document.documentElement, prev = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+    document.body.style.cssText = '';
+    window.scrollTo(0, sy);
+    html.style.scrollBehavior = prev;
+  }
+
+  burger.addEventListener('click', function(){
+    menu.classList.contains('open') ? cerrarMenu() : abrir();
+  });
+  cerrar.addEventListener('click', cerrarMenu);
+  overlay.addEventListener('click', cerrarMenu);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && menu.classList.contains('open')) cerrarMenu();
+  });
+  // un ancla dentro del menú tiene que cerrarlo antes de saltar
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      if(a.getAttribute('href').charAt(0) === '#') cerrarMenu();
+    });
+  });
+})();
+
+/* ── Barra de arriba: transparente sobre el hero, sólida al bajar ── */
+(function(){
+  var bar = document.getElementById('topbar');
+  var tick;
+  function pintar(){ bar.classList.toggle('solid', window.scrollY > 30); }
+  window.addEventListener('scroll', function(){
+    cancelAnimationFrame(tick);
+    tick = requestAnimationFrame(pintar);
+  }, {passive:true});
+  pintar();
+})();
+
+/* ── Sliders (.sl) ──────────────────────────────────────────────
+   Scroll nativo + scroll-snap: el dedo lo mueve sin JS. Esto solo
+   pinta los puntitos y mueve las flechas de escritorio.
+
+   Los puntos se cuentan por PANTALLAS, no por tarjetas: en la fila de
+   videos caben 2 o 3 a la vez y siete puntitos no dirían nada. */
+(function(){
+  document.querySelectorAll('[data-sl]').forEach(function(sl){
+    var track = sl.querySelector('.sl-track');
+    var dots  = sl.querySelector('.sl-dots');
+    var arrows = sl.querySelectorAll('.sl-arrow');
+    if(!track) return;
+
+    // ceil, no round: 7 tarjetas en 2,4 pantallas son 3 puntos, no 2. Con
+    // round el último tramo se quedaba sin punto y al llegar al final no
+    // había ninguno encendido.
+    function pantallas(){
+      return Math.max(1, Math.ceil((track.scrollWidth - 2) / track.clientWidth));
+    }
+    function activa(){
+      var n = pantallas();
+      // el último tramo casi nunca mide una pantalla completa: si ya se
+      // llegó al tope, el punto que manda es el último
+      if(track.scrollLeft >= track.scrollWidth - track.clientWidth - 4) return n - 1;
+      return Math.min(n - 1, Math.round(track.scrollLeft / track.clientWidth));
+    }
+
+    function construir(){
+      var n = pantallas();
+      if(dots){
+        dots.innerHTML = n > 1
+          ? Array.from({length:n}, function(_,i){ return '<i'+(i===0?' class="on"':'')+'></i>'; }).join('')
+          : '';
+      }
+      // con una sola pantalla no hay nada que navegar
+      var nav = sl.querySelector('.sl-nav');
+      if(nav) nav.style.display = n > 1 ? '' : 'none';
+      pintar();
+    }
+
+    function pintar(){
+      var i = activa();
+      if(dots) [].forEach.call(dots.children, function(d,j){ d.classList.toggle('on', j===i); });
+      arrows.forEach(function(b){
+        b.disabled = (+b.dataset.dir < 0)
+          ? track.scrollLeft < 8
+          : track.scrollLeft > track.scrollWidth - track.clientWidth - 8;
+      });
+    }
+
+    var raf;
+    track.addEventListener('scroll', function(){
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(pintar);
+    }, {passive:true});
+
+    if(dots){
+      dots.addEventListener('click', function(e){
+        var i = [].indexOf.call(dots.children, e.target);
+        if(i < 0) return;
+        track.scrollTo({ left: i * track.clientWidth, behavior:'smooth' });
+      });
+    }
+    arrows.forEach(function(b){
+      b.addEventListener('click', function(){
+        track.scrollBy({ left: (+b.dataset.dir) * track.clientWidth, behavior:'smooth' });
+      });
+    });
+
+    // al cambiar el ancho cambia cuántas tarjetas caben: hay que recontar.
+    // Solo si cambió el ANCHO: en el móvil la barra de URL dispara resize
+    // por el alto y eso repintaba los puntos mientras se miraban.
+    var w = window.innerWidth;
+    window.addEventListener('resize', function(){
+      if(window.innerWidth === w) return;
+      w = window.innerWidth;
+      construir();
+    });
+
+    construir();
+  });
+})();
+
+/* ── Fotos que se van cambiando solas (.fade-set) ───────────────
+   Es el "slider" del hero: enseña cuatro momentos del viaje sin
+   pedirle al visitante que haga nada. Se apaga si el sistema pide
+   menos animación. */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var sets = [].map.call(document.querySelectorAll('[data-fade]'), function(s){
+    return s.querySelectorAll('img');
+  });
+  if(!sets.length) return;
+  var i = 0, n = sets[0].length;
+  if(n < 2) return;
+  setInterval(function(){
+    var prev = i; i = (i + 1) % n;
+    // todas las tandas van sincronizadas (móvil de fondo y escritorio al lado)
+    sets.forEach(function(imgs){
+      if(imgs[prev]) imgs[prev].classList.remove('on');
+      if(imgs[i])    imgs[i].classList.add('on');
+    });
+  }, 5000);
+})();
+
+/* ── Tarjetas de video ──────────────────────────────────────────
+   PENDIENTE: hoy son portadas, igual que en la sección "Historias de
+   la Tribu" del sitio, que tampoco tiene los archivos todavía. Cuando
+   estén los videos: ponerle data-vid="videos/xxx.mp4" a cada .vcard y
+   engancharlo aquí (un <video> a pantalla completa, como el modal de
+   excursiones del index). Mientras tanto no se hace el tonto: si no
+   hay video, el toque lleva al WhatsApp a pedirlo. */
+document.querySelectorAll('.vcard').forEach(function(card){
+  card.addEventListener('click', function(){
+    var v = card.dataset.vid;
+    if(v) return;   // aquí irá el reproductor
+    window.open('https://wa.me/1809XXXXXXX?text=Hola%20Ivonne%2C%20m%C3%A1ndame%20los%20videos%20del%20Tour%20del%20Sur','_blank','noopener');
+  });
+});
+</script>
+
+</body>
+</html>

@@ -3015,6 +3015,57 @@ img{ display:block; max-width:100%; }
   box-shadow:0 4px 12px -4px rgba(0,100,50,.35);
 }
 .ivm-mini-btn:active{ opacity:.85; }
+
+/* ── TAMAÑOS DE LA TARJETA DE EXCURSIONES EN EL TELÉFONO ──────────────────
+   Esta tarjeta nació con la letra del escritorio encogida: el nombre en 15px,
+   el gancho del abono en 10,5 y la cancelación en 9,5. En la mano, al sol y a
+   un brazo de distancia eso no se lee, y el cliente pasa de largo justo donde
+   hay que decidir. La de Paquetes (.tpk-card) ya se subió por lo mismo y es la
+   que se ve bien, así que aquí se copian sus medidas.
+
+   Va todo junto y colgado de #ivm-mobgrid a propósito: .tpk-card reusa ESTAS
+   mismas clases y su alto está medido al píxel (la tarjeta y la barra pegada
+   de "ver el siguiente plan" tienen que caber juntas en la pantalla), así que
+   no se le puede mover de rebote.
+
+   El sitio a lo ancho sale de la foto, que baja de 126 a 118: en una columna
+   de texto de 175px, 8px son casi un carácter por renglón. */
+#ivm-mobgrid .ivm-mini{ padding:12px; gap:11px; }
+#ivm-mobgrid .ivm-mini-img{ width:118px; min-height:142px; }
+#ivm-mobgrid .ivm-mini-name{ font-size:17px; line-height:1.22; margin-bottom:6px; }
+#ivm-mobgrid .ivm-mini-meta{ font-size:13px; gap:5px; margin-bottom:8px; }
+#ivm-mobgrid .ivm-mini-deal span{ font-size:12.5px; }
+#ivm-mobgrid .ivm-mini-rest{ font-size:11.5px; margin-top:5px; }
+#ivm-mobgrid .ivm-mini-free{ font-size:10.5px; padding:4px 10px 4px 8px; margin-top:7px; }
+#ivm-mobgrid .ivm-mini-free svg{ width:12px; height:12px; }
+#ivm-mobgrid .ivm-mini-rate{ font-size:13px; }
+#ivm-mobgrid .ivm-mini-foot{ margin-top:9px; }
+#ivm-mobgrid .ivm-mini-price{ font-size:19.5px; white-space:nowrap; }
+#ivm-mobgrid .ivm-mini-price small{ font-size:12px; }
+/* "Ver Info" es el botón que abre la excursión y estaba en 12px con 9 de
+   relleno: en la mano ni se leía ni se le acertaba. Sube a 14px y ~42px de
+   alto, el ancho de un dedo, igual que el "Ver viaje" de los paquetes. */
+#ivm-mobgrid .ivm-mini-btn{ font-size:14px; padding:12px 20px; }
+/* Si el precio y el botón ya no caben en la misma línea (en un teléfono de
+   320 el cuerpo se queda en 117px), el botón baja solo en vez de aplastarse
+   contra el precio. */
+#ivm-mobgrid .ivm-mini-bottom{ flex-wrap:wrap; gap:8px; margin-top:10px; }
+
+/* Los puntitos y el "1/4" de debajo del carrusel, en la misma proporción.
+   Colgados de #ivm-mobnav porque el de Paquetes (#tpk-mobnav) usa las mismas
+   clases dentro de una barra pegada donde no sobra ni un píxel. */
+#ivm-mobnav .ivm-mobcount{ font-size:12.5px; }
+#ivm-mobnav .ivm-mobdot{ width:7px;height:7px; }
+#ivm-mobnav .ivm-mobdot.on{ width:22px; }
+
+/* Teléfonos estrechos (un iPhone SE son 320 de ancho): la letra se queda como
+   está — para eso se subió — y el aire y la foto son los que ceden. */
+@media (max-width:379.98px){
+  #ivm-mobgrid .ivm-mini{ padding:11px; gap:9px; }
+  #ivm-mobgrid .ivm-mini-img{ width:104px; }
+  #ivm-mobgrid .ivm-mini-name{ font-size:16px; }
+  #ivm-mobgrid .ivm-mini-btn{ font-size:13.5px; padding:11px 16px; }
+}
 } /* fin media 767.98 */
 
 /* ===== Flechas del modal ===== */

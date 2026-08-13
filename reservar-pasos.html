@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservar — IVONNE TOUR RD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --sand:#fbf7ef; --panel:#fff; --ink:#1b241e; --muted:#5c6b60; --line:#e8e1d5;
+  --g:#12854c; --g-d:#0b5a34; --g2:#1a9e5c; --b:#0e86bd; --o:#e0742a; --o-d:#b0430f;
+}
+body{ font-family:'Be Vietnam Pro',sans-serif; background:var(--sand); color:var(--ink); -webkit-font-smoothing:antialiased; line-height:1.6; }
+img{ display:block; max-width:100%; }
+.wrap{ max-width:1080px; margin:0 auto; padding:0 clamp(18px,4vw,36px); }
+
+.topbar{ background:#fff; border-bottom:1px solid var(--line); padding:15px 0; position:sticky; top:0; z-index:30; }
+.topbar .wrap{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.brand{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15px; letter-spacing:.28em; color:var(--g-d); }
+.back{ display:inline-flex; align-items:center; gap:7px; color:var(--muted); text-decoration:none; font-size:13.5px; font-weight:600; }
+.securebar{ display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--g-d); font-weight:600; }
+.securebar svg{ color:var(--g); }
+
+/* separadores de demo (las 2 formas de pasos) */
+.demo-note{ max-width:1080px; margin:34px auto 0; padding:0 clamp(18px,4vw,36px); }
+.demo-note .tag{ display:inline-block; background:var(--o); color:#fff; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:11px; letter-spacing:.13em; text-transform:uppercase; padding:6px 14px; border-radius:100px; margin-bottom:8px; }
+.demo-note p{ color:var(--muted); font-size:13.5px; }
+
+/* ====== INDICADOR DE PASOS ====== */
+.stepwrap{ padding:22px 0 6px; }
+/* forma A: barra de progreso + "paso X de 4" */
+.sA-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.sA-lbl{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:14px; color:var(--ink); }
+.sA-lbl span{ color:var(--g); }
+.sA-pct{ font-size:12.5px; color:var(--muted); font-weight:600; }
+.sA-bar{ height:8px; background:var(--line); border-radius:100px; overflow:hidden; }
+.sA-fill{ height:100%; background:linear-gradient(90deg,var(--g),var(--g2)); border-radius:100px; transition:width .4s cubic-bezier(.3,1,.4,1); }
+/* forma B: tabs clicables */
+.sB{ display:flex; gap:8px; flex-wrap:wrap; }
+.sB-tab{ flex:1; min-width:130px; display:flex; align-items:center; gap:10px; background:#fff; border:1.5px solid var(--line);
+  border-radius:13px; padding:12px 14px; cursor:pointer; transition:.2s; text-align:left; font-family:'Be Vietnam Pro'; }
+.sB-tab:hover{ border-color:#cfe4d7; }
+.sB-tab.on{ border-color:var(--g); background:#f2f9f4; }
+.sB-tab.done{ border-color:#cfe4d7; }
+.sB-n{ width:26px; height:26px; border-radius:50%; background:var(--line); color:var(--muted); display:grid; place-items:center;
+  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:13px; flex-shrink:0; transition:.2s; }
+.sB-tab.on .sB-n{ background:var(--g); color:#fff; }
+.sB-tab.done .sB-n{ background:var(--g2); color:#fff; }
+.sB-t{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13px; line-height:1.2; }
+.sB-t small{ display:block; font-weight:500; font-size:11px; color:var(--muted); }
+@media(max-width:640px){ .sB-tab .sB-t small{ display:none; } .sB-tab{ min-width:0; justify-content:center; } }
+
+/* ====== LAYOUT 2 columnas ====== */
+.layout{ display:grid; grid-template-columns:1fr 360px; gap:clamp(20px,3vw,34px); align-items:start; padding:20px 0 90px; }
+@media(max-width:900px){ .layout{ grid-template-columns:1fr; } }
+
+/* panel de pasos */
+.panel{ background:#fff; border:1px solid var(--line); border-radius:20px; padding:clamp(22px,3vw,30px);
+  box-shadow:0 30px 60px -50px rgba(0,0,0,.4); min-height:340px; }
+.pane{ display:none; } .pane.on{ display:block; animation:fade .35s; }
+@keyframes fade{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+.pane h2{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(20px,2.6vw,25px); letter-spacing:-.02em; margin-bottom:5px; }
+.pane .sub{ color:var(--muted); font-size:14.5px; margin-bottom:22px; }
+
+.field{ margin-bottom:17px; }
+label{ display:block; font-size:13.5px; font-weight:600; margin-bottom:8px; }
+label .opt{ color:var(--muted); font-weight:500; }
+input, select, textarea{ width:100%; font-family:'Be Vietnam Pro'; font-size:14.5px; color:var(--ink);
+  background:var(--sand); border:1.5px solid var(--line); border-radius:12px; padding:13px 15px; outline:none; transition:.2s; }
+input:focus, select:focus, textarea:focus{ border-color:var(--g); background:#fff; }
+input::placeholder, textarea::placeholder{ color:#9aa89e; }
+.hint{ font-size:12px; color:var(--muted); line-height:1.4; margin-top:6px; }
+.row2{ display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+@media(max-width:480px){ .row2{ grid-template-columns:1fr; } }
+
+.opts{ display:flex; flex-wrap:wrap; gap:9px; }
+.opt-pill{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; color:var(--ink); background:var(--sand);
+  border:1.5px solid var(--line); border-radius:12px; padding:11px 18px; cursor:pointer; transition:.2s; }
+.opt-pill.on{ background:#e4f2ea; border-color:var(--g); color:var(--g-d); }
+
+.counter{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--sand);
+  border:1.5px solid var(--line); border-radius:12px; padding:12px 15px; margin-bottom:12px; }
+.counter .lbl b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; }
+.counter .lbl small{ color:var(--muted); font-size:12px; }
+.ctrl{ display:flex; align-items:center; gap:14px; }
+.cbtn{ width:36px; height:36px; border-radius:50%; border:1.6px solid var(--g); background:#fff; color:var(--g);
+  font-size:20px; cursor:pointer; display:grid; place-items:center; transition:.2s; line-height:1; }
+.cbtn:hover{ background:var(--g); color:#fff; }
+.cbtn:disabled{ opacity:.3; } .cbtn:disabled:hover{ background:#fff; color:var(--g); }
+.cnum{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:19px; min-width:22px; text-align:center; }
+
+/* punto de encuentro tarjetas */
+.pe-cards{ display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-bottom:14px; }
+@media(max-width:480px){ .pe-cards{ grid-template-columns:1fr; } }
+.pe-card{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; text-align:left; background:var(--sand);
+  border:1.5px solid var(--line); border-radius:14px; padding:15px; cursor:pointer; transition:.2s; }
+.pe-card.on{ background:#e4f2ea; border-color:var(--g); }
+.pe-card .ic{ font-size:24px; margin-bottom:4px; }
+.pe-card b{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; }
+.pe-card small{ font-size:12px; color:var(--muted); }
+.pe-field{ display:none; } .pe-field.on{ display:block; }
+
+/* ===== EXTRAS como acordeón con variantes ===== */
+.ex-acc{ display:flex; flex-direction:column; gap:11px; }
+.ex-item{ border:1.5px solid var(--line); border-radius:16px; overflow:hidden; transition:border-color .25s, box-shadow .25s; }
+.ex-item.on{ border-color:var(--g); box-shadow:0 12px 26px -16px rgba(18,133,76,.6); }
+/* cabecera clicable */
+.ex-head{ width:100%; display:flex; align-items:center; gap:13px; background:#fff; border:none;
+  cursor:pointer; padding:15px 16px; text-align:left; }
+.ex-head .emoji{ font-size:26px; flex-shrink:0; }
+.ex-head .txt{ flex:1; }
+.ex-head .txt b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; }
+.ex-head .txt small{ font-size:12px; color:var(--muted); }
+.ex-head .from{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12.5px; color:var(--g-d);
+  background:#e4f2ea; padding:5px 11px; border-radius:100px; white-space:nowrap; }
+.ex-head .chev{ color:var(--muted); transition:transform .3s; flex-shrink:0; }
+.ex-item.open .ex-head .chev{ transform:rotate(180deg); }
+/* marca de agregado */
+.ex-item.on .ex-head .from{ background:var(--g); color:#fff; }
+/* panel que se despliega */
+.ex-panel{ max-height:0; overflow:hidden; transition:max-height .4s ease; background:var(--sand); }
+.ex-item.open .ex-panel{ max-height:600px; }
+.ex-panel .inner{ padding:16px; border-top:1px solid var(--line); }
+/* grupos de opciones dentro del panel */
+.ex-group{ margin-bottom:15px; }
+.ex-group:last-of-type{ margin-bottom:0; }
+.ex-group .glbl{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:11px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:9px; }
+.ex-opts{ display:flex; flex-wrap:wrap; gap:8px; }
+.ex-opt{ font-family:'Be Vietnam Pro'; font-size:13.5px; color:var(--ink); background:#fff;
+  border:1.5px solid var(--line); border-radius:11px; padding:9px 14px; cursor:pointer; transition:.2s;
+  display:inline-flex; align-items:center; gap:7px; }
+.ex-opt:hover{ border-color:#cfe4d7; }
+.ex-opt.on{ background:#e4f2ea; border-color:var(--g); color:var(--g-d); font-weight:600; }
+.ex-opt .pl{ font-weight:700; color:var(--g-d); font-size:12.5px; }
+/* texto libre */
+.ex-text{ width:100%; font-family:'Be Vietnam Pro'; font-size:14px; background:#fff;
+  border:1.5px solid var(--line); border-radius:11px; padding:11px 13px; outline:none; transition:.2s; }
+.ex-text:focus{ border-color:var(--g); }
+/* cantidad */
+.ex-qty{ display:inline-flex; align-items:center; gap:12px; background:#fff; border:1.5px solid var(--line);
+  border-radius:11px; padding:6px 10px; }
+.ex-qty button{ width:30px; height:30px; border-radius:50%; border:1.6px solid var(--g); background:#fff;
+  color:var(--g); font-size:18px; cursor:pointer; display:grid; place-items:center; line-height:1; transition:.2s; }
+.ex-qty button:hover{ background:var(--g); color:#fff; }
+.ex-qty .q{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16px; min-width:20px; text-align:center; }
+/* pie del panel: subtotal + botón agregar */
+.ex-pfoot{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:16px;
+  padding-top:14px; border-top:1px dashed var(--line); }
+.ex-sub{ font-size:13px; color:var(--muted); }
+.ex-sub b{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18px; color:var(--g-d); }
+.ex-toggle{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; color:#fff; background:var(--g);
+  border:none; border-radius:100px; padding:11px 20px; cursor:pointer; transition:.2s; display:inline-flex; align-items:center; gap:6px; }
+.ex-toggle:hover{ background:var(--g-d); }
+.ex-item.on .ex-toggle{ background:#fff; color:var(--g-d); border:1.5px solid var(--g); }
+
+/* caja de petición personalizada */
+.ex-custom{ margin-top:16px; background:linear-gradient(135deg,#f2f9f4,#eaf5ee); border:1.5px dashed #bcdcc8;
+  border-radius:16px; padding:18px; }
+.ex-custom-top{ display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-custom-emoji{ font-size:24px; flex-shrink:0; }
+.ex-custom-top b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; color:var(--ink); margin-bottom:3px; }
+.ex-custom-top small{ font-size:12.5px; color:var(--muted); line-height:1.5; }
+.ex-custom-in{ width:100%; font-family:'Be Vietnam Pro'; font-size:14px; color:var(--ink); background:#fff;
+  border:1.5px solid var(--line); border-radius:12px; padding:12px 14px; outline:none; resize:vertical;
+  min-height:62px; transition:.2s; }
+.ex-custom-in:focus{ border-color:var(--g); }
+.ex-custom-or{ text-align:center; font-size:12px; color:var(--muted); margin:12px 0; position:relative; }
+.ex-custom-or::before, .ex-custom-or::after{ content:''; position:absolute; top:50%; width:28%; height:1px; background:#cfe4d7; }
+.ex-custom-or::before{ left:0; } .ex-custom-or::after{ right:0; }
+.ex-custom-wa{ display:flex; align-items:center; justify-content:center; gap:9px; width:100%;
+  background:var(--g); color:#fff; text-decoration:none; font-family:'Plus Jakarta Sans'; font-weight:700;
+  font-size:14.5px; padding:14px; border-radius:12px; transition:.25s; }
+.ex-custom-wa:hover{ background:var(--g-d); transform:translateY(-2px); }
+
+/* ====== navegación de pasos ====== */
+.nav{ display:flex; gap:12px; margin-top:24px; }
+.nav button{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; padding:15px; border-radius:13px; cursor:pointer; border:none; transition:.25s; }
+.nav .prev{ background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:15px 22px; }
+.nav .prev:hover{ background:var(--sand); }
+.nav .next{ background:var(--g); color:#fff; flex:1; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 16px 30px -14px rgba(18,133,76,.9); }
+.nav .next:hover{ background:var(--g-d); transform:translateY(-2px); }
+
+/* ====== resumen lateral + Ivonne ====== */
+.side{ position:sticky; top:90px; }
+@media(max-width:900px){ .side{ position:static; } }
+.summary{ background:#fff; border:1px solid var(--line); border-radius:20px; overflow:hidden; box-shadow:0 30px 60px -46px rgba(0,0,0,.45); margin-bottom:16px; }
+.sum-media{ position:relative; aspect-ratio:16/10; background:#0d1a13; }
+.sum-media img{ width:100%; height:100%; object-fit:cover; }
+.sum-media .badge{ position:absolute; top:12px; left:12px; background:rgba(255,255,255,.92); font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12px; padding:6px 12px; border-radius:100px; }
+.sum-body{ padding:20px; }
+.sum-body h3{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18px; margin-bottom:4px; }
+.sum-body .z{ font-size:12.5px; color:var(--g-d); font-weight:600; margin-bottom:16px; }
+.sumline{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; font-size:13.5px; }
+.sumline .k{ color:var(--muted); }
+.sumline .v{ font-weight:600; text-align:right; }
+.sumdiv{ border-top:1px dashed var(--line); margin:8px 0; }
+.total{ display:flex; align-items:baseline; justify-content:space-between; padding-top:12px; margin-top:4px; border-top:2px solid var(--line); }
+.total .k{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; }
+.total .v{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:25px; color:var(--g-d); }
+.taxnote{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:8px; }
+.pay20{ background:linear-gradient(120deg,#eafaef,#d6f0e0); border:2px solid var(--g); border-radius:13px; padding:13px 15px; margin-top:13px; }
+.pay20 .a{ display:flex; justify-content:space-between; align-items:center; }
+.pay20 .a .l{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12.5px; color:var(--g-d); }
+.pay20 .a .r{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:19px; color:var(--o-d); }
+.pay20 .s{ font-size:11px; color:var(--muted); margin-top:5px; }
+
+/* Ivonne */
+.ivonne{ background:linear-gradient(135deg,#0e2b1c,#0a1a12); color:#fff; border-radius:20px; padding:20px; position:relative; overflow:hidden; }
+.ivonne::before{ content:''; position:absolute; width:150px; height:150px; border-radius:50%; background:rgba(26,158,92,.3); filter:blur(44px); top:-46px; right:-36px; }
+.ivonne .top{ display:flex; align-items:center; gap:13px; position:relative; z-index:1; }
+.ivonne .pic{ width:54px; height:54px; border-radius:50%; overflow:hidden; flex-shrink:0; border:2.5px solid rgba(255,255,255,.25); background:#24513a; }
+.ivonne .pic img{ width:100%; height:100%; object-fit:cover; }
+.ivonne .nm{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16px; }
+.ivonne .role{ font-size:11.5px; color:var(--g2); font-weight:600; }
+.ivonne .quote{ font-size:13px; color:rgba(255,255,255,.85); line-height:1.55; margin:13px 0 14px; position:relative; z-index:1; }
+.ivonne .wa{ display:flex; align-items:center; justify-content:center; gap:9px; width:100%; background:#fff; color:var(--g-d); text-decoration:none; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; padding:12px; border-radius:12px; position:relative; z-index:1; transition:.2s; }
+.ivonne .wa:hover{ background:#eef6f0; }
+.ivonne .wa svg{ color:var(--g); }
+
+/* barra fija abajo (móvil) */
+.mobilebar{ display:none; }
+@media(max-width:900px){
+  .mobilebar{ display:flex; position:fixed; bottom:0; left:0; right:0; z-index:40; background:#fff;
+    border-top:1px solid var(--line); box-shadow:0 -10px 30px -18px rgba(0,0,0,.3); padding:12px 16px; align-items:center; gap:14px; }
+  .mobilebar .mb-info{ flex:1; }
+  .mobilebar .mb-info .mb-t{ font-size:11px; color:var(--muted); }
+  .mobilebar .mb-info .mb-v{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; color:var(--g-d); }
+  .mobilebar .mb-info .mb-s{ font-size:10.5px; color:var(--o-d); font-weight:600; }
+  .mobilebar .mb-btn{ background:var(--g); color:#fff; border:none; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; padding:14px 20px; border-radius:12px; }
+  .layout{ padding-bottom:100px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="back" href="excursiones.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Volver</a>
+    <span class="brand">IVONNE TOUR RD</span>
+    <span class="securebar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg> Pago seguro</span>
+  </div>
+</div>
+
+<!-- ============ FORMA A: barra de progreso ============ -->
+<div class="demo-note"><span class="tag">Forma A — Barra de progreso</span><p>Muestra "Paso X de 4" y una barra que se llena. Simple y claro.</p></div>
+<div class="wrap">
+  <div class="stepwrap">
+    <div class="sA-top">
+      <span class="sA-lbl">Paso <span id="saNum">1</span> de 4 · <span id="saTitle">Fecha y personas</span></span>
+      <span class="sA-pct" id="saPct">25%</span>
+    </div>
+    <div class="sA-bar"><div class="sA-fill" id="saFill" style="width:25%"></div></div>
+  </div>
+</div>
+
+<!-- ============ FORMA B: tabs clicables ============ -->
+<div class="demo-note"><span class="tag">Forma B — Tabs clicables</span><p>El cliente ve los 4 pasos y puede tocar para saltar. Más control.</p></div>
+<div class="wrap">
+  <div class="stepwrap">
+    <div class="sB" id="sB">
+      <button class="sB-tab on" data-tab="0"><span class="sB-n">1</span><span class="sB-t">Fecha<small>y personas</small></span></button>
+      <button class="sB-tab" data-tab="1"><span class="sB-n">2</span><span class="sB-t">Recogida<small>dónde te buscamos</small></span></button>
+      <button class="sB-tab" data-tab="2"><span class="sB-n">3</span><span class="sB-t">Extras<small>opcional</small></span></button>
+      <button class="sB-tab" data-tab="3"><span class="sB-n">4</span><span class="sB-t">Confirmar<small>tus datos</small></span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONTENIDO ============ -->
+<div class="wrap">
+  <div class="layout">
+    <div class="panel">
+
+      <!-- PASO 1: Fecha y personas -->
+      <div class="pane on" data-p="0">
+        <h2>¿Cuándo y cuántos van?</h2>
+        <p class="sub">Elige el día, la salida y a quiénes traes.</p>
+        <div class="field">
+          <label>Fecha del tour</label>
+          <input type="date" id="fecha">
+        </div>
+        <div class="field">
+          <label>Horario de salida</label>
+          <div class="opts">
+            <button class="opt-pill on">7:30 AM</button>
+            <button class="opt-pill">1:00 PM</button>
+          </div>
+        </div>
+        <div class="field">
+          <div class="counter">
+            <div class="lbl"><b>Adultos</b><small>13 años o más</small></div>
+            <div class="ctrl"><button class="cbtn" data-c="ad" data-d="-1">−</button><span class="cnum" id="ad">2</span><button class="cbtn" data-c="ad" data-d="1">+</button></div>
+          </div>
+          <div class="counter">
+            <div class="lbl"><b>Niños</b><small>2 a 12 años</small></div>
+            <div class="ctrl"><button class="cbtn" data-c="ni" data-d="-1">−</button><span class="cnum" id="ni">0</span><button class="cbtn" data-c="ni" data-d="1">+</button></div>
+          </div>
+        </div>
+        <div class="nav"><button class="next" data-go="1">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      </div>
+
+      <!-- PASO 2: Recogida -->
+      <div class="pane" data-p="1">
+        <h2>¿Dónde te buscamos?</h2>
+        <p class="sub">No todo el mundo está en un hotel, y está perfecto. Dinos dónde estás.</p>
+        <div class="pe-cards">
+          <button class="pe-card on" data-pe="hotel"><span class="ic">🏨</span><b>En mi hotel</b><small>Te recogemos en la puerta</small></button>
+          <button class="pe-card" data-pe="punto"><span class="ic">📍</span><b>Punto de encuentro</b><small>Nos vemos en un punto cercano</small></button>
+        </div>
+        <div class="pe-field pe-hotel on">
+          <input type="text" placeholder="Nombre de tu hotel en Punta Cana / Bávaro">
+          <p class="hint">Si no sabes el nombre exacto, escribe lo que recuerdes y te ayudamos.</p>
+        </div>
+        <div class="pe-field pe-punto">
+          <select>
+            <option value="">Elige el punto de encuentro más cercano</option>
+            <option>Plaza Bávaro — Cruce de Friusa</option>
+            <option>Downtown Punta Cana</option>
+            <option>Cortecito — frente a la playa</option>
+            <option>Otro — lo coordinamos por WhatsApp</option>
+          </select>
+          <p class="hint">Todos los puntos tienen sombra y dónde sentarte mientras esperas.</p>
+        </div>
+        <div class="nav">
+          <button class="prev" data-go="0">Atrás</button>
+          <button class="next" data-go="2">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+
+      <!-- PASO 3: Extras -->
+      <div class="pane" data-p="2">
+        <h2>Hazlo aún más especial</h2>
+        <p class="sub">Opcional — agrega solo lo que quieras. Puedes saltar este paso.</p>
+        <div class="ex-acc" id="exAcc"></div>
+        <div class="ex-custom">
+          <div class="ex-custom-top">
+            <span class="ex-custom-emoji">✨</span>
+            <div>
+              <b>¿Buscas algo que no está aquí?</b>
+              <small>Un pastel sin gluten, una sorpresa especial, lo que se te ocurra. Escríbelo y lo conseguimos — Ivonne se encarga.</small>
+            </div>
+          </div>
+          <textarea class="ex-custom-in" placeholder="Cuéntanos qué te gustaría..."></textarea>
+          <div class="ex-custom-or">o si prefieres, hablemos directo</div>
+          <a class="ex-custom-wa" href="#" id="waCustom"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg> Pídele algo especial a Ivonne</a>
+        </div>
+        <div class="nav">
+          <button class="prev" data-go="1">Atrás</button>
+          <button class="next" data-go="3">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+
+      <!-- PASO 4: Datos y confirmar -->
+      <div class="pane" data-p="3">
+        <h2>Ya casi. Cuéntanos de ti</h2>
+        <p class="sub">Con esto te confirmamos y sabemos cómo cuidarte. Nada de spam, palabra de Ivonne.</p>
+        <div class="field">
+          <label>¿Cómo te llamas?</label>
+          <input type="text" placeholder="Tu nombre completo, como en tu documento">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Tu WhatsApp</label>
+            <input type="tel" placeholder="+1 809 000 0000">
+            <p class="hint">Por aquí te mandamos la confirmación y te avisamos el día del tour.</p>
+          </div>
+          <div class="field">
+            <label>Otro número <span class="opt">(opcional)</span></label>
+            <input type="tel" placeholder="Otro WhatsApp o de un familiar">
+            <p class="hint">Por si se te descarga el teléfono o algo — así siempre te ubicamos.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tu correo</label>
+          <input type="email" placeholder="tu@correo.com">
+          <p class="hint">Aquí te enviamos el voucher con todos los detalles de tu reserva.</p>
+        </div>
+        <div class="nav">
+          <button class="prev" data-go="2">Atrás</button>
+          <button class="next" id="btnReserve"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg> Apartar mi cupo</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== resumen lateral ===== -->
+    <aside class="side">
+      <div class="summary">
+        <div class="sum-media"><img src="marina-botes.jpg" alt="Isla Saona"><span class="badge">⭐ 4.9 (212)</span></div>
+        <div class="sum-body">
+          <h3>Isla Saona en Catamarán</h3>
+          <p class="z">📍 Isla Saona · 8 horas</p>
+          <div class="sumline"><span class="k">Fecha</span><span class="v" id="vFecha">Elige el día</span></div>
+          <div class="sumline"><span class="k">Salida</span><span class="v" id="vHora">7:30 AM</span></div>
+          <div class="sumline"><span class="k">Personas</span><span class="v" id="vPers">2 adultos</span></div>
+          <div class="sumdiv"></div>
+          <div class="sumline"><span class="k">US$89 × <span id="vCant">2</span></span><span class="v" id="vSub">US$178</span></div>
+          <div class="sumline" id="vExtrasLine" style="display:none"><span class="k">Extras</span><span class="v" id="vExtras">US$0</span></div>
+          <div class="total"><span class="k">Total</span><span class="v" id="vTotal">US$178</span></div>
+          <p class="taxnote">Precio final con impuestos incluidos (ITBIS).</p>
+          <div class="pay20">
+            <div class="a"><span class="l">Apartas ahora (20%)</span><span class="r" id="vAbono">US$36</span></div>
+            <div class="s">El resto (<span id="vResto">US$142</span>) lo pagas al subir a la guagua.</div>
+          </div>
+        </div>
+      </div>
+      <div class="ivonne">
+        <div class="top"><div class="pic"><img src="ivonne-foto.jpg" alt="Ivonne"></div><div><div class="nm">Ivonne</div><div class="role">La propietaria</div></div></div>
+        <p class="quote">"Yo misma reviso cada reserva y te acompaño hasta que subes a la guagua. Cualquier duda, escríbeme directo."</p>
+        <a class="wa" href="#" id="waIvonne"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg> Escríbeme por WhatsApp</a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- barra fija móvil -->
+<div class="mobilebar">
+  <div class="mb-info">
+    <div class="mb-t">Total (impuestos incl.)</div>
+    <div class="mb-v" id="mbTotal">US$178</div>
+    <div class="mb-s">Apartas ahora <span id="mbAbono">US$36</span></div>
+  </div>
+  <button class="mb-btn" id="mbNext">Continuar</button>
+</div>
+
+<script>
+const PRECIO=89, WHATSAPP='18090000000';
+const st={ad:2,ni:0,hora:'7:30 AM',fecha:''};
+let step=0;
+const TITLES=['Fecha y personas','Dónde te recogemos','Extras','Tus datos'];
+
+function showStep(n){
+  step=Math.max(0,Math.min(3,n));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on', +p.dataset.p===step));
+  // forma A
+  document.getElementById('saNum').textContent=step+1;
+  document.getElementById('saTitle').textContent=TITLES[step];
+  const pct=(step+1)*25;
+  document.getElementById('saPct').textContent=pct+'%';
+  document.getElementById('saFill').style.width=pct+'%';
+  // forma B
+  document.querySelectorAll('.sB-tab').forEach((t,i)=>{
+    t.classList.toggle('on', i===step); t.classList.toggle('done', i<step);
+  });
+  // botón móvil
+  document.getElementById('mbNext').textContent = step===3 ? 'Apartar' : 'Continuar';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-go]').forEach(b=> b.onclick=()=>showStep(+b.dataset.go));
+document.querySelectorAll('.sB-tab').forEach(t=> t.onclick=()=>showStep(+t.dataset.tab));
+document.getElementById('mbNext').onclick=()=>{ if(step<3) showStep(step+1); else alert('Aquí iría el pago / API.'); };
+
+// contadores
+document.querySelectorAll('.cbtn').forEach(btn=>{
+  btn.onclick=()=>{ const c=btn.dataset.c,d=+btn.dataset.d; st[c]=Math.max(c==='ad'?1:0, st[c]+d); document.getElementById(c).textContent=st[c]; upd(); };
+});
+document.querySelectorAll('.opt-pill').forEach(p=>{
+  p.onclick=()=>{ document.querySelectorAll('.opt-pill').forEach(x=>x.classList.remove('on')); p.classList.add('on'); st.hora=p.textContent; upd(); };
+});
+document.getElementById('fecha').onchange=e=>{ st.fecha=e.target.value; upd(); };
+// punto de encuentro
+document.querySelectorAll('.pe-card').forEach(c=>{
+  c.onclick=()=>{ document.querySelectorAll('.pe-card').forEach(x=>x.classList.remove('on')); c.classList.add('on');
+    document.querySelector('.pe-hotel').classList.toggle('on', c.dataset.pe==='hotel');
+    document.querySelector('.pe-punto').classList.toggle('on', c.dataset.pe==='punto'); };
+});
+
+function fmtFecha(f){ if(!f) return 'Elige el día'; const d=new Date(f+'T00:00'); return d.toLocaleDateString('es-DO',{weekday:'short',day:'numeric',month:'short'}); }
+function upd(){
+  const cant=st.ad+st.ni, sub=cant*PRECIO;
+  const ext=(typeof extrasTotal==='function')?extrasTotal():0;
+  const tot=sub+ext, abono=Math.round(tot*0.2);
+  document.getElementById('vFecha').textContent=fmtFecha(st.fecha);
+  document.getElementById('vHora').textContent=st.hora;
+  let pers=st.ad+' adulto'+(st.ad>1?'s':''); if(st.ni>0) pers+=', '+st.ni+' niño'+(st.ni>1?'s':'');
+  document.getElementById('vPers').textContent=pers;
+  document.getElementById('vCant').textContent=cant;
+  document.getElementById('vSub').textContent='US$'+sub;
+  const exLine=document.getElementById('vExtrasLine');
+  if(ext>0){ exLine.style.display='flex'; document.getElementById('vExtras').textContent='US$'+ext; } else exLine.style.display='none';
+  document.getElementById('vTotal').textContent='US$'+tot;
+  document.getElementById('vAbono').textContent='US$'+abono;
+  document.getElementById('vResto').textContent='US$'+(tot-abono);
+  document.getElementById('mbTotal').textContent='US$'+tot;
+  document.getElementById('mbAbono').textContent='US$'+abono;
+}
+
+// ============================================================
+//  EXTRAS con variantes (acordeón)
+//  Cada extra tiene "grupos" de opciones. Tipos de grupo:
+//    'precio'  -> opciones que DEFINEN el precio (elige una)
+//    'opcion'  -> elige una, no cambia precio (ej. sabor)
+//    'suma'    -> opciones que SUMAN al precio (elige una o varias)
+//    'cantidad'-> multiplica el precio por N
+//    'texto'   -> campo de texto libre (mensaje)
+//  El precio final = (precio base elegido + sumas) × cantidad
+// ============================================================
+const EXTRAS = [
+  {
+    id:'bizcocho', emoji:'🎂', name:'Bizcocho de cumpleaños', desc:'Personalízalo a tu gusto',
+    groups:[
+      { key:'tam', label:'Tamaño', type:'precio', opts:[
+        {v:'Para 4-6 personas', price:25},{v:'Para 8-10 personas', price:40},{v:'Para 15-20 personas', price:65} ]},
+      { key:'sabor', label:'Sabor', type:'opcion', opts:[
+        {v:'Chocolate'},{v:'Vainilla'},{v:'Tres leches'},{v:'Red velvet'} ]},
+      { key:'msg', label:'Mensaje en el bizcocho', type:'texto', ph:'Ej: ¡Feliz cumple, María!' },
+    ]
+  },
+  {
+    id:'champan', emoji:'🍾', name:'Champán y vinos', desc:'Para brindar a bordo',
+    groups:[
+      { key:'tipo', label:'¿Cuál prefieres?', type:'precio', opts:[
+        {v:'Prosecco', price:30},{v:'Champán francés', price:75},{v:'Vino tinto/blanco', price:35} ]},
+      { key:'cant', label:'¿Cuántas botellas?', type:'cantidad' },
+    ]
+  },
+  {
+    id:'romantico', emoji:'💐', name:'Decoración romántica', desc:'Sorprende a tu pareja',
+    groups:[
+      { key:'pack', label:'Elige el paquete', type:'precio', opts:[
+        {v:'Sencillo (flores + globos)', price:45},{v:'Completo (+ mesa decorada)', price:90},{v:'Pedida de mano 💍', price:180} ]},
+    ]
+  },
+  {
+    id:'langosta', emoji:'🦞', name:'Almuerzo premium', desc:'Sube de nivel la comida',
+    groups:[
+      { key:'plato', label:'Elige el plato', type:'precio', opts:[
+        {v:'Langosta a la parrilla', price:35},{v:'Camarones al ajillo', price:28},{v:'Parrillada mixta', price:32} ]},
+      { key:'pers', label:'¿Para cuántas personas?', type:'cantidad' },
+    ]
+  },
+  {
+    id:'fotos', emoji:'📸', name:'Fotos y video profesional', desc:'Llévate los recuerdos',
+    groups:[
+      { key:'pack', label:'Elige el paquete', type:'precio', opts:[
+        {v:'Digital básico (30 fotos)', price:40},{v:'Premium editado (100 fotos + video)', price:75},{v:'Con dron 🚁', price:120} ]},
+    ]
+  },
+  {
+    id:'masaje', emoji:'💆', name:'Masaje en la playa', desc:'Puro relax frente al mar',
+    groups:[
+      { key:'dur', label:'Duración', type:'precio', opts:[
+        {v:'20 minutos', price:30},{v:'40 minutos', price:50} ]},
+      { key:'pers', label:'¿Para cuántas personas?', type:'cantidad' },
+    ]
+  },
+  {
+    id:'vip', emoji:'🚐', name:'Transporte privado VIP', desc:'Solo para tu grupo',
+    groups:[
+      { key:'veh', label:'Según tu grupo', type:'precio', opts:[
+        {v:'Van (hasta 6)', price:70},{v:'Van grande (hasta 12)', price:110},{v:'Bus privado (hasta 25)', price:180} ]},
+    ]
+  },
+  {
+    id:'kit', emoji:'🎁', name:'Kit de bienvenida', desc:'Toalla + gorra de recuerdo',
+    groups:[
+      { key:'cant', label:'¿Cuántos kits?', type:'cantidad', unit:25 },
+    ]
+  },
+];
+
+// estado de cada extra: {open, on, choice:{grupo:valor}, qty}
+const exState = {};
+EXTRAS.forEach(e=>{
+  const st = { open:false, on:false, choice:{}, qty:1 };
+  // preseleccionar la primera opción de precio
+  e.groups.forEach(g=>{ if(g.type==='precio') st.choice[g.key]=0; if(g.type==='opcion') st.choice[g.key]=0; });
+  exState[e.id]=st;
+});
+
+const chevSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function priceOf(e){
+  const st = exState[e.id]; let base = 0;
+  e.groups.forEach(g=>{
+    if(g.type==='precio'){ const i = st.choice[g.key]??0; base += g.opts[i].price; }
+    if(g.type==='suma'){ (st.choice[g.key]||[]).forEach(i=> base += g.opts[i].price); }
+    if(g.type==='cantidad' && g.unit){ base += g.unit; }  // kit: precio por unidad
+  });
+  // multiplicar por cantidad si hay grupo cantidad sin unit propio
+  const qg = e.groups.find(g=>g.type==='cantidad');
+  if(qg){ base = (qg.unit? qg.unit : base) * st.qty; }
+  return base;
+}
+function fromPrice(e){ // precio "desde" para la cabecera
+  let min = Infinity;
+  const pg = e.groups.find(g=>g.type==='precio');
+  if(pg) min = Math.min(...pg.opts.map(o=>o.price));
+  else { const qg=e.groups.find(g=>g.type==='cantidad'); if(qg&&qg.unit) min=qg.unit; }
+  return min===Infinity? 0 : min;
+}
+
+function renderExtras(){
+  document.getElementById('exAcc').innerHTML = EXTRAS.map(e=>{
+    const st = exState[e.id];
+    const groups = e.groups.map(g=>{
+      if(g.type==='precio' || g.type==='opcion'){
+        const opts = g.opts.map((o,i)=>`<button class="ex-opt${st.choice[g.key]===i?' on':''}" data-ex="${e.id}" data-g="${g.key}" data-i="${i}">${o.v}${o.price?` <span class="pl">+US$${o.price}</span>`:''}</button>`).join('');
+        return `<div class="ex-group"><span class="glbl">${g.label}</span><div class="ex-opts">${opts}</div></div>`;
+      }
+      if(g.type==='cantidad'){
+        return `<div class="ex-group"><span class="glbl">${g.label}</span>
+          <div class="ex-qty"><button data-ex="${e.id}" data-q="-1">−</button><span class="q" id="q-${e.id}">${st.qty}</span><button data-ex="${e.id}" data-q="1">+</button></div></div>`;
+      }
+      if(g.type==='texto'){
+        return `<div class="ex-group"><span class="glbl">${g.label}</span><input class="ex-text" data-ex="${e.id}" data-g="${g.key}" placeholder="${g.ph||''}"></div>`;
+      }
+      return '';
+    }).join('');
+    return `
+    <div class="ex-item${st.open?' open':''}${st.on?' on':''}" data-id="${e.id}">
+      <button class="ex-head" data-head="${e.id}">
+        <span class="emoji">${e.emoji}</span>
+        <span class="txt"><b>${e.name}</b><small>${e.desc}</small></span>
+        <span class="from">${st.on?'✓ Añadido':'desde US$'+fromPrice(e)}</span>
+        <span class="chev">${chevSvg}</span>
+      </button>
+      <div class="ex-panel"><div class="inner">
+        ${groups}
+        <div class="ex-pfoot">
+          <span class="ex-sub">Este extra: <b id="sub-${e.id}">US$${priceOf(e)}</b></span>
+          <button class="ex-toggle" data-toggle="${e.id}">${st.on?'Quitar':'+ Añadir a mi reserva'}</button>
+        </div>
+      </div></div>
+    </div>`;
+  }).join('');
+  wireExtras();
+}
+
+function wireExtras(){
+  // abrir/cerrar acordeón
+  document.querySelectorAll('[data-head]').forEach(h=>{
+    h.onclick = ()=>{ const id=h.dataset.head; exState[id].open=!exState[id].open;
+      h.closest('.ex-item').classList.toggle('open', exState[id].open); };
+  });
+  // elegir opción (precio u opcion)
+  document.querySelectorAll('.ex-opt').forEach(o=>{
+    o.onclick = ()=>{ const {ex,g,i}=o.dataset; exState[ex].choice[g]=+i; refreshExtra(ex); };
+  });
+  // cantidad
+  document.querySelectorAll('[data-q]').forEach(btn=>{
+    btn.onclick = ()=>{ const ex=btn.dataset.ex; exState[ex].qty=Math.max(1, exState[ex].qty + (+btn.dataset.q));
+      document.getElementById('q-'+ex).textContent=exState[ex].qty; refreshExtra(ex); };
+  });
+  // texto libre
+  document.querySelectorAll('.ex-text').forEach(t=>{
+    t.oninput = ()=>{ exState[t.dataset.ex].choice[t.dataset.g]=t.value; };
+  });
+  // añadir/quitar
+  document.querySelectorAll('[data-toggle]').forEach(btn=>{
+    btn.onclick = ()=>{ const id=btn.dataset.toggle; exState[id].on=!exState[id].on;
+      const item=btn.closest('.ex-item'); item.classList.toggle('on', exState[id].on);
+      item.querySelector('.from').textContent = exState[id].on?'✓ Añadido':'desde US$'+fromPrice(EXTRAS.find(x=>x.id===id));
+      btn.textContent = exState[id].on?'Quitar':'+ Añadir a mi reserva';
+      upd();
+    };
+  });
+}
+function refreshExtra(id){
+  const e = EXTRAS.find(x=>x.id===id);
+  document.querySelectorAll(`.ex-opt[data-ex="${id}"]`).forEach(o=>{
+    const g=o.dataset.g, i=+o.dataset.i;
+    o.classList.toggle('on', exState[id].choice[g]===i);
+  });
+  document.getElementById('sub-'+id).textContent = 'US$'+priceOf(e);
+  if(exState[id].on) upd();  // si ya está añadido, actualiza el total general
+}
+
+function extrasTotal(){
+  let s=0;
+  EXTRAS.forEach(e=>{ if(exState[e.id].on) s+=priceOf(e); });
+  return s;
+}
+
+
+renderExtras();
+
+document.getElementById('waIvonne').href=`https://wa.me/${WHATSAPP}?text=`+encodeURIComponent('Hola Ivonne! Tengo una duda sobre la excursión Isla Saona:');
+const waCustom=document.getElementById('waCustom');
+const buildCustom=()=>{ const txt=(document.querySelector('.ex-custom-in')?.value||'').trim();
+  const base=txt?`Hola Ivonne! Para mi reserva de Isla Saona quiero pedirte algo especial: ${txt}`:'Hola Ivonne! Quiero pedirte algo especial para mi reserva de Isla Saona:';
+  waCustom.href=`https://wa.me/${WHATSAPP}?text=`+encodeURIComponent(base); };
+buildCustom();
+document.querySelector('.ex-custom-in')?.addEventListener('input', buildCustom);
+
+showStep(0);
+upd();
+</script>
+</body>
+</html>

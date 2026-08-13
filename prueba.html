@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probar — IVONNE TOUR RD</title>
+<meta name="robots" content="noindex">
+<!--
+   ===========================================================
+   PÁGINA DE PRUEBAS — no es parte de la web
+   Está aquí solo para abrir cada pantalla de un toque desde el
+   teléfono, sin escribir direcciones largas.
+   Cuando ya no haga falta, se borra este archivo y ya está.
+   ===========================================================
+-->
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; }
+:root{ --sand:#fbf7ef; --ink:#1b241e; --muted:#5c6b60; --line:#e8e1d5;
+       --g:#12854c; --g-d:#0b5a34; --g2:#1a9e5c; --o:#e0742a; --o-d:#b0430f; }
+body{ background:var(--sand); color:var(--ink); line-height:1.6;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding:26px 18px 60px; -webkit-font-smoothing:antialiased; }
+.wrap{ max-width:540px; margin:0 auto; }
+.marca{ font-weight:800; font-size:11px; letter-spacing:.26em; color:var(--g-d); margin-bottom:14px; }
+h1{ font-size:27px; line-height:1.15; letter-spacing:-.02em; margin-bottom:8px; }
+.lead{ color:var(--muted); font-size:15px; margin-bottom:26px; }
+h2{ font-size:11px; font-weight:800; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted); margin:28px 0 11px; }
+a.b{ display:flex; align-items:center; gap:14px; background:#fff; border:1.5px solid var(--line);
+  border-radius:16px; padding:16px 17px; margin-bottom:11px; text-decoration:none; color:var(--ink);
+  transition:.18s; -webkit-tap-highlight-color:transparent; }
+a.b:active{ transform:scale(.985); border-color:var(--g); }
+a.b .ic{ width:44px; height:44px; border-radius:13px; flex-shrink:0; display:grid; place-items:center;
+  font-size:21px; background:#eaf5ee; }
+a.b .tx{ flex:1; min-width:0; }
+a.b b{ display:block; font-weight:700; font-size:15.5px; line-height:1.25; }
+a.b small{ display:block; font-size:12.5px; color:var(--muted); margin-top:2px; }
+a.b .ch{ color:#c3ccc5; font-size:20px; }
+a.b.destaca{ border-color:var(--g); background:linear-gradient(135deg,#f2f9f4,#eaf5ee); }
+a.b.destaca .ic{ background:var(--g); color:#fff; }
+.avisito{ background:#fff6ef; border:1.5px solid #f3d9c2; border-left:4px solid var(--o);
+  border-radius:14px; padding:15px 16px; margin-top:26px; font-size:13.5px; color:var(--muted); }
+.avisito b{ color:var(--o-d); display:block; margin-bottom:4px; font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="marca">IVONNE TOUR RD</div>
+  <h1>Probar el flujo de reserva</h1>
+  <p class="lead">Cada botón abre una pantalla directamente. Es una página de pruebas: cuando ya no la necesites, borra este archivo.</p>
+
+  <h2>La pantalla final, sin rellenar nada</h2>
+
+  <a class="b destaca" href="reservar.html?id=saona&ver=confirmacion">
+    <span class="ic">🎟️</span>
+    <span class="tx"><b>Ya está — excursión</b><small>Isla Saona · el aviso cae solo, en dólares</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <a class="b" href="reservar.html?tipo=paquete&id=tour-del-sur&ver=confirmacion">
+    <span class="ic">🚌</span>
+    <span class="tx"><b>Ya está — plan de varios días</b><small>Tour del Sur · en pesos, con las paradas del sur</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <h2>El recorrido completo, como lo hace un cliente</h2>
+
+  <a class="b" href="reservar.html?id=saona">
+    <span class="ic">1️⃣</span>
+    <span class="tx"><b>Reservar Isla Saona</b><small>Los 4 pasos: fecha, recogida, extras y tus datos</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <a class="b" href="reservar.html?id=buggies-dia">
+    <span class="ic">🏍️</span>
+    <span class="tx"><b>Reservar Buggies por el Día</b><small>Para ver que trae SUS horarios: 8:00 AM y 2:00 PM</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <a class="b" href="reservar.html?id=party-boat">
+    <span class="ic">🛥️</span>
+    <span class="tx"><b>Reservar Party Boat</b><small>Solo adultos: aquí no sale el contador de niños</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <a class="b" href="reservar.html">
+    <span class="ic">📋</span>
+    <span class="tx"><b>Entrar sin elegir nada</b><small>Sale la lista para escoger, no una página rota</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <h2>La web</h2>
+
+  <a class="b" href="index.html#excursiones">
+    <span class="ic">🏝️</span>
+    <span class="tx"><b>Las excursiones</b><small>Toca "Apartar mi cupo" en cualquier tarjeta</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <a class="b" href="index.html#planes">
+    <span class="ic">🗓️</span>
+    <span class="tx"><b>Los planes de varios días</b><small>Ahora sus botones también llevan a la reserva</small></span>
+    <span class="ch">›</span>
+  </a>
+
+  <div class="avisito">
+    <b>Ojo con una cosa</b>
+    La pantalla final dice que se envió un correo, pero todavía no se envía ninguno: falta conectar el servicio de correo. Por eso el resumen y el código salen también en pantalla.
+  </div>
+
+</div>
+</body>
+</html>

@@ -2062,24 +2062,20 @@ img{ display:block; max-width:100%; }
   /* vertical y suave: da volumen sin que se note el truco. En diagonal el
      punto claro caía en mitad del botón y parecía un reflejo pegado encima. */
   background:linear-gradient(180deg,#199e56 0%,var(--g) 100%);
-  box-shadow:0 16px 32px -14px rgba(18,133,76,.95), 0 0 0 0 rgba(18,133,76,.40);
-  animation:ctaLatido 2.9s ease-in-out infinite;
+  /* Quieto. Llevaba un latido —un aro que salía y se apagaba cada 2,9s— y en
+     una pantalla donde ya se mueven el brillo del abono y el carrusel, un
+     botón que palpita solo no llama: cansa y distrae de lo que hay que leer.
+     La presencia la da el cuerpo (64px de alto y letra de 18,5) y la sombra,
+     que no necesitan moverse para verse. */
+  box-shadow:0 16px 32px -14px rgba(18,133,76,.95);
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
 }
 .btn.btn-go b{ font-weight:800; font-size:17px; letter-spacing:-.005em; }
 .btn.btn-go svg{ width:20px; height:20px; }
 
-/* El latido es un aro que sale del propio botón y se apaga. Llama la atención
-   SIN mover nada de sitio: un botón que crece y encoge se falla al tocarlo,
-   porque el pulgar apunta a donde estaba hace medio segundo. */
-@keyframes ctaLatido{
-  0%,100%{ box-shadow:0 16px 32px -14px rgba(18,133,76,.95), 0 0 0 0 rgba(18,133,76,.40); }
-  60%    { box-shadow:0 16px 32px -14px rgba(18,133,76,.95), 0 0 0 14px rgba(18,133,76,0); }
-}
-.btn.btn-go:hover{ animation:none; box-shadow:0 22px 38px -14px rgba(18,133,76,1); }
+.btn.btn-go:hover{ box-shadow:0 22px 38px -14px rgba(18,133,76,1); }
 .btn.btn-go:active{ transform:scale(.985); }
-@media (prefers-reduced-motion:reduce){ .btn.btn-go{ animation:none; } }
 
 /* En el teléfono es donde se decide la reserva y donde el pulgar tiene que
    acertar a la primera: 64px es el ancho cómodo de un dedo con margen. */
@@ -3327,20 +3323,8 @@ img{ display:block; max-width:100%; }
   background:linear-gradient(0deg, rgba(6,18,12,.85) 0%, rgba(6,18,12,.5) 55%, rgba(6,18,12,0) 100%);
   pointer-events:none;
 }
-/* Aviso de que se puede ampliar. Sale una vez al abrir el visor y se va: sin
-   esto, el pellizco y el doble toque son funciones que nadie descubre. */
-.lupa-tip{
-  position:absolute; left:50%; bottom:calc(74px + env(safe-area-inset-bottom,0px));
-  transform:translateX(-50%); z-index:5;
-  background:rgba(6,18,12,.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
-  border:1px solid rgba(255,255,255,.16);
-  font-family:'Plus Jakarta Sans'; font-weight:600; font-size:11.5px; color:#fff;
-  padding:7px 14px; border-radius:100px; white-space:nowrap;
-  opacity:0; transition:opacity .3s; pointer-events:none;
-}
-.lupa-tip.show{ opacity:1; }
 /* mientras se mira ampliado sobra todo lo demás */
-.lupa.zoomed .lupa-cap, .lupa.zoomed .lupa-tip{ opacity:0; }
+.lupa.zoomed .lupa-cap{ opacity:0; }
 .lupa-a{
   position:absolute; top:50%; transform:translateY(-50%); z-index:3;
   width:46px; height:46px; border-radius:50%;
@@ -4073,7 +4057,6 @@ img{ display:block; max-width:100%; }
   </div>
   <div id="ivm-lupa-stage" class="lupa-stage"></div>
   <div id="ivm-lupa-cap" class="lupa-cap"></div>
-  <div id="ivm-lupa-tip" class="lupa-tip">Pellizca para acercar · toca dos veces para verla entera</div>
   <button id="ivm-lupa-prev" class="lupa-a prev" type="button" aria-label="Foto anterior">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
@@ -4378,7 +4361,7 @@ img{ display:block; max-width:100%; }
       <div class="mob-gallery">
 
         <div class="mob-vid-card mob-vid-card-teal">
-          <div class="mob-vid-verified">Tour tranquilo</div>
+          <div class="mob-vid-verified">Tour relajado</div>
           <img class="mob-vid-img" src="images/amigas-bote-1.jpg" alt="" loading="lazy">
           <div class="mob-vid-duration">0:45</div>
           <div class="mob-vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></div>
@@ -4398,7 +4381,7 @@ img{ display:block; max-width:100%; }
           <img class="mob-vid-img" src="images/grupo-cascada-1.jpg" alt="" loading="lazy">
           <div class="mob-vid-duration">0:58</div>
           <div class="mob-vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></div>
-          <div class="mob-vid-info"><div class="mob-vid-name">Los Chamos</div><div class="mob-vid-tour">Cascadas El Limón</div></div>
+          <div class="mob-vid-info"><div class="mob-vid-name">Grupo de amigos</div><div class="mob-vid-tour">Cascadas El Limón</div></div>
         </div>
 
         <div class="mob-vid-card mob-vid-card-pink">
@@ -4410,11 +4393,11 @@ img{ display:block; max-width:100%; }
         </div>
 
         <div class="mob-vid-card mob-vid-card-blue">
-          <div class="mob-vid-verified">Tour tranquilo</div>
+          <div class="mob-vid-verified">Tour relajado</div>
           <img class="mob-vid-img" src="images/mirador-valle-mar.jpg" alt="" loading="lazy">
           <div class="mob-vid-duration">0:42</div>
           <div class="mob-vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></div>
-          <div class="mob-vid-info"><div class="mob-vid-name">Abuelo Pepe</div><div class="mob-vid-tour">Whale Watching</div></div>
+          <div class="mob-vid-info"><div class="mob-vid-name">Familia Pepe</div><div class="mob-vid-tour">Whale Watching</div></div>
         </div>
 
         <div class="mob-vid-card mob-vid-card-green">
@@ -4422,7 +4405,7 @@ img{ display:block; max-width:100%; }
           <img class="mob-vid-img" src="images/nina-tirolesa.jpg" alt="" loading="lazy">
           <div class="mob-vid-duration">1:05</div>
           <div class="mob-vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></div>
-          <div class="mob-vid-info"><div class="mob-vid-name">Team España</div><div class="mob-vid-tour">Zip Line &amp; Jungle</div></div>
+          <div class="mob-vid-info"><div class="mob-vid-name">Grupo España</div><div class="mob-vid-tour">Zip Line &amp; Jungle</div></div>
         </div>
 
         <div class="mob-vid-card mob-vid-card-indigo">
@@ -4438,7 +4421,7 @@ img{ display:block; max-width:100%; }
           <img class="mob-vid-img" src="images/rio-grupo.jpg" alt="" loading="lazy">
           <div class="mob-vid-duration">1:20</div>
           <div class="mob-vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></div>
-          <div class="mob-vid-info"><div class="mob-vid-name">Hnos. Martínez</div><div class="mob-vid-tour">Rafting Río Yaque</div></div>
+          <div class="mob-vid-info"><div class="mob-vid-name">Hermanos Martínez</div><div class="mob-vid-tour">Rafting Río Yaque</div></div>
         </div>
 
         <div class="mob-vid-card mob-vid-card-teal">
@@ -4458,11 +4441,11 @@ img{ display:block; max-width:100%; }
         </div>
 
         <div class="mob-vid-card mob-vid-card-purple">
-          <div class="mob-vid-verified">Tour de lodo</div>
+          <div class="mob-vid-verified">Tour todoterreno</div>
           <img class="mob-vid-img" src="images/base-cuatrimotos.jpg" alt="" loading="lazy">
           <div class="mob-vid-duration">1:15</div>
           <div class="mob-vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></div>
-          <div class="mob-vid-info"><div class="mob-vid-name">Amigos del Cole</div><div class="mob-vid-tour">Buggies Aventura</div></div>
+          <div class="mob-vid-info"><div class="mob-vid-name">Amigos de siempre</div><div class="mob-vid-tour">Buggies Aventura</div></div>
         </div>
 
         <div class="mob-vid-card mob-vid-card-green">
@@ -4490,11 +4473,11 @@ img{ display:block; max-width:100%; }
         </div>
 
         <div class="mob-vid-card mob-vid-card-indigo">
-          <div class="mob-vid-verified">Tour de diversión</div>
+          <div class="mob-vid-verified">Tour en grupo</div>
           <img class="mob-vid-img" src="images/grupo-evolution-2.jpg" alt="" loading="lazy">
           <div class="mob-vid-duration">1:03</div>
           <div class="mob-vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:2px"><polygon points="5,3 19,12 5,21"/></svg></div>
-          <div class="mob-vid-info"><div class="mob-vid-name">Team Colombia</div><div class="mob-vid-tour">Zip Line &amp; Jungle</div></div>
+          <div class="mob-vid-info"><div class="mob-vid-name">Grupo Colombia</div><div class="mob-vid-tour">Zip Line &amp; Jungle</div></div>
         </div>
 
       </div><!-- /mob-gallery -->
@@ -4509,21 +4492,6 @@ img{ display:block; max-width:100%; }
         Sin guion
       </div>
       <h2 class="mob-reviews-title">Tú grabas. <span class="mob-reviews-title-teal">Tú decides.</span></h2>
-
-      <div class="mob-faq-item">
-        <div class="mob-faq-head" onclick="this.closest('.mob-faq-item').classList.toggle('open')">
-          <div class="mob-faq-ico mob-faq-ico-1">💛</div>
-          <div class="mob-faq-text">Tu video lo subo solo si tú me dices que sí</div>
-          <div class="mob-faq-chevron">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-        </div>
-        <div class="mob-faq-body">
-          <div class="mob-faq-body-inner">
-            Terminas el tour y te escribo: «¿grabaste algo? ¿lo puedo subir?». Si dices que no, se queda en tu teléfono. Si dices que sí, <strong>va como está</strong>: lo que te gustó y lo que no.
-          </div>
-        </div>
-      </div>
 
       <div class="mob-faq-item">
         <div class="mob-faq-head" onclick="this.closest('.mob-faq-item').classList.toggle('open')">
@@ -4622,7 +4590,7 @@ img{ display:block; max-width:100%; }
       <div class="vid-card" data-tipo="tierra">
         <img src="images/base-cuatrimotos.jpg" alt="Dominando el Barro">
         <div class="vid-overlay"></div>
-        <span class="verify-badge">Tour de lodo</span>
+        <span class="verify-badge">Tour todoterreno</span>
         <div class="play-btn">
           <svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </div>
@@ -7278,19 +7246,6 @@ function lupaAbrir(media, i, titulo, card){
   if(lupaBloqueo) document.body.style.overflow = 'hidden';
   lupa.classList.add('on');
   lupaPintar();
-  lupaAvisar();
-}
-/* El aviso de "se puede ampliar" sale una vez por sesión: repetirlo cada vez
-   que se abre una foto acaba siendo ruido. */
-let lupaAvisado = false;
-function lupaAvisar(){
-  const tip = document.getElementById('ivm-lupa-tip');
-  if(!tip || lupaAvisado || lupaMedia[lupaI] && lupaMedia[lupaI].vid) return;
-  lupaAvisado = true;
-  setTimeout(() => {
-    tip.classList.add('show');
-    setTimeout(() => tip.classList.remove('show'), 2600);
-  }, 500);
 }
 function lupaCerrar(){
   if(!lupa) return;

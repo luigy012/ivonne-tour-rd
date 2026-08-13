@@ -1940,6 +1940,24 @@ img{ display:block; max-width:100%; }
   background:rgba(6,16,11,.55); backdrop-filter:blur(8px); padding:5px 10px; border-radius:100px; }
 .rate svg{ color:#ffc94d; }
 
+/* "Ver en grande". Mismo vidrio oscuro que .rate y .mbar para que se lea como
+   parte de la foto y no como un anuncio pegado encima. z-index 5 porque la
+   tira de .dots ocupa TODO el ancho de abajo (aunque los puntos se vean
+   centrados) y si no, se queda por debajo y no se deja tocar. */
+.card .zoomer{ position:absolute; bottom:11px; left:12px; z-index:5;
+  display:inline-flex; align-items:center; gap:6px; border:none; cursor:pointer;
+  font-family:'Plus Jakarta Sans'; font-weight:700; font-size:11.5px; color:#fff;
+  background:rgba(6,16,11,.58); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  padding:6px 11px; border-radius:100px; line-height:1;
+  -webkit-tap-highlight-color:transparent; transition:background .2s, transform .15s; }
+.card .zoomer:hover{ background:rgba(6,16,11,.8); }
+.card .zoomer:active{ transform:scale(.94); }
+.card .zoomer svg{ flex-shrink:0; }
+/* Mientras corre un video se quita: sus controles salen justo ahí abajo y el
+   botón se sentaba encima del play. El .zoomer es hermano de .slides, no del
+   .slide, así que hace falta mirar hacia dentro con :has(). */
+.card .slides:has(.slide.is-vid.playing) ~ .zoomer{ display:none; }
+
 /* --- cuerpo --- */
 .body{ padding:20px 20px 22px; display:flex; flex-direction:column; flex:1; }
 .body h3{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; letter-spacing:-.02em; line-height:1.14; margin-bottom:7px; }
@@ -3110,6 +3128,103 @@ img{ display:block; max-width:100%; }
   cursor:default;
   transform:none !important;
 }
+
+/* EXCURSIONES: las dos flechas eran el MISMO botón verde, una al lado de la
+   otra. Para saber cuál era cuál había que fijarse hacia dónde apunta una
+   punta de flecha de 14px — o tocarla y ver qué pasa.
+
+   Se separan por PESO, no por la flechita: la de avanzar va rellena, que es la
+   que casi todo el mundo va a tocar, y la de volver va de contorno. De un
+   vistazo se ve cuál es la acción principal sin leer nada.
+
+   Solo aquí: en Paquetes (#tpk-modal, que usa esta misma clase) no se toca. */
+#ivm-modal-next.ivm-nav-btn{
+  background:linear-gradient(100deg,#0d9488,#14b8a6);
+  box-shadow:0 4px 12px -3px rgba(13,148,136,.55);
+  color:#fff;
+}
+#ivm-modal-prev.ivm-nav-btn{
+  background:#fff;
+  border:1.5px solid rgba(13,148,136,.4);
+  color:#0f766e;
+  box-shadow:none;
+}
+/* Apagada. El gris sólido de arriba pintaba una PASTILLA gris que se leía como
+   un tercer botón distinto; aquí se queda con la misma silueta de contorno,
+   descolorida: "esta misma, ahora no". En la primera excursión solo queda
+   encendida la de avanzar, que es justo lo único que se puede hacer. */
+#ivm-modal-prev.ivm-nav-btn:disabled,
+#ivm-modal-next.ivm-nav-btn:disabled{
+  background:#f1f5f3 !important;
+  border:1.5px solid var(--line);
+  color:#c2ccc6 !important;
+  box-shadow:none !important;
+  opacity:1;
+}
+/* ===== VISOR EN GRANDE (Excursiones) ====================================
+   La foto de la ficha va recortada a `cover` dentro de un 16/11: en un
+   teléfono son unos 200px de alto y de una playa entera se ve una franja. Las
+   flechas laterales dejaban PASAR fotos, pero no verlas.
+
+   Aquí la foto va a `contain`: entera, sin recortar y sin deformar, con el
+   ancho y el alto que le toquen. Fondo casi negro para que no compita.
+
+   z-index 1400 = por encima de la ficha (.ivmodal va en 1200), que es desde
+   donde se abre casi siempre. El otro visor del sitio (.lb, el de las
+   capturas de WhatsApp) vive en 9999 y nunca están los dos abiertos. */
+.lupa{
+  position:fixed; inset:0; z-index:1400; display:none;
+  background:rgba(6,18,12,.96);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+}
+.lupa.on{ display:grid; grid-template-rows:auto 1fr auto; animation:lupaIn .25s ease; }
+@keyframes lupaIn{ from{ opacity:0 } to{ opacity:1 } }
+.lupa-top{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  /* el env() es por la muesca del iPhone: sin él la X se mete debajo */
+  padding:calc(12px + env(safe-area-inset-top,0px)) 14px 10px;
+}
+.lupa-num{
+  font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12.5px;
+  letter-spacing:.1em; color:rgba(255,255,255,.62);
+}
+.lupa-x{
+  width:42px; height:42px; border-radius:50%; flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.12); color:#fff;
+  display:grid; place-items:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; transition:background .2s;
+}
+.lupa-x:active{ background:rgba(255,255,255,.28); }
+/* min-height:0 o la fila 1fr de la rejilla no deja encoger a la foto y se sale
+   por abajo — el max-height:100% del img no serviría de nada */
+.lupa-stage{
+  position:relative; min-height:0;
+  display:grid; place-items:center; overflow:hidden; padding:0 8px;
+}
+.lupa-stage img,
+.lupa-stage video{
+  max-width:100%; max-height:100%; width:auto; height:auto;
+  object-fit:contain; display:block; border-radius:12px;
+  animation:lupaZoom .28s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes lupaZoom{ from{ transform:scale(.95); opacity:0 } to{ transform:none; opacity:1 } }
+.lupa-cap{
+  font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px;
+  color:#fff; text-align:center; line-height:1.35;
+  padding:12px 18px calc(16px + env(safe-area-inset-bottom,0px));
+}
+.lupa-a{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:3;
+  width:46px; height:46px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.14); color:#fff;
+  display:grid; place-items:center; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; transition:background .2s, opacity .2s;
+}
+.lupa-a.prev{ left:10px; }
+.lupa-a.next{ right:10px; }
+.lupa-a:active{ background:rgba(255,255,255,.3); }
+.lupa-a:disabled{ opacity:.25; cursor:default; }
+
 /* Tooltip inline debajo de las flechas (el de Excursiones y el de Paquetes) */
 #ivm-arrow-tip,
 #tpk-arrow-tip{
@@ -3809,6 +3924,26 @@ img{ display:block; max-width:100%; }
     </div>
   </div>
   <div id="ivm-modal-inner"></div>
+</div>
+
+<!-- Visor de fotos y videos a pantalla completa (Excursiones). Vive fuera del
+     modal a propósito: el modal tiene su propio scroll y su barra pegada, y
+     metido dentro el visor habría heredado los dos. -->
+<div id="ivm-lupa" class="lupa" role="dialog" aria-modal="true" aria-label="Foto en grande">
+  <div class="lupa-top">
+    <span id="ivm-lupa-num" class="lupa-num"></span>
+    <button id="ivm-lupa-x" class="lupa-x" type="button" aria-label="Cerrar la foto">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div id="ivm-lupa-stage" class="lupa-stage"></div>
+  <div id="ivm-lupa-cap" class="lupa-cap"></div>
+  <button id="ivm-lupa-prev" class="lupa-a prev" type="button" aria-label="Foto anterior">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button id="ivm-lupa-next" class="lupa-a next" type="button" aria-label="Foto siguiente">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
 </div>
 
 <!-- Paquetes de varios días: mismo armazón, contenido propio (móvil) -->
@@ -6625,7 +6760,8 @@ const I = {
   star:'<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>',
   cam:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2.2l1.2-2h8.2l1.2 2h2.2A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5v-9z" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.4"/></svg>',
   play:'<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
-  playBig:'<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'
+  playBig:'<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  expand:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 
 /* si la foto todavia no existe, se oculta y queda el fondo del slide */
@@ -6674,7 +6810,7 @@ function cardHTML(t){
       + `<span class="fact">${I.bag} Lleva: ${t.llevar.join(', ')}</span>`
       + (t.cancela?`<span class="fact">${I.check}${t.cancela}</span>`:'');
   return `
-  <article class="card" data-fotos="${st.total}">
+  <article class="card" data-fotos="${st.total}" data-name="${t.name}">
     <div class="media">
       <div class="slides">${slides}</div>
       <span class="time">${I.clock} ${t.time}</span>
@@ -6682,6 +6818,11 @@ function cardHTML(t){
       ${mbar}
       <span class="rate">${I.star} ${t.rating} (${t.reviews})</span>
       ${nav}
+      <!-- Tocar la foto ya la abre en grande, pero eso no se ve: hay que
+           adivinarlo. Este botón lo dice. Va abajo a la izquierda, la única
+           esquina libre (arriba van la hora y la etiqueta, abajo a la derecha
+           la valoración y en medio los puntitos). -->
+      <button class="zoomer" type="button" aria-label="Ver las fotos en grande">${I.expand} Ver en grande</button>
     </div>
     <div class="body">
       <h3>${t.name}</h3>
@@ -6833,6 +6974,134 @@ window.addEventListener('resize', ()=>{
   rzSlid = setTimeout(()=>document.querySelectorAll('.slides').forEach(syncSlider), 150);
 });
 
+/* ===== VISOR EN GRANDE (Excursiones) =====================================
+   Ojo con el scroll del body: el visor se abre casi siempre DESDE la ficha, y
+   la ficha ya lo tiene bloqueado a su manera (position:fixed + el scroll de la
+   página guardado en top). Si al cerrar el visor soltáramos ese bloqueo, la
+   página de detrás se iría al principio de golpe. Por eso solo se toca cuando
+   lo abre alguien que no lo tenía bloqueado — la tarjeta de escritorio. */
+const lupa      = document.getElementById('ivm-lupa');
+const lupaStage = document.getElementById('ivm-lupa-stage');
+const lupaNum   = document.getElementById('ivm-lupa-num');
+const lupaCap   = document.getElementById('ivm-lupa-cap');
+const lupaPrev  = document.getElementById('ivm-lupa-prev');
+const lupaNext  = document.getElementById('ivm-lupa-next');
+let lupaMedia = [], lupaI = 0, lupaCard = null, lupaBloqueo = false;
+
+// las fotos y videos de UNA tarjeta, leídos del DOM: sirve igual para la
+// tarjeta de escritorio y para la de dentro de Ver Info, que son la misma
+function fotosDe(card){
+  return [...card.querySelectorAll('.slides .slide')].map(sl => ({
+    vid: sl.dataset.vid || '',
+    img: (sl.querySelector('img') || {}).src || ''
+  })).filter(m => m.img || m.vid);
+}
+
+function lupaPintar(){
+  const m = lupaMedia[lupaI];
+  if(!m) return;
+  lupaStage.innerHTML = m.vid
+    ? `<video src="${m.vid}"${m.img ? ` poster="${m.img}"` : ''} controls autoplay playsinline webkit-playsinline></video>`
+    : `<img src="${m.img}" alt="${lupaCap.textContent || 'Foto de la excursión'}">`;
+  const v = lupaStage.querySelector('video');
+  if(v){
+    // el navegador puede negarse a arrancar con sonido; que no reviente
+    const p = v.play(); if(p && p.catch) p.catch(()=>{});
+  }
+  lupaNum.textContent  = (lupaI+1) + ' / ' + lupaMedia.length;
+  lupaPrev.disabled = lupaI <= 0;
+  lupaNext.disabled = lupaI >= lupaMedia.length - 1;
+}
+function lupaIr(k){
+  if(k < 0 || k >= lupaMedia.length) return;
+  lupaStage.querySelectorAll('video').forEach(v => v.pause());
+  lupaI = k;
+  lupaPintar();
+}
+function lupaAbrir(media, i, titulo, card){
+  if(!lupa || !media.length) return;
+  lupaMedia = media;
+  lupaI     = Math.max(0, Math.min(i, media.length - 1));
+  lupaCard  = card || null;
+  lupaCap.textContent = titulo || '';
+  lupaBloqueo = document.body.style.position !== 'fixed';
+  if(lupaBloqueo) document.body.style.overflow = 'hidden';
+  lupa.classList.add('on');
+  lupaPintar();
+}
+function lupaCerrar(){
+  if(!lupa) return;
+  lupaStage.querySelectorAll('video').forEach(v => v.pause());
+  lupa.classList.remove('on');
+  lupaStage.innerHTML = '';
+  if(lupaBloqueo) document.body.style.overflow = '';
+  lupaBloqueo = false;
+  // dejar la tarjeta de detrás en la foto que se estaba mirando: si sales por
+  // la 8 y debajo sigue la 1, parece que el visor iba por su cuenta
+  if(lupaCard && typeof lupaCard._irAFoto === 'function') lupaCard._irAFoto(lupaI);
+  lupaCard = null;
+}
+
+if(lupa){
+  lupaPrev.addEventListener('click', () => lupaIr(lupaI - 1));
+  lupaNext.addEventListener('click', () => lupaIr(lupaI + 1));
+  document.getElementById('ivm-lupa-x').addEventListener('click', lupaCerrar);
+  // tocar el fondo cierra; encima de la foto no, que ahí se está mirando
+  lupa.addEventListener('click', e => {
+    if(e.target === lupa || e.target === lupaStage || e.target === lupaCap) lupaCerrar();
+  });
+  document.addEventListener('keydown', e => {
+    if(!lupa.classList.contains('on')) return;
+    if(e.key === 'Escape')     lupaCerrar();
+    if(e.key === 'ArrowLeft')  lupaIr(lupaI - 1);
+    if(e.key === 'ArrowRight') lupaIr(lupaI + 1);
+  });
+  // deslizar de lado, igual que en la ficha (encima del video no: ahí el dedo
+  // suele ir a la barra de progreso)
+  let lx = 0, ly = 0, lh = null;
+  lupaStage.addEventListener('touchstart', e => {
+    if(e.target.closest('video')){ lh = false; return; }
+    lx = e.touches[0].clientX; ly = e.touches[0].clientY; lh = null;
+  }, {passive:true});
+  lupaStage.addEventListener('touchmove', e => {
+    if(lh !== null) return;
+    const dx = Math.abs(e.touches[0].clientX - lx);
+    const dy = Math.abs(e.touches[0].clientY - ly);
+    if(dx > 8 || dy > 8) lh = dx > dy;
+  }, {passive:true});
+  lupaStage.addEventListener('touchend', e => {
+    if(!lh) return;
+    const dx = e.changedTouches[0].clientX - lx;
+    if(Math.abs(dx) < 35) return;
+    lupaIr(dx < 0 ? lupaI + 1 : lupaI - 1);
+  }, {passive:true});
+}
+
+// Abrir el visor tocando la foto (o el botón de la esquina). Se llama desde
+// wireSlider ANTES de su corte por "una sola foto": una excursión con una foto
+// también se tiene que poder mirar en grande.
+function wireZoom(card){
+  const media = card.querySelector('.media');
+  const track = card.querySelector('.slides');
+  if(!media || !track) return;
+  // si el dedo venía deslizando, quería pasar de foto, no abrirla
+  let movio = false, zx = 0, zy = 0;
+  track.addEventListener('touchstart', e => {
+    movio = false; zx = e.touches[0].clientX; zy = e.touches[0].clientY;
+  }, {passive:true});
+  track.addEventListener('touchmove', e => {
+    if(Math.abs(e.touches[0].clientX - zx) > 8 ||
+       Math.abs(e.touches[0].clientY - zy) > 8) movio = true;
+  }, {passive:true});
+  media.addEventListener('click', e => {
+    if(movio) return;
+    // los controles ya hacen lo suyo: flechas, puntitos, el play del video y
+    // la pastilla que salta al video
+    if(e.target.closest('.arrow, .dots, .vplay, .mbar, video')) return;
+    lupaAbrir(fotosDe(card), +(track.dataset.i || 0), card.dataset.name || '', card);
+  });
+}
+
 function wireSlider(card){
   const track = card.querySelector('.slides');
   if(!track) return;
@@ -6843,6 +7112,9 @@ function wireSlider(card){
   const n = slides.length;
   let i = 0;
   track.dataset.i = 0;
+  // va antes del corte de abajo: con una sola foto no hay slider que armar,
+  // pero esa foto tambien se tiene que poder abrir en grande
+  wireZoom(card);
   if(n <= 1) return;
 
   const VENTANA = 7;   // cuantos puntitos se ven a la vez
@@ -6887,6 +7159,8 @@ function wireSlider(card){
     if(now)  now.textContent = i+1;
     if(mvid) mvid.classList.toggle('on', slides[i].classList.contains('is-vid'));
   }
+  // para que el visor pueda dejar la tarjeta en la foto por la que se salio
+  card._irAFoto = go;
 
   tap(card.querySelector('.arrow.prev'), ()=>go(i-1));
   tap(card.querySelector('.arrow.next'), ()=>go(i+1));

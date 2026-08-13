@@ -1899,13 +1899,25 @@ img{ display:block; max-width:100%; }
 .card .slides .slide{ position:relative; flex:0 0 100%; width:100%; max-width:100%;
   height:100%; overflow:hidden;
   background:linear-gradient(135deg,#16382a,#0d1a13); }
-.card .slides .slide img, .card .slides .slide video{ width:100%; height:100%; object-fit:cover; display:block; }
+/* Foto y video, EXACTAMENTE la misma caja. La portada del video iba a `cover`
+   pero el <video> iba a `contain`: en cuanto se monte un video de verdad, el
+   mismo hueco se vería con franjas negras arriba y abajo mientras las fotos lo
+   llenan entero — dos tamaños distintos alternándose en el mismo carril.
+   Aquí manda la consistencia: en el carril todo va recortado a la misma caja,
+   y quien quiera ver la pieza entera y sin recortar la abre en grande, que es
+   justo para lo que está el visor. */
+.card .slides .slide img, .card .slides .slide video{
+  position:absolute; inset:0;
+  width:100%; height:100%; object-fit:cover; display:block; }
 .card .slide.is-vid::before{ content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
-  background:rgba(6,16,11,.3); }
+  /* El velo plano del 30% teñía TODO el slide de video más oscuro que los de
+     foto: puestos en fila se leía como una pieza de otro tono y otro peso.
+     Ahora solo oscurece detrás del play, que es lo único que pide contraste. */
+  background:radial-gradient(circle at 50% 50%,
+    rgba(6,16,11,.46) 0%, rgba(6,16,11,.26) 30%, rgba(6,16,11,0) 62%); }
 .card .slide.is-vid.playing::before{ display:none; }
 /* el video se monta encima de la portada, tapandola por completo */
-.card .slide.is-vid video{ position:absolute; inset:0; width:100%; height:100%;
-  object-fit:contain; background:#000; z-index:4; }
+.card .slide.is-vid video{ z-index:4; background:#000; }
 .card .vplay{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:5;
   width:58px; height:58px; border-radius:50%; border:none; cursor:pointer; padding:0;
   background:rgba(255,255,255,.94); color:#0a3d24; display:grid; place-items:center;
@@ -3252,13 +3264,21 @@ img{ display:block; max-width:100%; }
   background:rgba(6,18,12,.96);
   -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
 }
-.lupa.on{ display:grid; grid-template-rows:auto 1fr auto; animation:lupaIn .25s ease; }
+/* La rejilla de tres filas (barra / foto / pie) le comía a la foto los 64px de
+   la barra y los 46 del pie ANTES de empezar a medirla. Ahora el hueco de la
+   foto es la pantalla entera y la barra y el pie flotan encima, sobre un
+   degradado que los mantiene legibles. */
+.lupa.on{ display:block; animation:lupaIn .25s ease; }
 @keyframes lupaIn{ from{ opacity:0 } to{ opacity:1 } }
 .lupa-top{
+  position:absolute; top:0; left:0; right:0; z-index:4;
   display:flex; align-items:center; justify-content:space-between; gap:12px;
   /* el env() es por la muesca del iPhone: sin él la X se mete debajo */
-  padding:calc(12px + env(safe-area-inset-top,0px)) 14px 10px;
+  padding:calc(12px + env(safe-area-inset-top,0px)) 14px 22px;
+  background:linear-gradient(180deg, rgba(6,18,12,.82) 0%, rgba(6,18,12,.45) 55%, rgba(6,18,12,0) 100%);
+  pointer-events:none;
 }
+.lupa-top > *{ pointer-events:auto; }
 .lupa-num{
   font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12.5px;
   letter-spacing:.1em; color:rgba(255,255,255,.62);
@@ -3270,24 +3290,57 @@ img{ display:block; max-width:100%; }
   -webkit-tap-highlight-color:transparent; transition:background .2s;
 }
 .lupa-x:active{ background:rgba(255,255,255,.28); }
-/* min-height:0 o la fila 1fr de la rejilla no deja encoger a la foto y se sale
-   por abajo — el max-height:100% del img no serviría de nada */
+/* El hueco es toda la pantalla. Los 8px de relleno que tenía antes dejaban la
+   foto en 374px de ancho cuando en el carril ya se veía a 390: el botón decía
+   "ver en grande" y la devolvía MÁS PEQUEÑA que de donde venías.
+   touch-action:none porque el pellizco y el arrastre los lleva el JS. */
+/* flex y no grid a propósito: en una rejilla sin filas declaradas, la fila se
+   mide POR EL CONTENIDO, así que el alto del hueco es indefinido mientras se
+   coloca la foto y su `max-height:100%` se queda en nada. En una pantalla
+   ancha la foto salía a 1440x954 dentro de 900 de alto — recortada arriba y
+   abajo. Con flex el alto sí es definido y el max-height funciona. */
 .lupa-stage{
-  position:relative; min-height:0;
-  display:grid; place-items:center; overflow:hidden; padding:0 8px;
+  position:absolute; inset:0; z-index:1;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; padding:0;
+  touch-action:none;
 }
 .lupa-stage img,
 .lupa-stage video{
   max-width:100%; max-height:100%; width:auto; height:auto;
-  object-fit:contain; display:block; border-radius:12px;
-  animation:lupaZoom .28s cubic-bezier(.2,.8,.3,1);
+  object-fit:contain; display:block;
+  animation:lupaFade .28s ease;
+  transform-origin:center center; will-change:transform;
+  -webkit-user-select:none; user-select:none; -webkit-user-drag:none;
 }
-@keyframes lupaZoom{ from{ transform:scale(.95); opacity:0 } to{ transform:none; opacity:1 } }
+/* La entrada era un scale(.95) → none. Ahora el transform es del zoom y lo
+   pone el JS, así que la animación solo puede tocar la opacidad: si no, se
+   pisan y la foto pega un salto al terminar de aparecer. */
+@keyframes lupaFade{ from{ opacity:0 } to{ opacity:1 } }
+/* con la foto ampliada, el dedo arrastra la foto y no cambia de imagen */
+.lupa.zoomed .lupa-stage{ cursor:grab; }
 .lupa-cap{
+  position:absolute; left:0; right:0; bottom:0; z-index:4;
   font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px;
   color:#fff; text-align:center; line-height:1.35;
-  padding:12px 18px calc(16px + env(safe-area-inset-bottom,0px));
+  padding:34px 18px calc(16px + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(0deg, rgba(6,18,12,.85) 0%, rgba(6,18,12,.5) 55%, rgba(6,18,12,0) 100%);
+  pointer-events:none;
 }
+/* Aviso de que se puede ampliar. Sale una vez al abrir el visor y se va: sin
+   esto, el pellizco y el doble toque son funciones que nadie descubre. */
+.lupa-tip{
+  position:absolute; left:50%; bottom:calc(74px + env(safe-area-inset-bottom,0px));
+  transform:translateX(-50%); z-index:5;
+  background:rgba(6,18,12,.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.16);
+  font-family:'Plus Jakarta Sans'; font-weight:600; font-size:11.5px; color:#fff;
+  padding:7px 14px; border-radius:100px; white-space:nowrap;
+  opacity:0; transition:opacity .3s; pointer-events:none;
+}
+.lupa-tip.show{ opacity:1; }
+/* mientras se mira ampliado sobra todo lo demás */
+.lupa.zoomed .lupa-cap, .lupa.zoomed .lupa-tip{ opacity:0; }
 .lupa-a{
   position:absolute; top:50%; transform:translateY(-50%); z-index:3;
   width:46px; height:46px; border-radius:50%;
@@ -3299,6 +3352,9 @@ img{ display:block; max-width:100%; }
 .lupa-a.next{ right:10px; }
 .lupa-a:active{ background:rgba(255,255,255,.3); }
 .lupa-a:disabled{ opacity:.25; cursor:default; }
+/* ampliada, las flechas estorban: el dedo está arrastrando la foto por debajo
+   de ellas y pasar de imagen ahora mismo no es lo que se quiere hacer */
+.lupa.zoomed .lupa-a{ opacity:0; pointer-events:none; }
 
 /* Tooltip inline debajo de las flechas (el de Excursiones y el de Paquetes) */
 #ivm-arrow-tip,
@@ -4017,6 +4073,7 @@ img{ display:block; max-width:100%; }
   </div>
   <div id="ivm-lupa-stage" class="lupa-stage"></div>
   <div id="ivm-lupa-cap" class="lupa-cap"></div>
+  <div id="ivm-lupa-tip" class="lupa-tip">Pellizca para acercar · toca dos veces para verla entera</div>
   <button id="ivm-lupa-prev" class="lupa-a prev" type="button" aria-label="Foto anterior">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
@@ -7076,6 +7133,108 @@ function fotosDe(card){
   })).filter(m => m.img || m.vid);
 }
 
+/* ===== AMPLIAR de verdad =================================================
+   "Ver en grande" abría la foto a `contain` dentro de un hueco con 8px de
+   relleno y con la barra y el pie robándole 110px de alto. En un teléfono la
+   dejaba en 374x248 cuando en el carril ya se veía a 390x268: el botón decía
+   "ver en grande" y la devolvía un 11% MÁS PEQUEÑA, con 486px de alto sin usar.
+
+   El hueco ya es la pantalla entera (arriba, en el CSS). Pero una foto
+   apaisada en un teléfono de pie está limitada por el ANCHO, así que llenar la
+   pantalla la sube de 374 a 390 y poco más: para que se note de verdad hace
+   falta poder ampliarla. Doble toque, pellizco y arrastre, hasta 5x, con la
+   proporción intacta y sin salirse de los bordes. */
+const Z_MAX = 5;      // más que esto ya es ver los píxeles, no la foto
+const Z_DOBLE = 2.6;  // a lo que salta el doble toque
+/* Con qué encuadre ABRE el visor.
+   Ajustar la foto entera a la pantalla no basta: en la ficha la foto ya ocupa
+   los 390px de ancho del teléfono, así que una apaisada mostrada entera mide
+   390x258 — un 4% MENOS de área que en el carril, con 586px de negro debajo.
+   Pulsabas "ver en grande" y no pasaba nada.
+   Así que abre llenando: se amplía hasta que ocupe ~62% del alto, sin pasar de
+   1,7x y sin comerse más del 42% del ancho. Una foto vertical, que ajustada ya
+   llena la pantalla, se queda como está — recortarla no aportaría nada. */
+const Z_TOPE_INI  = 1.7;   // techo del encuadre de apertura
+const Z_ALTO_OBJ  = 0.62;  // trozo del alto de pantalla que se busca llenar
+const Z_ANCHO_MIN = 0.58;  // del ancho de la foto, esto se ve siempre
+let zEsc = 1, zX = 0, zY = 0, zBase = 1;
+
+function lupaFoto(){ return lupaStage.querySelector('img'); }
+
+// ¿la foto se sale de la pantalla? entonces el dedo la arrastra
+function lupaDesplazable(){
+  const el = lupaFoto();
+  if(!el) return false;
+  return el.offsetWidth * zEsc > lupaStage.clientWidth + 1 ||
+         el.offsetHeight * zEsc > lupaStage.clientHeight + 1;
+}
+
+function lupaEscalaInicial(el){
+  const W = lupaStage.clientWidth, H = lupaStage.clientHeight;
+  const w = el.offsetWidth, h = el.offsetHeight;
+  if(!w || !h) return 1;
+  return Math.max(1, Math.min(
+    (H * Z_ALTO_OBJ) / h,        // lo que hace falta para llenar el alto buscado
+    W / (w * Z_ANCHO_MIN),       // sin recortar los lados más de la cuenta
+    Z_TOPE_INI
+  ));
+}
+
+// deja la foto en su encuadre de apertura (y recuerda cuál es, que a partir
+// de ahí es cuando se considera que el usuario ha ampliado a mano)
+function lupaEncuadrar(suave){
+  const el = lupaFoto();
+  zBase = el ? lupaEscalaInicial(el) : 1;
+  zEsc = zBase; zX = 0; zY = 0;
+  lupaLimitar();
+  lupaAplicar(suave);
+}
+
+// no dejar que la foto se despegue de la pantalla al arrastrarla
+function lupaLimitar(){
+  const el = lupaFoto();
+  if(!el) return;
+  const maxX = Math.max(0, (el.offsetWidth  * zEsc - lupaStage.clientWidth)  / 2);
+  const maxY = Math.max(0, (el.offsetHeight * zEsc - lupaStage.clientHeight) / 2);
+  zX = Math.max(-maxX, Math.min(maxX, zX));
+  zY = Math.max(-maxY, Math.min(maxY, zY));
+}
+
+function lupaAplicar(suave){
+  // "zoomed" es haber ampliado POR ENCIMA del encuadre de apertura, no zEsc>1:
+  // como ahora se abre ya ampliada, medirlo contra 1 escondía el pie y las
+  // flechas desde el primer instante.
+  // El toggle va ANTES del corte: si vienes de una foto ampliada y pasas a un
+  // video (que no se amplía), la clase se quedaba puesta para siempre.
+  lupa.classList.toggle('zoomed', zEsc > zBase + 0.01);
+  const el = lupaFoto();
+  if(!el) return;
+  el.style.transition = suave ? 'transform .28s cubic-bezier(.2,.8,.3,1)' : 'none';
+  el.style.transform  = `translate(${zX}px,${zY}px) scale(${zEsc})`;
+}
+
+// la foto ENTERA, sin recortar: es a donde lleva el doble toque
+function lupaResetZoom(suave){
+  zEsc = 1; zX = 0; zY = 0;
+  lupaAplicar(suave);
+}
+
+/* Ampliar SOBRE UN PUNTO: lo que había bajo el dedo se tiene que quedar bajo
+   el dedo. Si no, al ampliar la esquina de una foto te salta al centro y hay
+   que volver a buscarla arrastrando. */
+function lupaAmpliarEn(nueva, px, py){
+  const el = lupaFoto();
+  if(!el) return;
+  nueva = Math.max(1, Math.min(Z_MAX, nueva));
+  const r  = lupaStage.getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  zX = (px - cx) - (px - cx - zX) * nueva / zEsc;
+  zY = (py - cy) - (py - cy - zY) * nueva / zEsc;
+  zEsc = nueva;
+  lupaLimitar();
+  lupaAplicar(true);
+}
+
 function lupaPintar(){
   const m = lupaMedia[lupaI];
   if(!m) return;
@@ -7086,6 +7245,18 @@ function lupaPintar(){
   if(v){
     // el navegador puede negarse a arrancar con sonido; que no reviente
     const p = v.play(); if(p && p.catch) p.catch(()=>{});
+  }
+  /* El encuadre se mide con la foto ya colocada por el navegador: antes de que
+     cargue, offsetWidth es 0 y saldría cualquier número. Arranca en "entera" y
+     va al encuadre de apertura ANIMADO — ese medio segundo en el que la foto
+     crece es lo que dice "esto es la versión grande", y de paso enseña que hay
+     foto fuera del marco. */
+  zBase = 1; zEsc = 1; zX = 0; zY = 0;
+  lupaAplicar(false);
+  const im = lupaFoto();
+  if(im){
+    if(im.complete && im.naturalWidth) requestAnimationFrame(() => lupaEncuadrar(true));
+    else im.addEventListener('load', () => lupaEncuadrar(true), {once:true});
   }
   lupaNum.textContent  = (lupaI+1) + ' / ' + lupaMedia.length;
   lupaPrev.disabled = lupaI <= 0;
@@ -7107,11 +7278,25 @@ function lupaAbrir(media, i, titulo, card){
   if(lupaBloqueo) document.body.style.overflow = 'hidden';
   lupa.classList.add('on');
   lupaPintar();
+  lupaAvisar();
+}
+/* El aviso de "se puede ampliar" sale una vez por sesión: repetirlo cada vez
+   que se abre una foto acaba siendo ruido. */
+let lupaAvisado = false;
+function lupaAvisar(){
+  const tip = document.getElementById('ivm-lupa-tip');
+  if(!tip || lupaAvisado || lupaMedia[lupaI] && lupaMedia[lupaI].vid) return;
+  lupaAvisado = true;
+  setTimeout(() => {
+    tip.classList.add('show');
+    setTimeout(() => tip.classList.remove('show'), 2600);
+  }, 500);
 }
 function lupaCerrar(){
   if(!lupa) return;
   lupaStage.querySelectorAll('video').forEach(v => v.pause());
   lupa.classList.remove('on');
+  lupa.classList.remove('zoomed');
   lupaStage.innerHTML = '';
   if(lupaBloqueo) document.body.style.overflow = '';
   lupaBloqueo = false;
@@ -7125,35 +7310,155 @@ if(lupa){
   lupaPrev.addEventListener('click', () => lupaIr(lupaI - 1));
   lupaNext.addEventListener('click', () => lupaIr(lupaI + 1));
   document.getElementById('ivm-lupa-x').addEventListener('click', lupaCerrar);
-  // tocar el fondo cierra; encima de la foto no, que ahí se está mirando
+  // tocar el fondo cierra; encima de la foto no, que ahí se está mirando.
+  // Ampliada tampoco: ahí el dedo está trabajando sobre la imagen.
   lupa.addEventListener('click', e => {
+    if(arrastro) return;   // venía arrastrando la foto, no queriendo salir
     if(e.target === lupa || e.target === lupaStage || e.target === lupaCap) lupaCerrar();
   });
   document.addEventListener('keydown', e => {
     if(!lupa.classList.contains('on')) return;
-    if(e.key === 'Escape')     lupaCerrar();
+    // Escape deshace primero la ampliación a mano, y ya después cierra
+    if(e.key === 'Escape'){ if(zEsc > zBase + 0.01) lupaEncuadrar(true); else lupaCerrar(); }
     if(e.key === 'ArrowLeft')  lupaIr(lupaI - 1);
     if(e.key === 'ArrowRight') lupaIr(lupaI + 1);
+    if(e.key === '+' || e.key === '=') lupaAmpliarEn(zEsc * 1.6, innerWidth/2, innerHeight/2);
+    if(e.key === '-' || e.key === '_') lupaAmpliarEn(zEsc / 1.6, innerWidth/2, innerHeight/2);
   });
-  // deslizar de lado, igual que en la ficha (encima del video no: ahí el dedo
-  // suele ir a la barra de progreso)
-  let lx = 0, ly = 0, lh = null;
+
+  /* ── Gestos sobre la foto ────────────────────────────────────────────────
+     Un solo sitio decide qué es cada gesto, porque compiten entre ellos:
+       · dos dedos            → pellizcar para ampliar
+       · un dedo y ampliada   → arrastrar la foto
+       · un dedo y sin ampliar→ deslizar para cambiar de foto
+       · dos toques seguidos  → ampliar (o volver) sobre ese punto
+     Encima del video no se toca nada: ahí el dedo va a los controles. */
+  let dedos = [], baseEsc = 1, baseDist = 0, baseX = 0, baseY = 0;
+  let px0 = 0, py0 = 0, arrastro = false, ultimoToque = 0, dedoDentro = false;
+  let sobraX = 0, sobraY = 0;   // lo que el dedo pidió mover y el borde no dejó
+
+  const dist = (a,b) => Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+  const medio = (a,b) => ({ x:(a.clientX+b.clientX)/2, y:(a.clientY+b.clientY)/2 });
+
   lupaStage.addEventListener('touchstart', e => {
-    if(e.target.closest('video')){ lh = false; return; }
-    lx = e.touches[0].clientX; ly = e.touches[0].clientY; lh = null;
-  }, {passive:true});
+    if(e.target.closest('video')) return;
+    dedos = [...e.touches];
+    arrastro = false;
+    dedoDentro = true;
+    sobraX = sobraY = 0;
+    if(dedos.length === 2){
+      baseDist = dist(dedos[0], dedos[1]);
+      baseEsc  = zEsc; baseX = zX; baseY = zY;
+    } else if(dedos.length === 1){
+      px0 = dedos[0].clientX; py0 = dedos[0].clientY;
+      baseX = zX; baseY = zY;
+    }
+  }, {passive:false});
+
   lupaStage.addEventListener('touchmove', e => {
-    if(lh !== null) return;
-    const dx = Math.abs(e.touches[0].clientX - lx);
-    const dy = Math.abs(e.touches[0].clientY - ly);
-    if(dx > 8 || dy > 8) lh = dx > dy;
-  }, {passive:true});
+    if(e.target.closest('video') || !dedoDentro) return;
+    const t = e.touches;
+
+    if(t.length === 2 && baseDist > 0){
+      e.preventDefault();                       // que el navegador no haga su zoom
+      arrastro = true;
+      const m = medio(t[0], t[1]);
+      const nueva = Math.max(1, Math.min(Z_MAX, baseEsc * (dist(t[0],t[1]) / baseDist)));
+      // se amplía sobre el punto medio de los dos dedos
+      const r  = lupaStage.getBoundingClientRect();
+      const cx = r.left + r.width/2, cy = r.top + r.height/2;
+      zX = (m.x - cx) - (m.x - cx - baseX) * nueva / baseEsc;
+      zY = (m.y - cy) - (m.y - cy - baseY) * nueva / baseEsc;
+      zEsc = nueva;
+      lupaLimitar();
+      lupaAplicar(false);
+      return;
+    }
+
+    if(t.length === 1){
+      e.preventDefault();                       // arrastrando la foto, no la página
+      if(Math.abs(t[0].clientX - px0) > 8 || Math.abs(t[0].clientY - py0) > 8) arrastro = true;
+      /* Un solo movimiento hace las dos cosas: arrastra la foto mientras quepa
+         movimiento, y lo que NO se puede mover (porque ya está en el borde) se
+         guarda como "sobra". Al soltar, si sobró bastante, es que el dedo
+         quería pasar de foto. Así deslizar sigue funcionando igual estando
+         ampliada, y en la foto entera —donde no hay nada que arrastrar— la
+         sobra es el gesto completo y se comporta como el deslizar de siempre. */
+      const pedidoX = baseX + (t[0].clientX - px0);
+      const pedidoY = baseY + (t[0].clientY - py0);
+      zX = pedidoX; zY = pedidoY;
+      lupaLimitar();
+      sobraX = pedidoX - zX;
+      sobraY = pedidoY - zY;
+      lupaAplicar(false);
+      return;
+    }
+  }, {passive:false});
+
   lupaStage.addEventListener('touchend', e => {
-    if(!lh) return;
-    const dx = e.changedTouches[0].clientX - lx;
-    if(Math.abs(dx) < 35) return;
-    lupaIr(dx < 0 ? lupaI + 1 : lupaI - 1);
-  }, {passive:true});
+    if(e.target.closest('video')) return;
+    const quedan = e.touches.length;
+
+    // cambiar de foto: cuando el dedo empujó de lado más allá del borde
+    if(quedan === 0 && arrastro && Math.abs(sobraX) > 45 && Math.abs(sobraX) > Math.abs(sobraY)){
+      lupaIr(sobraX < 0 ? lupaI + 1 : lupaI - 1);
+      sobraX = sobraY = 0;
+    }
+
+    // doble toque: amplía sobre el punto, o vuelve al tamaño de pantalla
+    if(quedan === 0 && !arrastro && e.changedTouches.length){
+      const ahora = Date.now();
+      const p = e.changedTouches[0];
+      if(ahora - ultimoToque < 300){
+        // abre ya ampliada, así que el primer doble toque es para VER LA FOTO
+        // ENTERA; desde ahí, el siguiente vuelve a acercar
+        if(zEsc > 1.01) lupaResetZoom(true);
+        else            lupaAmpliarEn(Z_DOBLE, p.clientX, p.clientY);
+        ultimoToque = 0;
+        e.preventDefault();                     // que no llegue el click que cierra
+      } else {
+        ultimoToque = ahora;
+      }
+    }
+
+    if(quedan === 0){ dedoDentro = false; baseDist = 0; }
+    // al soltar el segundo dedo, el que queda sigue arrastrando desde su sitio
+    if(quedan === 1){
+      px0 = e.touches[0].clientX; py0 = e.touches[0].clientY;
+      baseX = zX; baseY = zY; baseDist = 0;
+    }
+  }, {passive:false});
+
+  // con ratón: rueda para ampliar y doble clic para saltar
+  lupaStage.addEventListener('wheel', e => {
+    if(e.target.closest('video')) return;
+    e.preventDefault();
+    lupaAmpliarEn(zEsc * (e.deltaY < 0 ? 1.18 : 1/1.18), e.clientX, e.clientY);
+  }, {passive:false});
+  lupaStage.addEventListener('dblclick', e => {
+    if(e.target.closest('video')) return;
+    if(zEsc > 1.01) lupaResetZoom(true);
+    else            lupaAmpliarEn(Z_DOBLE, e.clientX, e.clientY);
+  });
+  // arrastrar con el ratón cuando está ampliada
+  let ratonAbajo = false, rx = 0, ry = 0;
+  lupaStage.addEventListener('mousedown', e => {
+    if(zEsc <= 1.01 || e.target.closest('video')) return;
+    ratonAbajo = true; rx = e.clientX; ry = e.clientY; baseX = zX; baseY = zY;
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if(!ratonAbajo) return;
+    zX = baseX + (e.clientX - rx); zY = baseY + (e.clientY - ry);
+    lupaLimitar(); lupaAplicar(false);
+  });
+  window.addEventListener('mouseup', () => { ratonAbajo = false; });
+
+  // al girar el teléfono la foto cambia de tamaño: recolocar dentro de bordes
+  window.addEventListener('resize', () => {
+    if(!lupa.classList.contains('on')) return;
+    lupaLimitar(); lupaAplicar(false);
+  });
 }
 
 // Abrir el visor tocando la foto (o el botón de la esquina). Se llama desde

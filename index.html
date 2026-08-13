@@ -3058,6 +3058,27 @@ img{ display:block; max-width:100%; }
 #ivm-mobnav .ivm-mobdot{ width:7px;height:7px; }
 #ivm-mobnav .ivm-mobdot.on{ width:22px; }
 
+/* Flechas del carrusel. Los puntitos y el contador dicen DÓNDE estás; estas
+   dicen que puedes moverte, que es otra cosa. Van a los lados del contador y
+   no flotando sobre las fotos: ahí se tocan sin tapar nada.
+   Apagada (gris y sin sombra) = ese lado se acabó. Es la misma señal que dan
+   las flechas de dentro de Ver Info, para que se lean igual en los dos sitios. */
+.ivm-mobarrow{
+  display:grid; place-items:center; flex:0 0 auto;
+  width:40px; height:40px; border-radius:50%;
+  background:#fff; border:1px solid rgba(13,148,136,.32);
+  color:#0f766e; cursor:pointer;
+  box-shadow:0 4px 14px -9px rgba(13,148,136,.9);
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .15s, opacity .2s;
+}
+.ivm-mobarrow:active{ transform:scale(.92); }
+.ivm-mobarrow:disabled{
+  opacity:.34; color:#94a3b8;
+  border-color:var(--line); box-shadow:none;
+  cursor:default;
+}
+
 /* Teléfonos estrechos (un iPhone SE son 320 de ancho): la letra se queda como
    está — para eso se subió — y el aire y la foto son los que ceden. */
 @media (max-width:379.98px){
@@ -3141,6 +3162,65 @@ img{ display:block; max-width:100%; }
 .ivm-ask-chev{
   color:#3a7a52;flex-shrink:0;
 }
+
+/* ===== Seguir viendo excursiones desde DENTRO de "Ver Info" ===============
+   Las flechitas de la barra de arriba son pequeñas y su globo ("👉 Dale para
+   ver más excursiones") sale una sola vez y se va. Quien no lo pilló se queda
+   dentro de una excursión creyendo que ahí se acabó todo, y para ver la de al
+   lado tiene que cerrar y volver a la lista.
+
+   Esto va al final de la ficha, debajo del WhatsApp, y no se va nunca. Dice
+   cuántas hay, en cuál estás y cómo pasar a la de al lado — CON EL NOMBRE de
+   la que viene, que es lo que de verdad hace que la toques: "Próxima" a secas
+   no promete nada, "Hoyo Azul" sí.
+
+   Va fuera de .card (es hermano suyo), así que el aire de los lados se pone
+   aquí para que cuadre con los 20px de .body. */
+.ivm-sig{ margin:6px 20px 0; }
+.ivm-sig-h{
+  font-family:'Plus Jakarta Sans';font-weight:800;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:#0f766e;text-align:center;margin-bottom:11px;
+}
+.ivm-sig-btn{
+  display:flex;align-items:center;gap:11px;
+  width:100%;margin-bottom:9px;
+  padding:13px 15px;border-radius:16px;
+  text-align:left;cursor:pointer;
+  font-family:'Plus Jakarta Sans';
+  background:#fff;border:1px solid rgba(13,148,136,.3);color:#0f766e;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .15s, opacity .2s;
+}
+.ivm-sig-btn:last-child{ margin-bottom:0; }
+.ivm-sig-btn:active{ transform:scale(.985); }
+/* la de seguir hacia adelante es la que casi todo el mundo va a tocar */
+.ivm-sig-btn.on{
+  background:linear-gradient(100deg,#0d9488,#14b8a6);
+  border-color:transparent;color:#fff;
+  box-shadow:0 10px 22px -12px rgba(13,148,136,.85);
+}
+/* en la última no se deja una flecha muerta: devuelve a la primera, y la
+   flecha girada lo enseña — el mismo gesto que el "vuelve" de los paquetes */
+.ivm-sig-btn.vuelve{ color:#5c6b60;border-color:var(--line); }
+.ivm-sig-btn.vuelve .ivm-sig-ico{ background:rgba(15,23,42,.05); }
+.ivm-sig-btn.vuelve .ivm-sig-ico svg{ transform:rotate(180deg); }
+.ivm-sig-btn[disabled]{ opacity:.45;cursor:default;box-shadow:none; }
+.ivm-sig-tx{ flex:1;min-width:0;display:flex;flex-direction:column;gap:2px; }
+.ivm-sig-tx b{ font-size:14.5px;font-weight:800;line-height:1.2; }
+/* el nombre de la excursión, a un renglón: hay nombres largos y el botón no
+   puede crecer a lo alto sin comerse el final de la ficha */
+.ivm-sig-tx i{
+  font-style:normal;font-size:12.5px;font-weight:600;line-height:1.3;opacity:.8;
+  display:-webkit-box;-webkit-line-clamp:1;line-clamp:1;
+  -webkit-box-orient:vertical;overflow:hidden;
+}
+.ivm-sig-ico{
+  display:grid;place-items:center;flex:0 0 auto;
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(13,148,136,.1);
+}
+.ivm-sig-btn.on .ivm-sig-ico{ background:rgba(255,255,255,.2); }
 
 /* ================================================================
    MOBILE — Sección 4 (Excursiones) alineada con las secciones 1-3
@@ -4411,9 +4491,18 @@ img{ display:block; max-width:100%; }
 
     <!-- Slider móvil horizontal (solo visible en <768px via CSS) -->
     <div id="ivm-mobgrid"></div>
+    <!-- Los puntitos y el "1 / 4" solos no dicen "hay más": son un indicador,
+         no un control, y para pasar de página había que descubrir que se
+         desliza. Las flechas lo dicen de frente y se tocan. -->
     <div id="ivm-mobnav">
+      <button class="ivm-mobarrow" id="ivm-mobprev" type="button" aria-label="Ver las excursiones anteriores">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <div class="ivm-mobdots" id="ivm-mobdots"></div>
       <span class="ivm-mobcount" id="ivm-mobcount"></span>
+      <button class="ivm-mobarrow" id="ivm-mobnext" type="button" aria-label="Ver más excursiones">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
 
     <div class="dcarousel">
@@ -6900,7 +6989,10 @@ render('punta-cana');
   const navBar  = document.getElementById('ivm-mobnav');
   const dotsBar = document.getElementById('ivm-mobdots');
   const cntEl   = document.getElementById('ivm-mobcount');
+  const arwPrev = document.getElementById('ivm-mobprev');
+  const arwNext = document.getElementById('ivm-mobnext');
   let mobPags   = [];
+  let pagActiva = 0;       // pagina del carrusel que se esta viendo
   let arrastro  = false;   // true si el toque fue un deslizamiento, no un tap
 
   function pintarNav(){
@@ -6911,9 +7003,21 @@ render('punta-cana');
       const d = Math.abs(pag.offsetLeft - grid.scrollLeft);
       if(d < min){ min = d; activo = j; }
     });
+    pagActiva = activo;
     if(cntEl)   cntEl.textContent = (activo+1) + ' / ' + mobPags.length;
     if(dotsBar) [...dotsBar.children].forEach((d,j)=>d.classList.toggle('on', j===activo));
+    // la flecha apagada dice "por aqui ya no hay mas" sin tener que probarla
+    if(arwPrev) arwPrev.disabled = activo <= 0;
+    if(arwNext) arwNext.disabled = activo >= mobPags.length - 1;
   }
+
+  // mover el carrusel una pagina. El scroll dispara pintarNav solo.
+  function irAPagina(j){
+    if(!mobPags[j]) return;
+    grid.scrollTo({ left: mobPags[j].offsetLeft, behavior:'smooth' });
+  }
+  if(arwPrev) arwPrev.addEventListener('click', () => irAPagina(pagActiva - 1));
+  if(arwNext) arwNext.addEventListener('click', () => irAPagina(pagActiva + 1));
 
   // Listeners del contenedor: se enganchan UNA sola vez. Si se hicieran dentro
   // de ivmBuildMobGrid se irian acumulando cada vez que se cambia de destino.
@@ -7070,6 +7174,61 @@ render('punta-cana');
     setTimeout(() => { inner.innerHTML = ''; }, 300);
   }
 
+  // ── El pie de "seguir viendo" ──
+  // El nombre bonito del destino. Sale de la propia excursión (todas las de la
+  // lista son del mismo destino); el tab es el plan B por si algún día entra un
+  // destino nuevo y aquí no está.
+  const DEST_NOMBRE = {
+    'punta-cana'   : 'Punta Cana',
+    'bayahibe'     : 'Bayahibe',
+    'samana'       : 'Samaná',
+    'santo-domingo': 'Santo Domingo'
+  };
+  function destNombre(){
+    const t0 = currentLista[0];
+    if(t0 && DEST_NOMBRE[t0.dest]) return DEST_NOMBRE[t0.dest];
+    const tab = document.querySelector('.dtab.on');
+    return tab ? tab.textContent.trim() : 'la zona';
+  }
+  const SIG_IZQ = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SIG_DER = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function navPieHTML(idx){
+    const total = currentLista.length;
+    if(total < 2) return '';           // con una sola no hay a dónde ir
+    const zona = destNombre();
+    const ant  = currentLista[idx-1];
+    const sig  = currentLista[idx+1];
+
+    // adelante: la siguiente, o de vuelta a la primera si esta era la última
+    const btnSig = sig
+      ? `<button type="button" class="ivm-sig-btn on" data-ir="${idx+1}">
+           <span class="ivm-sig-tx"><b>Próxima excursión en ${zona}</b><i>${sig.name}</i></span>
+           <span class="ivm-sig-ico">${SIG_DER}</span>
+         </button>`
+      : `<button type="button" class="ivm-sig-btn vuelve" data-ir="0">
+           <span class="ivm-sig-tx"><b>Volver a la primera de ${zona}</b><i>${currentLista[0].name}</i></span>
+           <span class="ivm-sig-ico">${SIG_DER}</span>
+         </button>`;
+
+    // atrás: en la primera se deja apagado y DICIENDO por qué, que un botón
+    // gris sin explicación se lee como que la página está rota
+    const btnAnt = ant
+      ? `<button type="button" class="ivm-sig-btn" data-ir="${idx-1}">
+           <span class="ivm-sig-ico">${SIG_IZQ}</span>
+           <span class="ivm-sig-tx"><b>Anterior excursión</b><i>${ant.name}</i></span>
+         </button>`
+      : `<button type="button" class="ivm-sig-btn" disabled>
+           <span class="ivm-sig-ico">${SIG_IZQ}</span>
+           <span class="ivm-sig-tx"><b>Anterior excursión</b><i>Esta es la primera de ${zona}</i></span>
+         </button>`;
+
+    return `<div class="ivm-sig">
+      <div class="ivm-sig-h">Excursión ${idx+1} de ${total} en ${zona}</div>
+      ${btnSig}${btnAnt}
+    </div>`;
+  }
+
   function ivmLoadCard(idx){
     const t = currentLista[idx];
     if(!t) return;
@@ -7078,7 +7237,7 @@ render('punta-cana');
     counter.textContent = (idx+1) + '/' + currentLista.length;
     btnPrev.disabled = idx <= 0;
     btnNext.disabled = idx >= currentLista.length - 1;
-    inner.innerHTML = cardHTML(t);
+    inner.innerHTML = cardHTML(t) + navPieHTML(idx);
     modal.scrollTop = 0;
 
     // Wirear INMEDIATAMENTE — el innerHTML ya está disponible en el mismo tick
@@ -7144,6 +7303,17 @@ render('punta-cana');
   btnClose.addEventListener('click', ivmCloseModal);
   btnPrev.addEventListener('click',  () => { if(currentIdx>0) ivmLoadCard(currentIdx-1); });
   btnNext.addEventListener('click',  () => { if(currentIdx<currentLista.length-1) ivmLoadCard(currentIdx+1); });
+
+  // Los botones del pie se rehacen con cada ficha, asi que el listener va en el
+  // contenedor, que ese si es siempre el mismo. El indice destino viene puesto
+  // en data-ir: asi el "volver a la primera" no necesita logica aparte.
+  inner.addEventListener('click', e => {
+    const b = e.target.closest('.ivm-sig-btn');
+    if(!b || b.disabled) return;
+    const ir = +b.dataset.ir;
+    if(Number.isNaN(ir) || !currentLista[ir]) return;
+    ivmLoadCard(ir);   // ivmLoadCard ya sube el modal arriba del todo
+  });
 
   function ivmRebuild(){
     const active = document.querySelector('.dtab.on');

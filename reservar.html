@@ -528,6 +528,87 @@ h2.pago-h2{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(18
   .ok-btns{ flex-direction:column; }
 }
 
+/* ====== LA HOJA DEL PAGO ======
+   Sube desde abajo y tapa la página. Es el momento en que se pide dinero
+   y merece pantalla propia: sin la barra, sin los pasos, sin nada que
+   distraiga ni que se pueda tocar por error. */
+.hoja{ position:fixed; inset:0; z-index:200; display:flex; align-items:flex-end; justify-content:center; }
+.hoja[hidden]{ display:none !important; }
+.hoja-fondo{ position:absolute; inset:0; background:rgba(9,26,17,.55);
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); opacity:0; transition:opacity .35s; }
+.hoja.on .hoja-fondo{ opacity:1; }
+.hoja-in{ position:relative; width:100%; max-width:470px; max-height:96vh; overflow-y:auto;
+  background:var(--sand); border-radius:26px 26px 0 0; padding:0 clamp(18px,5vw,26px) 26px;
+  padding-bottom:calc(26px + env(safe-area-inset-bottom));
+  box-shadow:0 -24px 60px -26px rgba(0,0,0,.6);
+  transform:translateY(100%); transition:transform .42s cubic-bezier(.25,1,.35,1); }
+.hoja.on .hoja-in{ transform:none; }
+@media(min-width:640px){
+  .hoja{ align-items:center; }
+  .hoja-in{ border-radius:24px; max-height:92vh; }
+}
+
+/* la cinta de arriba: que nadie confunda esto con un cobro de verdad */
+.hoja-prueba{ margin:0 calc(clamp(18px,5vw,26px) * -1) 0; padding:12px clamp(18px,5vw,26px);
+  background:linear-gradient(120deg,var(--o),var(--o-d)); color:#fff;
+  border-radius:26px 26px 0 0; position:sticky; top:0; z-index:3; }
+@media(min-width:640px){ .hoja-prueba{ border-radius:24px 24px 0 0; } }
+.hoja-prueba b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:11px;
+  letter-spacing:.11em; margin-bottom:2px; }
+.hoja-prueba span{ display:block; font-size:12px; line-height:1.45; color:rgba(255,255,255,.93); }
+
+.hoja-top{ display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px; }
+.hoja-x{ width:34px; height:34px; border-radius:50%; border:1.5px solid var(--line); background:#fff;
+  color:var(--muted); cursor:pointer; display:grid; place-items:center; transition:.2s; }
+.hoja-x:hover{ background:var(--sand); color:var(--ink); }
+.hoja-seg{ display:inline-flex; align-items:center; gap:6px; font-family:'Plus Jakarta Sans';
+  font-weight:700; font-size:11.5px; color:var(--g-d); }
+
+.hoja-cifra{ text-align:center; padding:8px 0 20px; }
+.hoja-cifra .k{ display:block; font-size:12px; color:var(--muted); font-weight:600; }
+.hoja-cifra b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:800;
+  font-size:clamp(34px,9vw,44px); letter-spacing:-.04em; color:var(--g-d); line-height:1.05; margin:3px 0 4px; }
+.hoja-cifra small{ display:block; font-size:12.5px; color:var(--muted); }
+
+/* ── la tarjeta dibujada ──
+   Se rellena mientras se escribe. No es adorno: enseña el número tal y
+   como lo estás tecleando, que es donde se ven los errores de un dígito. */
+.tarjeta-visual{ position:relative; aspect-ratio:1.62; max-width:330px; margin:0 auto 22px;
+  border-radius:17px; padding:18px; color:#fff; overflow:hidden;
+  background:linear-gradient(128deg,#12854c 0%,#0b5a34 48%,#07301d 100%);
+  box-shadow:0 22px 40px -20px rgba(6,40,24,.95), inset 0 1px 0 rgba(255,255,255,.18);
+  display:flex; flex-direction:column; justify-content:space-between;
+  transition:transform .4s cubic-bezier(.3,1,.4,1); }
+.tarjeta-visual::after{ content:''; position:absolute; width:190px; height:190px; border-radius:50%;
+  background:rgba(255,255,255,.09); top:-84px; right:-56px; }
+.tarjeta-visual .marca{ position:absolute; top:17px; right:18px; font-family:'Plus Jakarta Sans';
+  font-weight:800; font-size:14px; letter-spacing:.04em; z-index:2; }
+.tarjeta-visual .chip{ width:40px; height:30px; border-radius:7px; z-index:2;
+  background:linear-gradient(135deg,#f6dc9a,#c9a24a);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18); }
+.tarjeta-visual .num{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:clamp(16px,4.6vw,19px);
+  letter-spacing:.08em; z-index:2; }
+.tarjeta-visual .pie{ display:flex; justify-content:space-between; gap:12px; z-index:2;
+  font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.82); }
+.tarjeta-visual .pie em{ font-style:normal; font-family:'Plus Jakarta Sans'; font-weight:600;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ── la lista de tarjetas de prueba ── */
+.hoja-tarjetas{ margin-top:22px; padding-top:18px; border-top:1px dashed var(--line); }
+.hoja-tarjetas > b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:11px;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+.tp{ display:flex; align-items:center; gap:11px; width:100%; text-align:left; cursor:pointer;
+  background:#fff; border:1.5px solid var(--line); border-radius:13px; padding:11px 13px;
+  margin-bottom:8px; font-family:'Be Vietnam Pro'; transition:border-color .2s, background .2s; }
+.tp:hover{ border-color:#cfe4d7; background:#fbfefc; }
+.tp-pt{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.tp-pt.ok{ background:var(--g); }
+.tp-pt.no{ background:var(--mal); }
+.tp-tx{ flex:1; min-width:0; }
+.tp-tx b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px;
+  letter-spacing:.03em; }
+.tp-tx small{ display:block; font-size:11.5px; color:var(--muted); margin-top:1px; }
+
 /* ====== LA BARRA DE ABAJO (el resumen del teléfono) ==========
    El resumen lateral no cabe en una pantalla de mano, y quitarlo del todo
    dejaba al cliente a ciegas: metía cuatro adultos y dos extras sin ver
@@ -1053,6 +1134,75 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
   </div>
 </div>
 
+<!-- ====== LA PANTALLA DE PAGO ======
+     Sube desde abajo cuando el cliente pulsa el botón. Es una hoja
+     aparte a propósito: el pago es un momento distinto del formulario,
+     y mezclarlo con los campos de "cómo te llamas" lo abarata.
+
+     ⚠️ MODO PRUEBA: nada de esto sale del navegador. No hay banco. Los
+     números de tarjeta se miran contra una lista y se olvidan. -->
+<div class="hoja" id="hojaPago" hidden>
+  <div class="hoja-fondo" id="hojaFondo"></div>
+  <div class="hoja-in" role="dialog" aria-modal="true" aria-labelledby="pagoTitulo">
+
+    <div class="hoja-prueba">
+      <b>⚠️ MODO DE PRUEBA</b>
+      <span>No hay cobro real y ningún dato sale de este navegador. Usa una de las tarjetas de abajo.</span>
+    </div>
+
+    <div class="hoja-top">
+      <button class="hoja-x" id="hojaX" type="button" aria-label="Cerrar y volver">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+      </button>
+      <span class="hoja-seg"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg> Conexión segura</span>
+    </div>
+
+    <div class="hoja-cifra">
+      <span class="k" id="pagoTitulo">Vas a pagar ahora</span>
+      <b id="pagoMonto">—</b>
+      <small id="pagoDetalle">—</small>
+    </div>
+
+    <div class="tarjeta-visual" id="tarjetaVisual">
+      <span class="marca" id="tvMarca"></span>
+      <span class="chip"></span>
+      <span class="num" id="tvNum">•••• •••• •••• ••••</span>
+      <span class="pie"><em id="tvNombre">TU NOMBRE</em><em id="tvExp">MM/AA</em></span>
+    </div>
+
+    <div class="field" data-campo="tjNum">
+      <label for="tjNum">Número de la tarjeta</label>
+      <input type="text" id="tjNum" inputmode="numeric" autocomplete="cc-number" placeholder="4111 1111 1111 1111" maxlength="23">
+      <p class="malmsg" id="mal-tjNum"></p>
+    </div>
+    <div class="row2">
+      <div class="field" data-campo="tjExp">
+        <label for="tjExp">Vence</label>
+        <input type="text" id="tjExp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5">
+        <p class="malmsg" id="mal-tjExp"></p>
+      </div>
+      <div class="field" data-campo="tjCvv">
+        <label for="tjCvv">CVV</label>
+        <input type="text" id="tjCvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
+        <p class="malmsg" id="mal-tjCvv"></p>
+      </div>
+    </div>
+    <div class="field" data-campo="tjNombre">
+      <label for="tjNombre">Nombre en la tarjeta</label>
+      <input type="text" id="tjNombre" autocomplete="cc-name" spellcheck="false" placeholder="Como aparece impreso">
+      <p class="malmsg" id="mal-tjNombre"></p>
+    </div>
+
+    <div class="err" id="errPago"></div>
+    <button class="cta" id="btnPagar" type="button">Pagar</button>
+
+    <div class="hoja-tarjetas">
+      <b>Tarjetas de prueba — toca una para rellenarla</b>
+      <div id="listaPrueba"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ====== LA BARRA DE ABAJO (solo en el teléfono) ======
      Qué se reserva, para quién y cuánto — y el botón. Va suelta y fija,
      fuera del layout, para que ni el scroll ni el modo confirmación
@@ -1513,7 +1663,9 @@ function pintarCampo(id, msg, insistir){
   el.classList.toggle('bien', !msg && !vacio);   // la palomita, solo si escribió algo
   if(campo) campo.classList.toggle('malo', gritar);
   if(caja){
-    if(gritar) caja.innerHTML = ICO_MAL + '<span>' + msg + '</span>';
+    // se borra el texto al ocultarlo: un aviso viejo escondido en el DOM
+    // acaba saliendo cuando no toca, o lo lee un lector de pantalla
+    caja.innerHTML = gritar ? ICO_MAL + '<span>' + msg + '</span>' : '';
     caja.classList.toggle('on', gritar);
   }
 }
@@ -1535,7 +1687,16 @@ const INMEDIATOS = [
   'Un nombre no lleva números',
   'Ahí hay algún signo que no va',
   'Un teléfono solo lleva números',
-  'Un correo no lleva espacios'
+  'Un correo no lleva espacios',
+  /* los de la tarjeta. Estos tres solo se producen cuando el dato YA está
+     completo — un número de 16 dígitos que no cuadra, un mes que no existe,
+     un año que ya pasó — así que no hay nada que esperar: son definitivos
+     en el momento en que aparecen. Y en el pago, cuanto antes se sepa,
+     mejor: nadie quiere descubrir el dígito cambiado después de pulsar. */
+  'Ese número no es válido',
+  'Ese mes no existe',
+  'Esa tarjeta ya venció',
+  'No reconocemos esa tarjeta'
 ];
 const esInmediato = msg => INMEDIATOS.some(x => msg.startsWith(x));
 
@@ -1997,18 +2158,150 @@ function extrasElegidos(){
    nada mas de la pagina tiene que enterarse del cambio.
    ============================================================ */
 
-/* ⚠️  EL CORREO TODAVIA NO SALE DE AQUI  ⚠️
-   Esta pagina es HTML suelto: un navegador no puede mandar correos por
-   su cuenta, hace falta un servicio detras (EmailJS, Formspree, Resend
-   o un servidor propio). Mientras `activo` sea false, la pantalla de
-   confirmacion le dice al cliente que le llego un correo QUE NO SE HA
-   ENVIADO. Por eso ahi mismo se le enseña el resumen completo y el
-   boton de WhatsApp: para que no se quede sin la informacion.
+/* ═══════════════════════════════════════════════════════════════════
+   ⚠️  LO QUE HOY NO PASA, Y HAY QUE SABERLO  ⚠️
 
-   Cuando se conecte el servicio: poner activo:true y mandar el objeto
-   `reserva` desde enviarReserva(). Es el mismo sitio donde despues va
-   el cobro del abono.                                                */
-const CORREO = { activo:false, servicio:'' };
+   Cuando un cliente aparta un cupo, IVONNE NO SE ENTERA. La reserva se
+   guarda en el localStorage del NAVEGADOR DEL CLIENTE — en su teléfono,
+   no en ningún sitio que nosotros podamos mirar. El cliente ve su
+   pantalla de "listo" y la información se queda ahí y muere con él.
+
+   Eso es lo que arregla este bloque. Los dos correos ya están escritos
+   —el del dueño y el del cliente—, con todos sus datos, para los dos
+   casos (apartado y pagado completo). Lo único que falta es el
+   transporte: la función que los mete en internet.
+
+   PARA ENCENDERLO, DOS COSAS Y NINGUNA MÁS:
+     1. CORREO.activo = true  y  CORREO.dueno = 'tu@correo.com'
+     2. rellenar transportar() con el servicio que se contrate
+
+   Nada más de la página tiene que cambiar. Ni el formulario, ni la
+   confirmación, ni el objeto reserva.
+   ═══════════════════════════════════════════════════════════════════ */
+const CORREO = {
+  activo   : false,
+  servicio : '',                             // 'emailjs' | 'resend' | 'formspree' | 'propio'
+  dueno    : 'reservas@ivonnetourrd.com',    // ← a dónde llegan los avisos de Ivonne
+  copia    : '',                             // otro correo en copia, si hace falta
+  reintentos: 3
+};
+
+/* ── LOS DOS CORREOS ──────────────────────────────────────────
+   Cada uno devuelve un sobre cerrado: a quién va, qué asunto lleva y
+   qué dice. Se escriben aquí, aparte del envío, por dos motivos: se
+   pueden leer y corregir sin tocar nada técnico, y se pueden PROBAR
+   sin mandar nada (ver `verCorreos()` al final del archivo).        */
+
+function lineasDeReserva(r){
+  const l = [];
+  l.push(['Código de reserva', r.codigo]);
+  l.push([r.producto.tipo === 'paquete' ? 'Plan' : 'Excursión', r.producto.nombre]);
+  l.push(['Fecha', fmtFechaLarga(r.fecha) + (r.hora ? ' · sale ' + r.hora : '')]);
+  l.push(['Personas', r.personas.adultos + ' adulto' + (r.personas.adultos > 1 ? 's' : '') +
+                      (r.personas.ninos ? ', ' + r.personas.ninos + ' niño' + (r.personas.ninos > 1 ? 's' : '') : '') +
+                      ' (' + r.personas.total + ' en total)']);
+  l.push([r.recogida.tipo === 'hotel' ? 'Recoger en el hotel' : 'Punto de encuentro', r.recogida.valor]);
+  l.push(['—', '—']);
+  l.push(['Cliente', r.cliente.nombre]);
+  l.push(['Correo', r.cliente.email]);
+  l.push(['WhatsApp', r.cliente.whatsapp + (r.cliente.whatsapp2 ? '  /  ' + r.cliente.whatsapp2 : '')]);
+  l.push(['—', '—']);
+  l.push(['Modalidad', r.pago.modo === 'completo' ? 'PAGÓ EL TOUR COMPLETO' : 'APARTÓ EL CUPO']);
+  l.push(['Total del tour', $$(r.totales.total)]);
+  l.push(['Cobrado ahora', $$(r.pago.hoy)]);
+  l.push(['Pendiente de cobro', r.pago.pendiente > 0
+      ? $$(r.pago.pendiente) + '  ← cobrar el día del tour'
+      : 'Nada. Está pagado entero.']);
+  if(r.pago.referencia) l.push(['Referencia del pago', r.pago.referencia]);
+  if(r.extras.length){
+    l.push(['—', '—']);
+    r.extras.forEach(e => {
+      const det = Object.values(e.opciones).filter(v => v !== '' && v !== 1).join(', ');
+      l.push(['Extra', e.nombre + (det ? ' (' + det + ')' : '') + ' — ' + $$(e.precio)]);
+    });
+  }
+  if(r.peticion) l.push(['PETICIÓN ESPECIAL', r.peticion]);
+  return l;
+}
+
+/* el aviso para Ivonne: lo que necesita para atender la reserva */
+function correoParaDueno(r){
+  const completo = r.pago.modo === 'completo';
+  const quien = primerNombre(r.cliente.nombre) || r.cliente.nombre;
+  return {
+    etiqueta: 'dueno',
+    para    : CORREO.dueno,
+    copia   : CORREO.copia,
+    // el asunto se lee entero en la lista del móvil, sin abrirlo: qué pasó,
+    // qué tour, qué día y quién
+    asunto  : (completo ? '💳 PAGADO COMPLETO' : '🎟️ CUPO APARTADO') +
+              ' · ' + r.producto.nombre +
+              ' · ' + fmtFecha(r.fecha) +
+              ' · ' + r.cliente.nombre +
+              ' (' + r.codigo + ')',
+    // responder al correo del cliente contesta al cliente, no a uno mismo
+    responderA: r.cliente.email,
+    titulo  : completo
+      ? quien + ' pagó el tour completo'
+      : quien + ' apartó su cupo — quedan ' + $$(r.pago.pendiente) + ' por cobrar',
+    lineas  : lineasDeReserva(r),
+    pie     : completo
+      ? 'No hay que cobrarle nada el día del tour.'
+      : 'RECORDAR: cobrarle ' + $$(r.pago.pendiente) + ' el día del tour.'
+  };
+}
+
+/* el voucher del cliente: lo mismo, contado para él */
+function correoParaCliente(r){
+  const completo = r.pago.modo === 'completo';
+  return {
+    etiqueta: 'cliente',
+    para    : r.cliente.email,
+    asunto  : 'Tu reserva ' + r.codigo + ' · ' + r.producto.nombre + ' · ' + fmtFecha(r.fecha),
+    responderA: CORREO.dueno,
+    titulo  : '¡Listo, ' + (primerNombre(r.cliente.nombre) || 'ya está') +
+              '! Guardamos tu reserva para el ' + fmtFechaLarga(r.fecha),
+    lineas  : lineasDeReserva(r),
+    pie     : completo
+      ? 'Ya está todo pagado. El día del tour no tienes que pagar nada ni llevar efectivo: llegas, saludas y te subes. Cualquier duda, escríbeme por WhatsApp.'
+      : 'Tu cupo está guardado. Te faltan ' + $$(r.pago.pendiente) + ', que pagas ' +
+        (r.producto.tipo === 'paquete' ? 'al llegar' : 'al subir a la guagua') +
+        '. Cualquier duda, escríbeme por WhatsApp.'
+  };
+}
+
+/* el sobre en texto plano, que es lo que casi todo servicio pide */
+function correoATexto(c){
+  const ancho = Math.max(...c.lineas.filter(l => l[0] !== '—').map(l => l[0].length));
+  const cuerpo = c.lineas.map(([k, v]) =>
+    k === '—' ? '' : k.padEnd(ancho) + ' :  ' + v).join('\n');
+  return c.titulo + '\n' + '='.repeat(Math.min(c.titulo.length, 60)) + '\n\n' + cuerpo + '\n\n' + c.pie +
+         '\n\n— IVONNE TOUR RD';
+}
+
+/* ── EL TRANSPORTE (lo único que falta) ───────────────────────
+   Aquí dentro va la llamada al servicio que se contrate. Recibe un
+   sobre ya escrito y solo tiene que mandarlo. Ejemplos de cómo
+   quedaría, según lo que se elija:
+
+     EmailJS (sin servidor, gratis hasta 200/mes — lo más rápido):
+       await emailjs.send('service_xx','template_xx',
+         { to:c.para, subject:c.asunto, body:correoATexto(c) });
+
+     Resend / Sendgrid (hace falta un servidor propio o una función):
+       await fetch('/api/correo', { method:'POST',
+         headers:{'Content-Type':'application/json'},
+         body: JSON.stringify(c) });
+
+     Formspree (el más simple de todos, sin código de servidor):
+       await fetch('https://formspree.io/f/XXXX', { method:'POST',
+         headers:{'Content-Type':'application/json'},
+         body: JSON.stringify({ email:c.para, message:correoATexto(c) }) });
+                                                                    */
+async function transportar(c){
+  if(!CORREO.activo) throw new Error('correo-no-configurado');
+  throw new Error('transporte-sin-implementar');   // ← aquí va el servicio
+}
 
 function codigoReserva(){
   const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // sin I, O, 0, 1: se confunden al dictarlos
@@ -2035,50 +2328,439 @@ function armarReserva(){
       whatsapp2: st.cliente.wa2.trim(),
       email   : st.cliente.email.trim()
     },
-    // cómo eligió pagar. Es lo que la pasarela va a necesitar saber: cuánto
-    // se cobra ahora y cuánto queda pendiente para el día del tour.
-    pago   : { modo:st.pago, hoy:T.hoy, pendiente:T.resto },
+    /* EL ESTADO DE LA RESERVA. Es lo que contesta "¿esta reserva está
+       cobrada?" sin tener que deducirlo de las cifras:
+         nueva     → creada, todavía sin pasar por el banco
+         apartada  → se cobró el abono, queda pendiente el resto
+         pagada    → se cobró entero, no debe nada
+         fallida   → el banco dijo que no; NO es una reserva válida     */
+    estado : 'nueva',
+    // cómo eligió pagar. Es lo que la pasarela necesita saber: cuánto se
+    // cobra ahora y cuánto queda pendiente para el día del tour.
+    pago   : {
+      modo      : st.pago,
+      hoy       : T.hoy,
+      pendiente : T.resto,
+      proveedor : PAGO.proveedor,
+      moneda    : PAGO.moneda,
+      referencia: '',          // la que devuelva el banco
+      cobrado   : false
+    },
+    avisos : { dueno:'sin-encolar', cliente:'sin-encolar' },
     totales: { subtotal:T.subtotal, extras:T.extras, total:T.total, abono:T.abono, hoy:T.hoy, resto:T.resto }
   };
 }
 
+/* ── LA COLA ──────────────────────────────────────────────────
+   Un aviso que no sale a la primera no se puede tirar: es una reserva de
+   la que Ivonne no se enteraría. Se guarda en una cola y se reintenta —
+   al terminar la reserva, y otra vez cada vez que alguien abre la página.
+   Se borra de la cola solo cuando sale de verdad.                     */
+const COLA = 'avisos.pendientes';
+
+function leerCola(){
+  try{ return JSON.parse(localStorage.getItem(COLA) || '[]'); }catch(e){ return []; }
+}
+function escribirCola(v){
+  try{ localStorage.setItem(COLA, JSON.stringify(v)); }catch(e){}
+}
+function encolar(sobres){
+  const cola = leerCola();
+  sobres.forEach(c => cola.push({ ...c, intentos:0, creado:new Date().toISOString() }));
+  escribirCola(cola);
+  return cola.length;
+}
+
+/* Intenta vaciar la cola. Nunca lanza: que un correo falle no puede
+   romperle la reserva al cliente, que ya pagó. */
+async function despachar(){
+  let cola = leerCola();
+  if(!cola.length) return { enviados:0, pendientes:0 };
+  const quedan = [];
+  let enviados = 0;
+  for(const c of cola){
+    try{
+      await transportar(c);
+      enviados++;
+    }catch(e){
+      c.intentos++;
+      c.ultimoError = e.message;
+      // se guarda igual aunque se pase de intentos: perder el aviso de una
+      // reserva es peor que tener la cola larga
+      quedan.push(c);
+    }
+  }
+  escribirCola(quedan);
+  if(quedan.length){
+    console.warn('[IVONNE] ' + quedan.length + ' aviso(s) sin enviar. Motivo: ' +
+      quedan[0].ultimoError + '. Ver CORREO.activo y transportar().');
+  }
+  return { enviados, pendientes:quedan.length };
+}
+
+/* ── DONDE NACE LA RESERVA ────────────────────────────────────
+   TODO el formulario desemboca aquí, y solo aquí. Es el punto que hay
+   que tocar el día que haya servidor: guardar allí en vez de (o además
+   de) en el navegador. Nada más de la página se entera del cambio.   */
 function enviarReserva(reserva){
-  // Queda guardada en el navegador: hoy es el unico sitio donde vive.
+  // 1. queda guardada. Hoy, en el navegador del cliente — que es justo la
+  //    razón por la que los avisos de abajo no son un lujo.
   try{
     const previas = JSON.parse(localStorage.getItem('reservas') || '[]');
     previas.push(reserva);
     localStorage.setItem('reservas', JSON.stringify(previas));
   }catch(e){ /* si no se puede guardar, la reserva sigue su camino igual */ }
 
-  // AQUI VA EL CORREO cuando haya servicio, y AQUI VA EL COBRO del abono
-  // cuando elijamos pasarela. Las dos cosas reciben este mismo objeto.
-  if(CORREO.activo){
-    // enviarCorreo(reserva)  ← pendiente
+  // 2. se escriben los dos avisos y se meten en la cola. Esto pasa SIEMPRE,
+  //    esté el correo configurado o no: así, el día que se encienda, hasta
+  //    las reservas viejas que quedaron pendientes salen solas.
+  const sobres = [ correoParaDueno(reserva), correoParaCliente(reserva) ];
+  encolar(sobres);
+  reserva.avisos = { dueno:'en-cola', cliente:'en-cola' };
+
+  // 3. y se intenta mandarlos. Sin await y sin romper nada si falla: el
+  //    cliente no tiene por qué esperar a un correo, ni enterarse si falla.
+  despachar().then(res => {
+    if(res.enviados) console.info('[IVONNE] ' + res.enviados + ' aviso(s) enviados.');
+  });
+
+  // 4. mientras no haya correo, al menos que quede a la vista de quien
+  //    abra la consola. Es un apaño de desarrollo, no una solución.
+  if(!CORREO.activo){
+    console.group('[IVONNE] Reserva ' + reserva.codigo + ' — el correo NO está conectado');
+    sobres.forEach(c => console.log('\n── PARA ' + c.para + ' ──\n' + c.asunto + '\n\n' + correoATexto(c)));
+    console.groupEnd();
   }
   return reserva;
 }
 
+// al abrir la página se reintenta lo que quedara pendiente de otras veces
+despachar();
+
+/* ── PARA LEER LOS CORREOS SIN MANDAR NADA ────────────────────
+   En la consola del navegador:  verCorreos()
+   Enseña los dos correos tal cual saldrían, con los datos que haya
+   puestos ahora mismo en el formulario. Sirve para repasar la redacción
+   antes de contratar nada. Y  verCola()  enseña lo que quedó pendiente. */
+window.verCorreos = function(){
+  const demo = armarReserva();
+  demo.pago.referencia = 'SIM-EJEMPLO';
+  [correoParaDueno(demo), correoParaCliente(demo)].forEach(c => {
+    console.log('\n\n════ PARA: ' + c.para + ' ════\nASUNTO: ' + c.asunto + '\n\n' + correoATexto(c));
+  });
+  return 'Dos correos de ejemplo, sin enviar nada.';
+};
+window.verCola = () => leerCola();
+
+/* ═══════════════════════════════════════════════════════════════════
+   EL COBRO
+
+   Igual que con el correo: la forma está montada, falta el proveedor.
+   `cobrar()` recibe la reserva, devuelve una promesa y resuelve con
+   { ok, referencia, mensaje }. Todo lo demás de la página habla con
+   esta función y con ninguna otra.
+
+   Hoy corre el proveedor 'simulado', que hace la pausa, valida la
+   tarjeta de mentira y contesta. Cambiar a Azul, CardNet o Stripe es
+   escribir otro adaptador aquí abajo y cambiar PAGO.proveedor.
+   ═══════════════════════════════════════════════════════════════════ */
+const PAGO = {
+  proveedor : 'simulado',        // 'simulado' | 'azul' | 'cardnet' | 'stripe'
+  moneda    : (bruto.cur === 'RD$' ? 'DOP' : 'USD'),
+  comercio  : 'IVONNE TOUR RD'
+};
+
+/* Las tarjetas de prueba. 4111… es el número de pruebas de toda la vida
+   (pasa el dígito de control de Luhn y no pertenece a nadie). Las otras
+   dos están aquí para poder ver TAMBIÉN cómo se ve cuando algo falla,
+   que es la mitad del trabajo y la que nunca se prueba. */
+const TARJETAS_PRUEBA = [
+  { n:'4111 1111 1111 1111', que:'Visa · el pago pasa',            res:'ok' },
+  { n:'5555 5555 5555 4444', que:'Mastercard · el pago pasa',      res:'ok' },
+  { n:'4000 0000 0000 0002', que:'La rechaza el banco',            res:'rechazada' },
+  { n:'4000 0000 0000 9995', que:'Sin fondos suficientes',         res:'sin-fondos' }
+];
+
+const ADAPTADORES = {
+
+  /* ── SIMULADO: el que corre hoy ─────────────────────────────
+     No sale de este navegador. No hay banco, no hay dinero y ningún
+     dato de tarjeta viaja a ninguna parte: se mira el número, se
+     contesta, y se olvida. Está para ver el flujo entero funcionando. */
+  async simulado(r, tarjeta){
+    await new Promise(res => setTimeout(res, 1400));   // lo que tarda un banco
+    const num = (tarjeta.numero || '').replace(/\s/g, '');
+    const ficha = TARJETAS_PRUEBA.find(t => t.n.replace(/\s/g, '') === num);
+    if(ficha && ficha.res === 'rechazada')
+      return { ok:false, mensaje:'El banco rechazó la tarjeta. Prueba con otra.' };
+    if(ficha && ficha.res === 'sin-fondos')
+      return { ok:false, mensaje:'La tarjeta no tiene fondos suficientes para este cobro.' };
+    if(!ficha)
+      return { ok:false, mensaje:'En modo de prueba solo funcionan las tarjetas de la lista de abajo.' };
+    return {
+      ok:true,
+      referencia:'SIM-' + Date.now().toString(36).toUpperCase(),
+      mensaje:'Cobro simulado correctamente'
+    };
+  }
+
+  /* ── AZUL (Banco Popular) — el día que se contrate ───────────
+     Azul no deja que el número de tarjeta pase por nuestra página: se
+     manda al cliente a SU formulario y vuelve con la respuesta. O sea
+     que este adaptador NO recibirá `tarjeta`; en su lugar guardará la
+     reserva, redirigirá, y la vuelta se atenderá al cargar la página.
+
+     async azul(r){
+       guardarPendiente(r);                    // para reconocerla al volver
+       const f = document.createElement('form');
+       f.method = 'POST';
+       f.action = 'https://pagos.azul.com.do/PaymentPage/Default.aspx';
+       // MerchantId, OrderNumber, Amount, ITBIS, ApprovedUrl, DeclinedUrl,
+       // AuthHash — la firma se calcula EN EL SERVIDOR, nunca aquí.
+       f.submit();
+       return { ok:'redirige' };
+     }                                                              */
+};
+
+/* Lo que llama el resto de la página. Nada más sabe qué proveedor hay. */
+async function cobrar(reserva, tarjeta){
+  const adaptador = ADAPTADORES[PAGO.proveedor];
+  if(!adaptador) return { ok:false, mensaje:'No hay pasarela de pago configurada.' };
+  try{
+    return await adaptador(reserva, tarjeta || {});
+  }catch(e){
+    // un fallo de red no puede dejar al cliente sin saber qué pasó
+    return { ok:false, mensaje:'No pudimos conectar con el banco. Revisa tu conexión e inténtalo otra vez.' };
+  }
+}
+
 const GIRANDO = '<svg class="girando" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 3a9 9 0 1 0 9 9" stroke-linecap="round"/></svg>';
 
-function apartar(){
-  // repasar los cuatro pasos enteros antes de dar nada por hecho
-  if(tropieza(4)) return;
-  // el boton se queda trabajando: apartar un cupo tiene que pesar. Y este
-  // respiro es justo donde despues cabra la llamada de verdad a la pasarela.
-  // Son dos botones (el del panel y el de la barra) segun donde se toque,
-  // pero el cliente ve uno: los dos tienen que quedarse quietos a la vez.
-  const botones = [document.getElementById('btnReserve'), document.getElementById('ctaMovil')];
-  const antes = botones.map(b => b.innerHTML);
-  botones.forEach(b => { b.classList.add('cargando'); b.innerHTML = GIRANDO + ' Apartando tu cupo...'; });
+/* ── EL CAMINO COMPLETO DE UNA RESERVA ────────────────────────
+     revisar → armar → COBRAR → si el banco dice que sí:
+     guardar → encolar los dos avisos → confirmación
 
-  setTimeout(() => {
-    enviada = enviarReserva(armarReserva());
-    pintarConfirmacion(enviada);
-    verPaso(4);
-    botones.forEach((b,i) => { b.classList.remove('cargando'); b.innerHTML = antes[i]; });
-    try{ sessionStorage.removeItem(CLAVE); }catch(e){}
-  }, 900);
+   El orden importa: la reserva solo se da por buena, se guarda y se avisa
+   DESPUÉS de que el cobro salga bien. Si el banco dice que no, no hay
+   reserva, no hay correo y el cliente se queda donde estaba, sabiendo
+   por qué. Es el punto exacto donde entra la pasarela de verdad.      */
+function apartar(){
+  if(tropieza(4)) return;
+  abrirPago();
 }
+
+async function cobrarYConfirmar(tarjeta){
+  const reserva = armarReserva();
+  const res = await cobrar(reserva, tarjeta);
+
+  if(!res.ok) return res;                 // el banco dijo que no: aquí se acaba
+
+  // el banco dijo que sí: ya es una reserva de verdad
+  reserva.pago.cobrado    = true;
+  reserva.pago.referencia = res.referencia || '';
+  reserva.estado = reserva.pago.modo === 'completo' ? 'pagada' : 'apartada';
+
+  enviada = enviarReserva(reserva);       // guarda + escribe y encola los avisos
+  pintarConfirmacion(enviada);
+  verPaso(4);
+  try{ sessionStorage.removeItem(CLAVE); }catch(e){}
+  return res;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LA HOJA DEL PAGO
+
+   Valida la tarjeta con las mismas reglas que usaría una de verdad —
+   Luhn, marca por el prefijo, caducidad, largo del CVV — porque de eso
+   depende que la pantalla se vea y se sienta como se va a ver el día
+   que el banco esté detrás. Lo único de mentira es el banco.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Luhn: la cuenta que hace que un número de tarjeta sea un número de
+   tarjeta y no dieciséis dígitos cualquiera. Se dobla uno sí uno no
+   desde la derecha, se suma todo, y tiene que dar múltiplo de 10. */
+function luhn(num){
+  const d = (num || '').replace(/\D/g, '');
+  if(d.length < 12) return false;
+  let suma = 0, doble = false;
+  for(let i = d.length - 1; i >= 0; i--){
+    let n = +d[i];
+    if(doble){ n *= 2; if(n > 9) n -= 9; }
+    suma += n; doble = !doble;
+  }
+  return suma % 10 === 0;
+}
+
+function marcaDe(num){
+  const d = (num || '').replace(/\D/g, '');
+  if(/^4/.test(d))                       return 'VISA';
+  if(/^(5[1-5]|2[2-7])/.test(d))         return 'MASTERCARD';
+  if(/^3[47]/.test(d))                   return 'AMEX';
+  if(/^6(011|5)/.test(d))                return 'DISCOVER';
+  return '';
+}
+const esAmex = n => marcaDe(n) === 'AMEX';
+
+/* los grupos de 4 (o 4-6-5 en Amex), que es como se lee una tarjeta */
+function formatearNum(v){
+  const d = v.replace(/\D/g, '').slice(0, esAmex(v) ? 15 : 16);
+  const cortes = esAmex(v) ? [4, 10] : [4, 8, 12];
+  return d.split('').map((c, i) => (cortes.includes(i) ? ' ' : '') + c).join('');
+}
+function formatearExp(v){
+  const d = v.replace(/\D/g, '').slice(0, 4);
+  return d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d;
+}
+
+const REVISAR_TJ = {
+  tjNum(v){
+    const d = (v || '').replace(/\D/g, '');
+    if(!d) return 'Escribe el número de la tarjeta.';
+    if(!marcaDe(d)) return 'No reconocemos esa tarjeta. ¿Está bien el primer número?';
+    if(d.length < (esAmex(d) ? 15 : 16)) return 'Faltan números: son ' + (esAmex(d) ? 15 : 16) + ' en total.';
+    if(!luhn(d)) return 'Ese número no es válido. Repásalo, suele ser un dígito cambiado.';
+    return '';
+  },
+  tjExp(v){
+    const d = (v || '').replace(/\D/g, '');
+    if(!d) return 'Pon la fecha de vencimiento.';
+    if(d.length < 4) return 'Escríbela completa: mes y año, como 08/28.';
+    const mes = +d.slice(0, 2), ano = 2000 + +d.slice(2);
+    if(mes < 1 || mes > 12) return 'Ese mes no existe. El mes va primero: 08/28.';
+    const hoy = new Date();
+    if(ano < hoy.getFullYear() || (ano === hoy.getFullYear() && mes < hoy.getMonth() + 1))
+      return 'Esa tarjeta ya venció.';
+    return '';
+  },
+  tjCvv(v){
+    const d = (v || '').replace(/\D/g, '');
+    const largo = esAmex(document.getElementById('tjNum').value) ? 4 : 3;
+    if(!d) return 'Falta el CVV, los ' + largo + ' números del reverso.';
+    if(d.length !== largo) return 'El CVV son ' + largo + ' números' + (largo === 4 ? ' en Amex' : '') + '.';
+    return '';
+  },
+  tjNombre(v){
+    const t = (v || '').trim();
+    if(!t) return 'Pon el nombre tal y como está impreso en la tarjeta.';
+    if(/\d/.test(t)) return 'Un nombre no lleva números.';
+    if(t.length < 3) return 'Ese nombre es muy corto.';
+    return '';
+  }
+};
+const CAMPOS_TJ = ['tjNum', 'tjExp', 'tjCvv', 'tjNombre'];
+
+function pintarTarjeta(){
+  const num = document.getElementById('tjNum').value;
+  const marca = marcaDe(num);
+  document.getElementById('tvMarca').textContent = marca;
+  document.getElementById('tvNum').textContent = num || '•••• •••• •••• ••••';
+  document.getElementById('tvExp').textContent = document.getElementById('tjExp').value || 'MM/AA';
+  document.getElementById('tvNombre').textContent =
+    document.getElementById('tjNombre').value || 'TU NOMBRE';
+}
+
+function abrirPago(){
+  const T = totales();
+  const completo = st.pago === 'completo';
+  document.getElementById('pagoTitulo').textContent = completo ? 'Vas a pagar el tour completo' : 'Vas a apartar tu cupo';
+  document.getElementById('pagoMonto').textContent  = $$(T.hoy);
+  document.getElementById('pagoDetalle').textContent = P.nombre + ' · ' + txPersonas() + ' · ' +
+    (completo ? 'no queda nada pendiente' : 'quedan ' + $$(T.resto) + ' para el día del tour');
+  document.getElementById('btnPagar').textContent = (completo ? 'Pagar ' : 'Apartar con ') + $$(T.hoy);
+  avisar('Pago', '');
+
+  const hoja = document.getElementById('hojaPago');
+  hoja.hidden = false;
+  void hoja.offsetWidth;
+  hoja.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarPago(){
+  const hoja = document.getElementById('hojaPago');
+  hoja.classList.remove('on');
+  document.body.style.overflow = '';
+  setTimeout(() => { hoja.hidden = true; }, 420);
+}
+
+/* la lista de tarjetas de prueba: se toca una y se rellena sola. Sin esto
+   habría que copiar dieciséis dígitos a mano en un teléfono. */
+function pintarTarjetasPrueba(){
+  document.getElementById('listaPrueba').innerHTML = TARJETAS_PRUEBA.map((t, i) => `
+    <button type="button" class="tp" data-tp="${i}">
+      <span class="tp-pt ${t.res === 'ok' ? 'ok' : 'no'}"></span>
+      <span class="tp-tx"><b>${t.n}</b><small>${t.que}</small></span>
+    </button>`).join('');
+  document.querySelectorAll('[data-tp]').forEach(b => {
+    b.onclick = () => {
+      const t = TARJETAS_PRUEBA[+b.dataset.tp];
+      document.getElementById('tjNum').value = t.n;
+      document.getElementById('tjExp').value = '08/30';
+      document.getElementById('tjCvv').value = '123';
+      const suyo = (st.cliente.nombre || 'MARIA FERNANDEZ').toUpperCase();
+      document.getElementById('tjNombre').value = suyo;
+      CAMPOS_TJ.forEach(id => pintarCampo(id, REVISAR_TJ[id](document.getElementById(id).value), false));
+      pintarTarjeta();
+      avisar('Pago', '');
+    };
+  });
+}
+
+function armarHojaPago(){
+  pintarTarjetasPrueba();
+
+  const num = document.getElementById('tjNum'), exp = document.getElementById('tjExp'),
+        cvv = document.getElementById('tjCvv'), nom = document.getElementById('tjNombre');
+
+  num.oninput = e => { e.target.value = formatearNum(e.target.value); alEscribir('tjNum', REVISAR_TJ.tjNum(e.target.value)); pintarTarjeta(); };
+  exp.oninput = e => { e.target.value = formatearExp(e.target.value); alEscribir('tjExp', REVISAR_TJ.tjExp(e.target.value)); pintarTarjeta(); };
+  cvv.oninput = e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4); alEscribir('tjCvv', REVISAR_TJ.tjCvv(e.target.value)); };
+  nom.oninput = e => { alEscribir('tjNombre', REVISAR_TJ.tjNombre(e.target.value)); pintarTarjeta(); };
+  CAMPOS_TJ.forEach(id => {
+    const el = document.getElementById(id);
+    el.onblur = () => pintarCampo(id, REVISAR_TJ[id](el.value), true);
+  });
+
+  document.getElementById('hojaX').onclick = cerrarPago;
+  document.getElementById('hojaFondo').onclick = cerrarPago;
+
+  document.getElementById('btnPagar').onclick = async () => {
+    // repasar la tarjeta entera antes de molestar al banco
+    let primerMalo = null;
+    CAMPOS_TJ.forEach(id => {
+      const m = REVISAR_TJ[id](document.getElementById(id).value);
+      pintarCampo(id, m, true);
+      if(m && !primerMalo) primerMalo = id;
+    });
+    if(primerMalo){ document.getElementById(primerMalo).focus(); return; }
+
+    const btn = document.getElementById('btnPagar');
+    const antes = btn.textContent;
+    btn.classList.add('cargando');
+    btn.innerHTML = GIRANDO + ' Hablando con el banco...';
+    avisar('Pago', '');
+
+    const res = await cobrarYConfirmar({
+      numero : num.value,
+      exp    : exp.value,
+      cvv    : cvv.value,
+      nombre : nom.value
+    });
+
+    btn.classList.remove('cargando');
+    btn.textContent = antes;
+
+    if(res.ok){
+      cerrarPago();
+    }else{
+      // el banco dijo que no: se dice por qué y se le deja donde estaba,
+      // con lo suyo escrito. No se pierde ni la reserva ni la tarjeta.
+      avisar('Pago', res.mensaje);
+      document.getElementById('errPago').scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+  };
+}
+armarHojaPago();
 
 function primerNombre(n){ return (n || '').trim().split(/\s+/)[0] || ''; }
 

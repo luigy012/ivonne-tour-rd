@@ -231,17 +231,18 @@ input.mal, select.mal{ border-color:var(--mal); background:#fdf3f2; }
 .ivonne .wa:hover{ background:#eef6f0; }
 .ivonne .wa svg{ color:var(--g); }
 
-/* barra fija abajo (móvil) */
-.mobilebar{ display:none; }
+/* ====== EN EL TELÉFONO: SOLO EL PASO ======
+   En una pantalla de mano, el resumen lateral y la barra de abajo no
+   ayudaban: repetían el botón de Continuar en dos sitios y llenaban de
+   números una pantalla donde solo hay que contestar UNA pregunta. Aquí
+   se ve el paso y nada más; lo que reservó se le enseña entero al final,
+   en el ticket. En el escritorio sí hay sitio, y el resumen se queda. */
 @media(max-width:900px){
-  .mobilebar{ display:flex; position:fixed; bottom:0; left:0; right:0; z-index:40; background:#fff;
-    border-top:1px solid var(--line); box-shadow:0 -10px 30px -18px rgba(0,0,0,.3); padding:12px 16px; align-items:center; gap:14px; }
-  .mobilebar .mb-info{ flex:1; }
-  .mobilebar .mb-info .mb-t{ font-size:11px; color:var(--muted); }
-  .mobilebar .mb-info .mb-v{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; color:var(--g-d); }
-  .mobilebar .mb-info .mb-s{ font-size:10.5px; color:var(--o-d); font-weight:600; }
-  .mobilebar .mb-btn{ background:var(--g); color:#fff; border:none; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; padding:14px 20px; border-radius:12px; }
-  .layout{ padding-bottom:100px; }
+  .side{ display:none; }
+  .layout{ padding-bottom:40px; }
+  .panel{ padding:22px 18px 24px; border-radius:18px; }
+  .nav{ margin-top:20px; }
+  .nav .next{ min-height:56px; font-size:16px; }
 }
 
 /* ====== EL BOTÓN MIENTRAS PIENSA ======
@@ -252,49 +253,11 @@ input.mal, select.mal{ border-color:var(--mal); background:#fdf3f2; }
 .girando{ animation:girar .9s linear infinite; transform-origin:center; }
 @keyframes girar{ to{ transform:rotate(360deg); } }
 
-/* ====== EL AVISO QUE CAE DE ARRIBA (el "push") ======
-   Cae como la notificación de un teléfono: en el móvil arriba del todo,
-   en el escritorio arriba a la derecha. Dice las dos cosas que importan
-   en ese instante — que la reserva llegó, y que hay que ir al correo —
-   y se va sola en 8 segundos, con una barrita que lo va contando. */
-.push{ position:fixed; z-index:120; top:12px; left:50%; width:min(430px, calc(100vw - 22px));
-  transform:translateX(-50%) translateY(-150%); opacity:0; pointer-events:none;
-  transition:transform .6s cubic-bezier(.15,1.15,.35,1), opacity .4s; }
-.push.on{ transform:translateX(-50%) translateY(0); opacity:1; pointer-events:auto; }
-@media(min-width:901px){
-  .push{ left:auto; right:22px; top:20px; transform:translateY(-150%); }
-  .push.on{ transform:translateY(0); }
-}
-.push-card{ position:relative; overflow:hidden; background:rgba(255,255,255,.98);
-  -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
-  border:1px solid rgba(207,228,215,.9); border-radius:20px;
-  box-shadow:0 28px 55px -20px rgba(11,90,52,.5), 0 5px 14px -5px rgba(0,0,0,.14); }
-.push-row{ display:flex; gap:13px; align-items:flex-start; padding:15px 15px 14px; }
-.push-ico{ width:44px; height:44px; border-radius:13px; flex-shrink:0; display:grid; place-items:center;
-  background:linear-gradient(135deg,var(--g2),var(--g-d)); color:#fff;
-  box-shadow:0 10px 18px -9px rgba(18,133,76,.95); }
-.push-tx{ flex:1; min-width:0; }
-.push-h{ display:flex; align-items:center; gap:6px; margin-bottom:3px;
-  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:10px; letter-spacing:.13em;
-  text-transform:uppercase; color:var(--g-d); }
-.push-h em{ font-style:normal; font-weight:600; letter-spacing:0; text-transform:none; color:var(--muted); font-size:11px; }
-.push-t{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15.5px; line-height:1.25; letter-spacing:-.01em; }
-.push-b{ font-size:12.5px; color:var(--muted); line-height:1.45; margin-top:3px; }
-.push-b b{ color:var(--ink); font-weight:700; }
-.push-x{ width:26px; height:26px; border-radius:50%; border:none; background:var(--sand); color:var(--muted);
-  cursor:pointer; display:grid; place-items:center; flex-shrink:0; transition:.2s; }
-.push-x:hover{ background:var(--line); color:var(--ink); }
-.push-barra{ height:3px; background:#eaf3ed; }
-.push-barra i{ display:block; height:100%; width:100%; transform-origin:left;
-  background:linear-gradient(90deg,var(--g2),var(--g)); }
-.push.on .push-barra i{ animation:vaciar 8s linear forwards; }
-@keyframes vaciar{ from{ transform:scaleX(1); } to{ transform:scaleX(0); } }
-
 /* ====== PANTALLA DE "YA ESTÁ" ======
    Cuando la reserva se manda, sobran los pasos, el resumen lateral y la
    barra de abajo: ya no hay nada que decidir. La página se queda en una
    sola columna con la confirmación. */
-body.listo .stepwrap, body.listo .side, body.listo .mobilebar{ display:none; }
+body.listo .stepwrap, body.listo .side{ display:none; }
 body.listo .layout{ grid-template-columns:1fr; padding-bottom:60px; }
 body.listo .panel{ border:none; box-shadow:none; background:transparent; padding-left:0; padding-right:0; }
 .ok-top{ text-align:center; padding:6px 0 4px; }
@@ -605,33 +568,6 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
   </div>
 </div>
 
-<!-- El aviso que cae al apartar. Vive fuera de todo (position:fixed) para
-     que no le afecte el scroll ni el modo confirmación. -->
-<div class="push" id="push" role="status" aria-live="polite">
-  <div class="push-card">
-    <div class="push-row">
-      <div class="push-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6 8.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="push-tx">
-        <div class="push-h">Ivonne Tour RD <em>ahora</em></div>
-        <div class="push-t" id="pushT">Reserva recibida ✓</div>
-        <div class="push-b" id="pushB"></div>
-      </div>
-      <button class="push-x" id="pushX" aria-label="Cerrar el aviso"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg></button>
-    </div>
-    <div class="push-barra"><i></i></div>
-  </div>
-</div>
-
-<!-- barra fija móvil -->
-<div class="mobilebar">
-  <div class="mb-info">
-    <div class="mb-t">Total (impuestos incl.)</div>
-    <div class="mb-v" id="mbTotal">—</div>
-    <div class="mb-s">Apartas ahora <span id="mbAbono">—</span></div>
-  </div>
-  <button class="mb-btn" id="mbNext">Continuar</button>
-</div>
-
 </main>
 
 <!-- El catálogo: las excursiones, los paquetes y los extras. El mismo
@@ -841,7 +777,6 @@ function verPaso(n){
       t.classList.toggle('on', i === step);
       t.classList.toggle('done', i < step);
     });
-    document.getElementById('mbNext').textContent = step === 3 ? 'Apartar mi cupo' : 'Continuar';
   }
   window.scrollTo({ top:0, behavior:'smooth' });
   guardar();
@@ -917,7 +852,6 @@ function marcarMalos(p){
 
 document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => irA(+b.dataset.go));
 document.querySelectorAll('.sB-tab').forEach(t => t.onclick = () => irA(+t.dataset.tab));
-document.getElementById('mbNext').onclick = () => { if(step < 3) irA(step + 1); else apartar(); };
 document.getElementById('btnReserve').onclick = apartar;
 
 /* ============================================================
@@ -1005,8 +939,6 @@ function upd(){
   document.getElementById('vTotal').textContent = $$(T.total);
   document.getElementById('vAbono').textContent = $$(T.abono);
   document.getElementById('vResto').textContent = $$(T.resto);
-  document.getElementById('mbTotal').textContent = $$(T.total);
-  document.getElementById('mbAbono').textContent = $$(T.abono);
   guardar();
 }
 
@@ -1219,43 +1151,19 @@ function apartar(){
   // el boton se queda trabajando: apartar un cupo tiene que pesar. Y este
   // respiro es justo donde despues cabra la llamada de verdad a la pasarela.
   const btn = document.getElementById('btnReserve');
-  const mb  = document.getElementById('mbNext');
   const antes = btn.innerHTML;
   btn.classList.add('cargando'); btn.innerHTML = GIRANDO + ' Apartando tu cupo...';
-  mb.disabled = true; mb.textContent = 'Apartando...';
 
   setTimeout(() => {
     enviada = enviarReserva(armarReserva());
     pintarConfirmacion(enviada);
     verPaso(4);
-    mostrarPush(enviada);
     btn.classList.remove('cargando'); btn.innerHTML = antes;
-    mb.disabled = false;
     try{ sessionStorage.removeItem(CLAVE); }catch(e){}
   }, 900);
 }
 
 function primerNombre(n){ return (n || '').trim().split(/\s+/)[0] || ''; }
-
-/* ── EL AVISO QUE CAE ─────────────────────────────────────────
-   Se va solo a los 8 segundos (lo que tarda la barrita en vaciarse),
-   o antes si lo cierran. */
-let pushReloj = null;
-function mostrarPush(r){
-  const caja = document.getElementById('push');
-  document.getElementById('pushT').textContent = 'Reserva ' + r.codigo + ' recibida ✓';
-  document.getElementById('pushB').innerHTML =
-    (primerNombre(r.cliente.nombre) ? primerNombre(r.cliente.nombre) + ', busca' : 'Busca') +
-    ' tu correo en <b>' + r.cliente.email + '</b>: ahí está toda la información de tu reserva.';
-  // reiniciar la barrita aunque se enseñe dos veces seguidas
-  caja.classList.remove('on');
-  void caja.offsetWidth;
-  caja.classList.add('on');
-  clearTimeout(pushReloj);
-  pushReloj = setTimeout(cerrarPush, 8000);
-}
-function cerrarPush(){ clearTimeout(pushReloj); document.getElementById('push').classList.remove('on'); }
-document.getElementById('pushX').onclick = cerrarPush;
 
 function pintarConfirmacion(r){
   const nombre = primerNombre(r.cliente.nombre);
@@ -1377,7 +1285,6 @@ if(params.get('ver') === 'confirmacion'){
   const demo = armarReserva();
   pintarConfirmacion(demo);
   verPaso(4);
-  setTimeout(() => mostrarPush(demo), 500);
 }
 
 }

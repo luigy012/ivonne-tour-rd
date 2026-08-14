@@ -84,26 +84,123 @@ function aTexto(sobre){
          cuerpo + '\n\n' + sobre.pie + '\n\n— IVONNE TOUR RD';
 }
 
+/* ── EL CORREO BONITO ─────────────────────────────────────────
+   Un correo NO se maqueta como una página web. Gmail, Outlook y el
+   correo del iPhone se comen la mitad del CSS moderno: nada de flex,
+   nada de grid, nada de hojas de estilo aparte. Se hace con tablas y
+   con el estilo escrito en cada etiqueta, como en 2005 — feo por
+   dentro, pero es lo único que se ve igual en todas partes.
+
+   Reglas que se respetan aquí:
+     · tablas para todo lo que sea colocar cosas
+     · estilo dentro de cada etiqueta (nada de <style>)
+     · 600px de ancho, que es lo que cabe en todos los clientes
+     · nada de imágenes de fondo (Outlook las ignora)
+     · el color se hereda del tipo de correo: verde si todo va bien,
+       ámbar si es un aviso de pago fallido
+     · y siempre acompañado de la versión en texto plano, que es la
+       que se lee si alguien tiene las imágenes bloqueadas          */
 function aHtml(sobre){
-  const esc = s => String(s).replace(/[&<>]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c]));
-  const filasHtml = sobre.filas.map(l => l
-    ? `<tr><td style="padding:7px 14px 7px 0;color:#5c6b60;font-size:13px;white-space:nowrap;vertical-align:top">${esc(l[0])}</td>
-           <td style="padding:7px 0;font-size:14px;font-weight:600;color:#1b241e">${esc(l[1])}</td></tr>`
-    : `<tr><td colspan="2" style="padding:6px 0"><div style="border-top:1px dashed #e8e1d5"></div></td></tr>`
-  ).join('');
-  return `<div style="background:#fbf7ef;padding:26px 14px;font-family:-apple-system,Segoe UI,Roboto,sans-serif">
-  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e8e1d5;border-radius:18px;overflow:hidden">
-    <div style="background:linear-gradient(135deg,#12854c,#0b5a34);padding:22px 24px">
-      <div style="color:rgba(255,255,255,.75);font-size:10px;letter-spacing:.22em;font-weight:700">IVONNE TOUR RD</div>
-      <div style="color:#fff;font-size:19px;font-weight:800;margin-top:7px;line-height:1.3">${esc(sobre.titulo)}</div>
-    </div>
-    <div style="padding:22px 24px">
-      <table style="width:100%;border-collapse:collapse">${filasHtml}</table>
-      <div style="margin-top:20px;padding:14px 16px;background:#f2f9f4;border:1px solid #cfe4d7;border-left:4px solid #12854c;border-radius:10px;font-size:13.5px;color:#0b5a34;line-height:1.55">${esc(sobre.pie)}</div>
-      <a href="https://wa.me/${CFG.whatsapp}" style="display:block;margin-top:18px;text-align:center;background:#12854c;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:13px;border-radius:11px">Escribir por WhatsApp</a>
-    </div>
-  </div>
-</div>`;
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+  const alerta = sobre.etiqueta === 'fallido';
+  const c = alerta
+    ? { fuerte:'#b0430f', suave:'#e0742a', papel:'#fff6ef', linea:'#f3d9c2', icono:'!' }
+    : { fuerte:'#0b5a34', suave:'#12854c', papel:'#f2f9f4', linea:'#cfe4d7', icono:'✓' };
+
+  const FUENTE = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+
+  /* las filas de datos. La primera de cada bloque manda: si la etiqueta
+     va en MAYÚSCULAS es porque es la que hay que leer primero (el
+     WhatsApp en el aviso de fallo, la petición especial), y se pinta
+     destacada en vez de en gris. */
+  const filasHtml = sobre.filas.map(l => {
+    if(!l) return `<tr><td colspan="2" style="padding:9px 0"><div style="height:1px;background:#e8e1d5;line-height:1px;font-size:0">&nbsp;</div></td></tr>`;
+    const destacada = l[0] === l[0].toUpperCase() && l[0].length > 4;
+    return `<tr>
+      <td style="padding:8px 16px 8px 0;font-family:${FUENTE};font-size:12px;color:${destacada ? c.fuerte : '#5c6b60'};font-weight:${destacada ? '700' : '400'};white-space:nowrap;vertical-align:top;line-height:1.5">${esc(l[0])}</td>
+      <td style="padding:8px 0;font-family:${FUENTE};font-size:14px;color:#1b241e;font-weight:600;line-height:1.5">${esc(l[1])}</td>
+    </tr>`;
+  }).join('');
+
+  /* la cabecera del resguardo: el código grande, que es lo que el
+     cliente va a buscar cuando abra el correo dentro de tres semanas */
+  const codigo = (sobre.filas.find(l => l && /^Código/.test(l[0])) || [])[1] || '';
+
+  return `<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(sobre.asunto)}</title></head>
+<body style="margin:0;padding:0;background:#fbf7ef;">
+<!-- el texto que asoma en la lista del móvil, antes de abrir -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(sobre.pie)}</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fbf7ef;padding:24px 12px">
+<tr><td align="center">
+
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e8e1d5">
+
+    <!-- CABECERA -->
+    <tr><td style="background:${c.fuerte};padding:28px 30px 26px">
+      <div style="font-family:${FUENTE};font-size:10px;letter-spacing:.24em;font-weight:700;color:rgba(255,255,255,.6)">IVONNE TOUR RD</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px"><tr>
+        <td width="42" valign="top">
+          <div style="width:38px;height:38px;background:${c.suave};border-radius:50%;text-align:center;line-height:38px;font-size:20px;color:#ffffff;font-family:${FUENTE};font-weight:700">${c.icono}</div>
+        </td>
+        <td valign="middle" style="padding-left:12px">
+          <div style="font-family:${FUENTE};font-size:19px;line-height:1.32;font-weight:700;color:#ffffff">${esc(sobre.titulo)}</div>
+        </td>
+      </tr></table>
+    </td></tr>
+
+    ${codigo ? `<!-- EL CÓDIGO, EN GRANDE -->
+    <tr><td style="padding:0 30px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${c.papel};border:1px solid ${c.linea};border-radius:13px;margin-top:24px">
+        <tr><td align="center" style="padding:16px 18px">
+          <div style="font-family:${FUENTE};font-size:10px;letter-spacing:.16em;font-weight:700;color:#5c6b60">TU CÓDIGO DE RESERVA</div>
+          <div style="font-family:${FUENTE};font-size:27px;letter-spacing:.09em;font-weight:700;color:${c.fuerte};padding-top:5px">${esc(codigo)}</div>
+        </td></tr>
+      </table>
+    </td></tr>` : ''}
+
+    <!-- LOS DATOS -->
+    <tr><td style="padding:22px 30px 4px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${filasHtml}</table>
+    </td></tr>
+
+    <!-- QUÉ HAY QUE HACER -->
+    <tr><td style="padding:18px 30px 0">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${c.papel};border-radius:12px;border-left:4px solid ${c.suave}">
+        <tr><td style="padding:15px 17px;font-family:${FUENTE};font-size:13.5px;line-height:1.6;color:${c.fuerte}">${esc(sobre.pie)}</td></tr>
+      </table>
+    </td></tr>
+
+    <!-- WHATSAPP -->
+    <tr><td style="padding:20px 30px 0">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td align="center" style="background:#12854c;border-radius:12px">
+          <a href="https://wa.me/${esc(CFG.whatsapp)}" style="display:block;padding:15px;font-family:${FUENTE};font-size:14.5px;font-weight:700;color:#ffffff;text-decoration:none">${alerta ? 'Escribirle por WhatsApp' : 'Escribir por WhatsApp'}</a>
+        </td></tr>
+      </table>
+    </td></tr>
+
+    <!-- PIE -->
+    <tr><td style="padding:24px 30px 26px">
+      <div style="height:1px;background:#e8e1d5;line-height:1px;font-size:0">&nbsp;</div>
+      <div style="font-family:${FUENTE};font-size:11.5px;line-height:1.6;color:#8b978f;padding-top:16px">
+        IVONNE TOUR RD · Punta Cana, República Dominicana<br>
+        ${alerta
+          ? 'Este aviso es solo para ti. Al cliente no le ha llegado ningún correo.'
+          : 'Si tienes cualquier duda, responde a este correo y te contestamos.'}
+      </div>
+    </td></tr>
+
+  </table>
+
+</td></tr>
+</table>
+</body></html>`;
 }
 
 /* ── LOS TRES SOBRES ────────────────────────────────────────── */

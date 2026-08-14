@@ -16,101 +16,278 @@
   --g:#12854c; --g-d:#0b5a34; --g2:#1a9e5c; --b:#0e86bd; --o:#e0742a; --o-d:#b0430f;
   --mal:#c0392b;
 }
-body{ font-family:'Be Vietnam Pro',sans-serif; background:var(--sand); color:var(--ink); -webkit-font-smoothing:antialiased; line-height:1.6; }
+/* el fondo no es un color plano: un halo verde muy suave arriba da
+   profundidad y hace que los paneles blancos floten en vez de estar
+   pegados. Fijo, para que no se mueva con el scroll. */
+body{ font-family:'Be Vietnam Pro',sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; line-height:1.6;
+  background:radial-gradient(1200px 560px at 50% -12%, #eef7f1 0%, rgba(238,247,241,0) 62%), var(--sand);
+  background-attachment:fixed; }
 img{ display:block; max-width:100%; }
 .wrap{ max-width:1080px; margin:0 auto; padding:0 clamp(18px,4vw,36px); }
 
-.topbar{ background:#fff; border-bottom:1px solid var(--line); padding:15px 0; position:sticky; top:0; z-index:30; }
+.topbar{ background:rgba(255,255,255,.88); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line); padding:13px 0; position:sticky; top:0; z-index:30; }
 .topbar .wrap{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
-.brand{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15px; letter-spacing:.28em; color:var(--g-d); }
-.back{ display:inline-flex; align-items:center; gap:7px; color:var(--muted); text-decoration:none; font-size:13.5px; font-weight:600; }
-.securebar{ display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--g-d); font-weight:600; }
+.brand{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:14px; letter-spacing:.28em; color:var(--g-d); }
+.back{ display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none;
+  font-size:13.5px; font-weight:600; padding:7px 13px 7px 9px; border-radius:100px;
+  border:1.5px solid transparent; transition:.2s; }
+.back:hover{ color:var(--ink); background:#fff; border-color:var(--line); }
+/* el sello de pago seguro: en una pantalla donde se piden datos y dinero,
+   se gana el sitio que ocupa */
+.securebar{ display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--g-d); font-weight:700;
+  font-family:'Plus Jakarta Sans'; background:#eaf5ee; border:1px solid #cfe4d7;
+  padding:6px 12px; border-radius:100px; }
 .securebar svg{ color:var(--g); }
-@media(max-width:520px){ .brand{ display:none; } }
+@media(max-width:520px){ .brand{ display:none; } .back{ padding-left:6px; } }
 
 /* ====== INDICADOR DE PASOS ======
-   Van los dos a la vez, y no por indecisión: la barra dice CUÁNTO
-   falta (en el teléfono es lo único que se ve sin bajar), y los tabs
-   dicen QUÉ falta y dejan volver a un paso anterior de un toque. */
-.stepwrap{ padding:22px 0 6px; }
-/* la barra de progreso + "paso X de 4" */
-.sA-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; gap:12px; }
-.sA-lbl{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:14px; color:var(--ink); }
-.sA-lbl span{ color:var(--g); }
-.sA-pct{ font-size:12.5px; color:var(--muted); font-weight:600; flex-shrink:0; }
-.sA-bar{ height:8px; background:var(--line); border-radius:100px; overflow:hidden; }
-.sA-fill{ height:100%; background:linear-gradient(90deg,var(--g),var(--g2)); border-radius:100px; transition:width .4s cubic-bezier(.3,1,.4,1); }
-/* los tabs clicables */
-.sB{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
-.sB-tab{ flex:1; min-width:130px; display:flex; align-items:center; gap:10px; background:#fff; border:1.5px solid var(--line);
-  border-radius:13px; padding:12px 14px; cursor:pointer; transition:.2s; text-align:left; font-family:'Be Vietnam Pro'; }
-.sB-tab:hover{ border-color:#cfe4d7; }
-.sB-tab.on{ border-color:var(--g); background:#f2f9f4; }
-.sB-tab.done{ border-color:#cfe4d7; }
-.sB-n{ width:26px; height:26px; border-radius:50%; background:var(--line); color:var(--muted); display:grid; place-items:center;
-  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:13px; flex-shrink:0; transition:.2s; }
-.sB-tab.on .sB-n{ background:var(--g); color:#fff; }
-.sB-tab.done .sB-n{ background:var(--g2); color:#fff; }
-.sB-t{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13px; line-height:1.2; }
-.sB-t small{ display:block; font-weight:500; font-size:11px; color:var(--muted); }
-@media(max-width:640px){ .sB-tab .sB-t small{ display:none; } .sB-tab{ min-width:0; justify-content:center; padding:11px 8px; } }
+   Antes eran dos cosas: una barra de progreso Y cuatro tarjetas-tab con
+   número y subtítulo. En el escritorio se defendía; en el teléfono los
+   cuatro tabs se apretaban hasta quedar en cuatro cuadraditos ilegibles
+   con el texto partido.
+
+   Ahora es UNA sola pieza que hace los dos trabajos: cuatro segmentos que
+   se van llenando (dicen cuánto falta) y que se pueden tocar para volver
+   atrás (dicen qué falta). En el escritorio cada uno lleva su nombre
+   debajo; en el teléfono se quedan los segmentos solos, que ya se
+   entienden — y encima va escrito "Paso 2 de 4 · Dónde te recogemos". */
+.stepwrap{ padding:clamp(18px,3vw,26px) 0 4px; }
+.sHead{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.sHead .lbl{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(13.5px,2.4vw,15.5px);
+  letter-spacing:-.01em; line-height:1.25; }
+.sHead .lbl span{ color:var(--g); }
+.sHead .pct{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:11.5px; color:var(--muted);
+  flex-shrink:0; background:#fff; border:1px solid var(--line); border-radius:100px; padding:5px 12px; }
+
+.steps{ display:flex; gap:7px; }
+.stp{ flex:1; background:none; border:none; padding:0; cursor:pointer; text-align:left;
+  font-family:'Be Vietnam Pro'; -webkit-tap-highlight-color:transparent; }
+/* el riel y, dentro, la parte llena: se llena creciendo de izquierda a
+   derecha, no apareciendo de golpe */
+.stp i{ display:block; position:relative; height:6px; border-radius:100px; background:var(--line); overflow:hidden; }
+.stp i::after{ content:''; position:absolute; inset:0; border-radius:100px;
+  background:linear-gradient(90deg,var(--g),var(--g2));
+  transform:scaleX(0); transform-origin:left; transition:transform .45s cubic-bezier(.3,1,.4,1); }
+.stp.done i::after, .stp.on i::after{ transform:none; }
+.stp.on i{ box-shadow:0 6px 14px -7px rgba(18,133,76,.9); }
+.stp b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:11.5px;
+  color:var(--muted); margin-top:9px; transition:color .25s; }
+.stp.done b{ color:var(--ink); }
+.stp.on b{ color:var(--g-d); }
+@media(max-width:640px){
+  .stp b{ display:none; }
+  .stp i{ height:5px; }
+  .steps{ gap:6px; }
+}
 
 /* ====== LAYOUT 2 columnas ====== */
 .layout{ display:grid; grid-template-columns:1fr 360px; gap:clamp(20px,3vw,34px); align-items:start; padding:20px 0 90px; }
 @media(max-width:900px){ .layout{ grid-template-columns:1fr; } }
 
 /* panel de pasos */
-.panel{ background:#fff; border:1px solid var(--line); border-radius:20px; padding:clamp(22px,3vw,30px);
-  box-shadow:0 30px 60px -50px rgba(0,0,0,.4); min-height:340px; }
+.panel{ background:#fff; border:1px solid var(--line); border-radius:22px; padding:clamp(22px,3vw,32px);
+  box-shadow:0 1px 2px rgba(16,24,20,.04), 0 34px 64px -48px rgba(16,40,28,.55); min-height:340px; }
 .pane{ display:none; } .pane.on{ display:block; animation:fade .35s; }
 @keyframes fade{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
-.pane h2{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(20px,2.6vw,25px); letter-spacing:-.02em; margin-bottom:5px; }
-.pane .sub{ color:var(--muted); font-size:14.5px; margin-bottom:22px; }
+.pane h2{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(21px,2.6vw,26px);
+  letter-spacing:-.028em; line-height:1.18; margin-bottom:6px; }
+.pane .sub{ color:var(--muted); font-size:14.5px; margin-bottom:24px; max-width:56ch; }
+/* una raya fina bajo el encabezado del paso: separa la pregunta de los
+   campos sin meter una caja más */
+.pane .sub{ padding-bottom:20px; border-bottom:1px solid var(--line); }
 
 .field{ margin-bottom:17px; }
 label{ display:block; font-size:13.5px; font-weight:600; margin-bottom:8px; }
 label .opt{ color:var(--muted); font-weight:500; }
 input, select, textarea{ width:100%; font-family:'Be Vietnam Pro'; font-size:14.5px; color:var(--ink);
-  background:var(--sand); border:1.5px solid var(--line); border-radius:12px; padding:13px 15px; outline:none; transition:.2s; }
-input:focus, select:focus, textarea:focus{ border-color:var(--g); background:#fff; }
+  background:var(--sand); border:1.5px solid var(--line); border-radius:12px; padding:13px 15px; outline:none;
+  transition:border-color .2s, background .2s, box-shadow .2s; }
+input:focus, select:focus, textarea:focus{ border-color:var(--g); background:#fff; box-shadow:0 0 0 3.5px rgba(18,133,76,.13); }
 input::placeholder, textarea::placeholder{ color:#9aa89e; }
+
+/* ====== CUANDO UN CAMPO ESTÁ MAL ======
+   El aviso va DEBAJO DEL CAMPO, no todo junto al final: si hay tres cosas
+   mal, tres avisos en el sitio donde se arregla cada una. Y cada aviso dice
+   qué pasa con ESE dato — "un nombre no lleva números" enseña algo; "revisa
+   los campos" no enseña nada. */
 input.mal, select.mal{ border-color:var(--mal); background:#fdf3f2; }
+input.mal:focus, select.mal:focus{ box-shadow:0 0 0 3.5px rgba(192,57,43,.14); }
+/* ============================================================
+   LOS DETALLES QUE DAN VIDA
+
+   Ninguno decora por decorar: cada uno CONFIRMA algo que el cliente
+   acaba de hacer. Un cambio que se ve venir se entiende; uno que
+   aparece de golpe parece un fallo de la página.
+
+   Todos se apagan enteros con "reducir movimiento" al final del bloque.
+   ============================================================ */
+
+/* 1. el latido del número que acaba de cambiar */
+@keyframes latir{ 0%{ transform:scale(1); } 34%{ transform:scale(1.085); } 100%{ transform:scale(1); } }
+.late{ display:inline-block; animation:latir .43s cubic-bezier(.3,1.4,.4,1); }
+
+/* 2. la onda del botón principal, donde cae el dedo */
+.cta{ position:relative; overflow:hidden; }
+.cta .onda{ position:absolute; border-radius:50%; transform:translate(-50%,-50%) scale(0);
+  background:rgba(255,255,255,.42); pointer-events:none;
+  animation:onda .62s cubic-bezier(.25,.7,.3,1) forwards; }
+@keyframes onda{ to{ transform:translate(-50%,-50%) scale(1); opacity:0; } }
+
+/* 3. el rebote del contador de personas al sumar o restar */
+@keyframes rebote{ 0%{ transform:scale(1); } 40%{ transform:scale(1.28); } 100%{ transform:scale(1); } }
+.cnum.salta{ animation:rebote .34s cubic-bezier(.3,1.5,.4,1); }
+
+/* 4. la marca de elegido, que entra creciendo en vez de aparecer */
+@keyframes marcar{ 0%{ transform:scale(0); } 62%{ transform:scale(1.22); } 100%{ transform:scale(1); } }
+.pago.on::after, .ubi.on .ubi-ck, .pe-card.on::after{ animation:marcar .34s cubic-bezier(.3,1.5,.4,1); }
+
+/* 5. la palomita de la confirmación: se DIBUJA, no aparece hecha.
+   Es el último gesto de la reserva y merece medio segundo. */
+.ok-check svg path{ stroke-dasharray:30; stroke-dashoffset:30; animation:trazar .5s .34s cubic-bezier(.4,0,.2,1) forwards; }
+@keyframes trazar{ to{ stroke-dashoffset:0; } }
+
+/* 6. los destellos alrededor de la palomita, tres y se acabó */
+.chispa{ position:absolute; width:6px; height:6px; border-radius:50%; background:#fff;
+  opacity:0; pointer-events:none; animation:chispear 1.05s ease-out forwards; }
+@keyframes chispear{
+  0%{ opacity:0; transform:translate(0,0) scale(.3); }
+  28%{ opacity:.95; }
+  100%{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(1); }
+}
+
+/* 7. los extras, cuando entran en la reserva */
+@keyframes anadido{ 0%{ transform:scale(1); } 45%{ transform:scale(1.11); } 100%{ transform:scale(1); } }
+.ex-item.on .from{ animation:anadido .38s cubic-bezier(.3,1.4,.4,1); }
+
+/* quien pidió menos movimiento, no ve ninguno de estos */
+@media(prefers-reduced-motion:reduce){
+  .late, .cnum.salta, .pago.on::after, .ubi.on .ubi-ck, .pe-card.on::after,
+  .ex-item.on .from, .ok-check svg path, .chispa, .cta .onda{ animation:none; }
+  .ok-check svg path{ stroke-dashoffset:0; }
+}
+
+/* el temblorcito de "eso ahí no va" */
+@keyframes sacude{ 0%,100%{ transform:translateX(0); } 20%,60%{ transform:translateX(-5px); } 40%,80%{ transform:translateX(5px); } }
+input.sacude{ animation:sacude .32s cubic-bezier(.36,.07,.19,.97); }
+@media(prefers-reduced-motion:reduce){ input.sacude{ animation:none; } }
+
+.malmsg{ display:none; align-items:flex-start; gap:7px; font-size:12.5px; font-weight:600;
+  color:var(--mal); line-height:1.45; margin-top:8px; }
+.malmsg.on{ display:flex; animation:fade .22s; }
+.malmsg svg{ flex-shrink:0; margin-top:2px; }
+/* mientras se enseña el error, la pista normal se calla: dos textos debajo
+   del mismo cuadro diciendo cosas distintas es ruido */
+.field.malo .hint{ display:none; }
+
+/* y cuando está bien, se dice también: una palomita discreta dentro del
+   campo. Cuesta nada y quita la duda de "¿lo habré puesto bien?" */
+input.bien{ border-color:#a9d9c0; padding-right:42px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' viewBox='0 0 24 24' fill='none' stroke='%2312854c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 13px center; }
 .hint{ font-size:12px; color:var(--muted); line-height:1.4; margin-top:6px; }
 .row2{ display:grid; grid-template-columns:1fr 1fr; gap:13px; }
 @media(max-width:480px){ .row2{ grid-template-columns:1fr; } }
 
-.opts{ display:flex; flex-wrap:wrap; gap:9px; }
-.opt-pill{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; color:var(--ink); background:var(--sand);
-  border:1.5px solid var(--line); border-radius:12px; padding:11px 18px; cursor:pointer; transition:.2s; }
-.opt-pill.on{ background:#e4f2ea; border-color:var(--g); color:var(--g-d); }
+/* las horas de salida: pastillas grandes, que se tocan con el dedo */
+.opts{ display:flex; flex-wrap:wrap; gap:10px; }
+.opt-pill{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; color:var(--ink); background:#fff;
+  border:1.5px solid var(--line); border-radius:13px; padding:13px 20px; cursor:pointer;
+  transition:border-color .2s, background .2s, box-shadow .25s, color .2s;
+  -webkit-tap-highlight-color:transparent; }
+.opt-pill:hover{ border-color:#cfe4d7; }
+.opt-pill.on{ background:linear-gradient(135deg,#eef8f2,#e0f0e7); border-color:var(--g); color:var(--g-d);
+  box-shadow:0 10px 20px -12px rgba(18,133,76,.75); }
 
-.counter{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--sand);
-  border:1.5px solid var(--line); border-radius:12px; padding:12px 15px; margin-bottom:12px; }
-.counter .lbl b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; }
+/* los contadores de personas */
+.counter{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:#fff;
+  border:1.5px solid var(--line); border-radius:15px; padding:13px 15px; margin-bottom:11px;
+  transition:border-color .2s, box-shadow .25s; }
+.counter:hover{ border-color:#cfe4d7; box-shadow:0 10px 22px -18px rgba(0,0,0,.5); }
+.counter .lbl b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; }
 .counter .lbl small{ color:var(--muted); font-size:12px; }
-.ctrl{ display:flex; align-items:center; gap:14px; }
-.cbtn{ width:36px; height:36px; border-radius:50%; border:1.6px solid var(--g); background:#fff; color:var(--g);
-  font-size:20px; cursor:pointer; display:grid; place-items:center; transition:.2s; line-height:1; }
+/* el grupo −/número/+ va en su propia cajita: se lee como un mando, no
+   como dos botones sueltos con un número en medio */
+.ctrl{ display:flex; align-items:center; gap:4px; background:var(--sand);
+  border:1px solid var(--line); border-radius:100px; padding:4px; }
+.cbtn{ width:38px; height:38px; border-radius:50%; border:none; background:#fff; color:var(--g-d);
+  font-size:21px; cursor:pointer; display:grid; place-items:center; line-height:1;
+  box-shadow:0 2px 5px -2px rgba(0,0,0,.28); transition:background .2s, color .2s, transform .14s;
+  -webkit-tap-highlight-color:transparent; }
 .cbtn:hover{ background:var(--g); color:#fff; }
-.cbtn:disabled{ opacity:.3; } .cbtn:disabled:hover{ background:#fff; color:var(--g); }
-.cnum{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:19px; min-width:22px; text-align:center; }
+.cbtn:active{ transform:scale(.9); }
+.cbtn:disabled{ opacity:.32; box-shadow:none; } .cbtn:disabled:hover{ background:#fff; color:var(--g-d); }
+.cnum{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18px; min-width:32px; text-align:center; }
 
 /* aviso de "esto es lo que falta" */
-.err{ display:none; align-items:center; gap:9px; background:#fdf3f2; border:1.5px solid #f0c9c4; color:var(--mal);
-  border-radius:12px; padding:12px 14px; font-size:13.5px; font-weight:600; margin-top:16px; }
+.err{ display:none; align-items:center; gap:9px; background:#fdf3f2; border:1.5px solid #f0c9c4;
+  border-left:4px solid var(--mal); color:var(--mal);
+  border-radius:12px; padding:13px 15px; font-size:13.5px; font-weight:600; margin-top:16px; }
 .err.on{ display:flex; animation:fade .25s; }
 .err svg{ flex-shrink:0; }
 
 /* punto de encuentro tarjetas */
 .pe-cards{ display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-bottom:14px; }
 @media(max-width:480px){ .pe-cards{ grid-template-columns:1fr; } }
-.pe-card{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; text-align:left; background:var(--sand);
-  border:1.5px solid var(--line); border-radius:14px; padding:15px; cursor:pointer; transition:.2s; }
-.pe-card.on{ background:#e4f2ea; border-color:var(--g); }
-.pe-card .ic{ font-size:24px; margin-bottom:4px; }
+/* las dos opciones de recogida. Estado activo por color y por un check en
+   la esquina — nunca por tamaño: dos tarjetas que se eligen entre sí tienen
+   que medir exactamente lo mismo, o la elegida parece "otra cosa". */
+.pe-card{ position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+  text-align:left; background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:16px;
+  cursor:pointer; transition:border-color .2s, background .25s, box-shadow .25s;
+  -webkit-tap-highlight-color:transparent; }
+.pe-card:hover{ border-color:#cfe4d7; }
+.pe-card.on{ background:linear-gradient(135deg,#f2f9f4,#e6f3ec); border-color:var(--g);
+  box-shadow:0 14px 28px -20px rgba(18,133,76,.9); }
+.pe-card.on::after{ content:''; position:absolute; top:12px; right:12px; width:20px; height:20px;
+  border-radius:50%; background:var(--g) center/12px no-repeat;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E"); }
+.pe-card .ic{ font-size:25px; margin-bottom:5px; }
 .pe-card b{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; }
 .pe-card small{ font-size:12px; color:var(--muted); }
 .pe-field{ display:none; } .pe-field.on{ display:block; }
+
+/* ====== LAS UBICACIONES ======
+   Era un desplegable gris del sistema: el elemento más soso que existe en
+   una web, y encima escondía las opciones hasta que lo abrías. Ahora se
+   ven todas de una, en tarjetas.
+
+   Van con icono dibujado y no con foto a propósito: no tenemos fotos de
+   estos puntos, y poner una imagen de banco de un malecón cualquiera sería
+   enseñar un sitio al que el cliente no va a ir. Un icono no miente. Cada
+   uno dice qué clase de sitio es —plaza, playa, pueblo, coordinado por
+   WhatsApp—, que es la información que de verdad ayuda a elegir. */
+.ubis{ display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:10px; }
+@media(max-width:400px){ .ubis{ grid-template-columns:1fr; } }
+.ubi{ position:relative; display:flex; align-items:center; gap:12px; text-align:left;
+  background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:13px 14px;
+  cursor:pointer; font-family:'Be Vietnam Pro'; overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  transition:border-color .2s, background .25s, box-shadow .25s; }
+.ubi:hover{ border-color:#cfe4d7; }
+/* el degradado que entra por la izquierda al elegirla: da vida sin mover
+   nada de sitio ni cambiar el tamaño de la tarjeta */
+.ubi::before{ content:''; position:absolute; inset:0; opacity:0; transition:opacity .3s;
+  background:linear-gradient(100deg,rgba(18,133,76,.11),rgba(18,133,76,0) 62%); }
+.ubi.on{ border-color:var(--g); box-shadow:0 14px 28px -20px rgba(18,133,76,.95); }
+.ubi.on::before{ opacity:1; }
+.ubi-ic{ position:relative; width:42px; height:42px; border-radius:13px; flex-shrink:0;
+  display:grid; place-items:center; background:var(--sand); color:var(--muted);
+  border:1px solid var(--line); transition:.25s; }
+.ubi.on .ubi-ic{ background:linear-gradient(135deg,var(--g2),var(--g-d)); color:#fff;
+  border-color:transparent; box-shadow:0 9px 16px -9px rgba(18,133,76,.95); }
+.ubi-tx{ position:relative; flex:1; min-width:0; }
+.ubi-tx b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px;
+  line-height:1.22; letter-spacing:-.012em; }
+.ubi-tx small{ display:block; font-size:11.5px; color:var(--muted); margin-top:2px; }
+.ubi.on .ubi-tx small{ color:var(--g-d); }
+/* la marca de elegida */
+.ubi-ck{ position:relative; width:19px; height:19px; border-radius:50%; flex-shrink:0;
+  border:1.7px solid var(--line); background:#fff; transition:.22s; }
+.ubi.on .ubi-ck{ border-color:var(--g); background:var(--g) center/12px no-repeat;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E"); }
+/* cuando falta elegir, la rejilla entera se señala */
+.field.malo .ubis{ outline:1.5px solid var(--mal); outline-offset:5px; border-radius:16px; }
 
 /* la nota de a qué hora se recoge (los paquetes no tienen pastillas de horario:
    tienen un párrafo con la ruta y las horas, que se enseña tal cual) */
@@ -184,37 +361,140 @@ input.mal, select.mal{ border-color:var(--mal); background:#fdf3f2; }
   font-size:14.5px; padding:14px; border-radius:12px; transition:.25s; }
 .ex-custom-wa:hover{ background:var(--g-d); transform:translateY(-2px); }
 
+/* ====== LAS DOS FORMAS DE PAGAR ======
+   No son dos opciones iguales y la pantalla no finge que lo sean: pagar
+   completo va primero, ocupa más, lleva la cinta de arriba y es la única
+   que explica lo que te ahorra. Apartar se queda en una fila sobria.
+
+   El peso visual es la recomendación. Pero la otra no está escondida ni
+   penalizada: se elige de un toque y no dice nada en rojo. Quien no puede
+   pagar todo hoy reserva igual — que ese era el motivo de que exista. */
+.pagos{ display:flex; flex-direction:column; gap:11px; margin-bottom:26px; }
+.pago{ position:relative; display:block; width:100%; text-align:left; cursor:pointer;
+  font-family:'Be Vietnam Pro'; background:#fff; border:1.5px solid var(--line);
+  border-radius:18px; padding:16px; -webkit-tap-highlight-color:transparent;
+  transition:border-color .22s, box-shadow .28s, background .28s; }
+.pago:hover{ border-color:#cfe4d7; }
+.pago.on{ border-color:var(--g); border-width:1.5px;
+  background:linear-gradient(150deg,#f4faf6 0%,#e9f5ee 100%);
+  box-shadow:0 18px 36px -24px rgba(11,90,52,.95); }
+
+/* la cinta de "esto es lo que elige la gente" */
+.pago-flag{ display:inline-block; font-family:'Plus Jakarta Sans'; font-weight:800;
+  font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:#fff;
+  background:linear-gradient(120deg,var(--o),var(--o-d)); padding:5px 11px; border-radius:100px;
+  margin-bottom:12px; box-shadow:0 8px 16px -10px rgba(176,67,15,.95); }
+
+.pago-top{ display:flex; align-items:center; gap:12px; }
+.pago-ic{ width:44px; height:44px; border-radius:13px; flex-shrink:0; display:grid; place-items:center;
+  background:var(--sand); color:var(--muted); border:1px solid var(--line); transition:.25s; }
+.pago.on .pago-ic{ background:linear-gradient(135deg,var(--g2),var(--g-d)); color:#fff; border-color:transparent;
+  box-shadow:0 10px 18px -10px rgba(18,133,76,.95); }
+.pago-tx{ flex:1; min-width:0; }
+.pago-tx b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16px;
+  letter-spacing:-.02em; line-height:1.2; }
+.pago-tx small{ display:block; font-size:12.5px; color:var(--muted); margin-top:2px; line-height:1.4; }
+.pago-num{ flex-shrink:0; text-align:right; }
+.pago-num em{ font-style:normal; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px;
+  letter-spacing:-.03em; color:var(--ink); transition:color .25s; }
+.pago.on .pago-num em{ color:var(--g-d); }
+
+/* los tres beneficios: la razón de peso, no el precio */
+.pago-vent{ display:flex; flex-direction:column; gap:7px; margin-top:14px; padding-top:13px;
+  border-top:1px dashed #c8e0d3; }
+.pago-vent span{ display:flex; align-items:flex-start; gap:8px; font-size:13px; color:var(--ink); line-height:1.4; }
+.pago-vent svg{ flex-shrink:0; margin-top:2px; color:var(--g); }
+
+/* la marca de elegido, arriba a la derecha */
+.pago::after{ content:''; position:absolute; top:15px; right:15px; width:21px; height:21px;
+  border-radius:50%; border:1.8px solid var(--line); background:#fff; transition:.22s; }
+.pago.on::after{ border-color:var(--g); background:var(--g) center/13px no-repeat;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E"); }
+/* en la tarjeta sin cinta, la marca de elegido y el precio comparten
+   renglón: el precio se aparta para no quedar debajo */
+.pago-simple .pago-num{ padding-right:28px; }
+
+/* el segundo encabezado del paso, ya dentro de los datos */
+h2.pago-h2{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(18px,2.2vw,21px);
+  letter-spacing:-.025em; margin-bottom:6px; padding-top:6px; }
+
+@media(max-width:480px){
+  .pago{ padding:15px 14px; }
+  .pago-tx b{ font-size:15px; }
+  .pago-num em{ font-size:18px; }
+  .pago-vent span{ font-size:12.5px; }
+}
+
+/* ====== EL BOTÓN PRINCIPAL ======
+   Es el mismo botón en los cuatro pasos, y es el único que manda en la
+   pantalla: apartar el cupo es la razón de que esta página exista. Nada
+   más aquí compite con él — ni el "Atrás", que es gris y estrecho a
+   propósito, ni ningún enlace suelto al lado.
+
+   Alto mínimo de 56px: cabe un dedo entero sin apuntar. */
+.cta{
+  width:100%; min-height:56px; padding:15px 24px;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16.5px; letter-spacing:-.012em;
+  color:#fff; border:none; border-radius:15px; cursor:pointer;
+  background:linear-gradient(135deg,var(--g2) 0%,var(--g) 52%,var(--g-d) 100%);
+  /* dos sombras: la de color levanta el botón del papel, la línea blanca
+     de dentro le da el brillo de arriba, como un botón físico */
+  box-shadow:0 15px 30px -13px rgba(11,90,52,.85), inset 0 1.5px 0 rgba(255,255,255,.26);
+  transition:box-shadow .25s, transform .16s, filter .25s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cta:hover{ filter:brightness(1.06); box-shadow:0 20px 38px -13px rgba(11,90,52,.95), inset 0 1.5px 0 rgba(255,255,255,.26); }
+.cta:active{ transform:translateY(2px); box-shadow:0 8px 18px -11px rgba(11,90,52,.9); }
+.cta:disabled, .cta.cargando{ pointer-events:none; filter:saturate(.75); opacity:.92; }
+.cta svg{ flex-shrink:0; }
+
 /* ====== navegación de pasos ====== */
-.nav{ display:flex; gap:12px; margin-top:24px; }
-.nav button{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; padding:15px; border-radius:13px; cursor:pointer; border:none; transition:.25s; }
-.nav .prev{ background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:15px 22px; }
-.nav .prev:hover{ background:var(--sand); }
-.nav .next{ background:var(--g); color:#fff; flex:1; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 16px 30px -14px rgba(18,133,76,.9); }
-.nav .next:hover{ background:var(--g-d); transform:translateY(-2px); }
+.nav{ display:flex; gap:12px; margin-top:26px; align-items:stretch; }
+.nav .prev{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; color:var(--muted);
+  background:#fff; border:1.5px solid var(--line); border-radius:15px; padding:15px 22px;
+  cursor:pointer; transition:.22s; flex-shrink:0; }
+.nav .prev:hover{ background:var(--sand); color:var(--ink); border-color:#d6cec0; }
+.nav .next{ flex:1; }
 
 /* ====== resumen lateral + Ivonne ====== */
 .side{ position:sticky; top:90px; }
 @media(max-width:900px){ .side{ position:static; } }
-.summary{ background:#fff; border:1px solid var(--line); border-radius:20px; overflow:hidden; box-shadow:0 30px 60px -46px rgba(0,0,0,.45); margin-bottom:16px; }
+.summary{ background:#fff; border:1px solid var(--line); border-radius:22px; overflow:hidden;
+  box-shadow:0 1px 2px rgba(16,24,20,.04), 0 34px 64px -46px rgba(16,40,28,.5); margin-bottom:16px; }
 .sum-media{ position:relative; aspect-ratio:16/10; background:#0d1a13; }
 .sum-media img{ width:100%; height:100%; object-fit:cover; }
-.sum-media .badge{ position:absolute; top:12px; left:12px; background:rgba(255,255,255,.92); font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12px; padding:6px 12px; border-radius:100px; }
+/* el velo de abajo: sin él, la nota de la esquina se pierde en las fotos claras */
+.sum-media::after{ content:''; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(to top, rgba(8,20,14,.4), transparent 45%); }
+.sum-media .badge{ position:absolute; top:12px; left:12px; z-index:2; background:rgba(255,255,255,.94);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12px; padding:6px 12px; border-radius:100px; }
 .sum-body{ padding:20px; }
-.sum-body h3{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18px; margin-bottom:4px; }
-.sum-body .z{ font-size:12.5px; color:var(--g-d); font-weight:600; margin-bottom:16px; }
+.sum-body h3{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18.5px; letter-spacing:-.025em;
+  line-height:1.2; margin-bottom:5px; }
+.sum-body .z{ font-size:12.5px; color:var(--g-d); font-weight:600; margin-bottom:14px;
+  padding-bottom:14px; border-bottom:1px solid var(--line); }
 .sumline{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; font-size:13.5px; }
 .sumline .k{ color:var(--muted); }
 .sumline .v{ font-weight:600; text-align:right; }
 .sumdiv{ border-top:1px dashed var(--line); margin:8px 0; }
-.total{ display:flex; align-items:baseline; justify-content:space-between; padding-top:12px; margin-top:4px; border-top:2px solid var(--line); }
+.total{ display:flex; align-items:baseline; justify-content:space-between; padding-top:13px; margin-top:5px;
+  border-top:2px solid var(--line); }
 .total .k{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; }
-.total .v{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:25px; color:var(--g-d); }
+.total .v{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:26px; color:var(--g-d); letter-spacing:-.03em; }
 .taxnote{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:8px; }
-.pay20{ background:linear-gradient(120deg,#eafaef,#d6f0e0); border:2px solid var(--g); border-radius:13px; padding:13px 15px; margin-top:13px; }
-.pay20 .a{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+/* la caja del abono: es la cifra que de verdad va a pagar hoy, y por eso
+   es la única de la columna que lleva color propio */
+.pay20{ position:relative; overflow:hidden; background:linear-gradient(125deg,#f0fbf4,#dcf1e4);
+  border:1.5px solid var(--g); border-radius:15px; padding:14px 16px; margin-top:14px;
+  box-shadow:0 14px 28px -20px rgba(18,133,76,.85); }
+.pay20::after{ content:''; position:absolute; width:120px; height:120px; border-radius:50%;
+  background:rgba(26,158,92,.16); filter:blur(30px); top:-54px; right:-38px; }
+.pay20 .a{ position:relative; display:flex; justify-content:space-between; align-items:center; gap:10px; }
 .pay20 .a .l{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:12.5px; color:var(--g-d); }
-.pay20 .a .r{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:19px; color:var(--o-d); }
-.pay20 .s{ font-size:11px; color:var(--muted); margin-top:5px; }
+.pay20 .a .r{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; color:var(--o-d); letter-spacing:-.025em; }
+.pay20 .s{ position:relative; font-size:11px; color:var(--muted); margin-top:5px; }
 .sum-cancela{ display:flex; gap:8px; align-items:flex-start; font-size:11.5px; color:var(--muted); margin-top:12px; line-height:1.5; }
 .sum-cancela svg{ color:var(--g); flex-shrink:0; margin-top:2px; }
 
@@ -231,106 +511,196 @@ input.mal, select.mal{ border-color:var(--mal); background:#fdf3f2; }
 .ivonne .wa:hover{ background:#eef6f0; }
 .ivonne .wa svg{ color:var(--g); }
 
-/* ====== EN EL TELÉFONO: SOLO EL PASO ======
-   En una pantalla de mano, el resumen lateral y la barra de abajo no
-   ayudaban: repetían el botón de Continuar en dos sitios y llenaban de
-   números una pantalla donde solo hay que contestar UNA pregunta. Aquí
-   se ve el paso y nada más; lo que reservó se le enseña entero al final,
-   en el ticket. En el escritorio sí hay sitio, y el resumen se queda. */
+/* ====== EN EL TELÉFONO ====== */
 @media(max-width:900px){
-  .side{ display:none; }
-  .layout{ padding-bottom:40px; }
+  .side{ display:none; }             /* el resumen lateral no cabe: baja a la barra */
   .panel{ padding:22px 18px 24px; border-radius:18px; }
+  /* el hueco que le deja a la barra, para que no tape nada */
+  .layout{ padding-bottom:calc(158px + env(safe-area-inset-bottom)); }
+  /* el botón principal vive en la barra: aquí abajo sería el mismo dos veces */
+  .nav .next{ display:none; }
   .nav{ margin-top:20px; }
-  .nav .next{ min-height:56px; font-size:16px; }
+  .nav .prev{ width:100%; }
+  /* el paso 1 no tiene "Atrás", así que sin el Continuar la fila se queda
+     vacía: se quita entera y no deja un hueco sin explicación */
+  .pane[data-p="0"] .nav{ display:none; }
+  /* los dos botones del final, uno debajo del otro y a lo ancho */
+  .ok-btns{ flex-direction:column; }
+}
+
+/* ====== LA BARRA DE ABAJO (el resumen del teléfono) ==========
+   El resumen lateral no cabe en una pantalla de mano, y quitarlo del todo
+   dejaba al cliente a ciegas: metía cuatro adultos y dos extras sin ver
+   nunca ni cuánto iba ni QUÉ estaba reservando. Esta barra es ese resumen
+   reducido a lo que de verdad se mira mientras se decide, y en el orden en
+   que se mira:
+
+       [foto]  Isla Saona Completo          US$178
+               sáb 26 ago · 2 adultos    aparta US$36
+       ┌────────────────────────────────────────────┐
+       │              Continuar  →                  │
+       └────────────────────────────────────────────┘
+
+   La foto y el nombre están para que nunca haya duda de qué se aparta.
+   Y el botón vive aquí, no dentro del paso: es el único de la pantalla,
+   siempre a mano y sin tener que bajar a buscarlo.                     */
+.barra{ display:none; }
+@media(max-width:900px){
+  .barra{
+    display:block; position:fixed; left:0; right:0; bottom:0; z-index:40;
+    transform:translateY(115%); transition:transform .45s cubic-bezier(.3,1,.4,1);
+  }
+  .barra.on{ transform:none; }
+  /* en la pantalla de "ya está" se retira: ahí no queda nada que decidir
+     y el ticket ya dice el precio con todas sus letras */
+  body.listo .barra{ transform:translateY(115%); }
+}
+.barra-in{
+  background:linear-gradient(180deg,#ffffff 0%,#fdfaf4 100%);
+  border-top:1px solid var(--line);
+  border-radius:24px 24px 0 0;
+  padding:13px clamp(15px,4vw,22px);
+  padding-bottom:calc(13px + env(safe-area-inset-bottom));
+  /* tres capas: el filo claro de arriba, la sombra ancha verdosa que la
+     despega del contenido, y una corta que le da el canto */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
+             0 -20px 46px -28px rgba(11,90,52,.5),
+             0 -3px 14px -8px rgba(0,0,0,.14);
+}
+/* el asa de arriba: dice "esto es una pieza aparte", como las hojas que
+   suben desde abajo en las apps del teléfono */
+.barra-in::before{
+  content:''; display:block; width:38px; height:4px; border-radius:100px;
+  background:var(--line); margin:-4px auto 11px;
+}
+.barra-tour{ display:flex; align-items:center; gap:13px; margin-bottom:12px; }
+/* LA FOTO DEL TOUR.
+   Va en su propia caja y no suelta como <img>: así, si la foto no carga o
+   el tour no tiene, queda el degradado verde con la inicial dentro — nunca
+   un hueco en blanco ni una miniatura rota. Y 58px, no 48: a 48 se leía
+   como un icono de adorno; a 58 se lee como la foto de lo que reservas. */
+.barra-foto{ position:relative; width:58px; height:58px; border-radius:15px; flex-shrink:0;
+  overflow:hidden; background:linear-gradient(140deg,#12854c,#0b5a34 60%,#08301d);
+  box-shadow:0 10px 20px -11px rgba(0,0,0,.85), inset 0 0 0 1px rgba(255,255,255,.14); }
+.barra-foto img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:2; }
+/* la inicial del tour, debajo de la foto: solo se ve si la foto falla */
+.barra-foto i{ position:absolute; inset:0; z-index:1; display:grid; place-items:center;
+  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:23px; font-style:normal;
+  color:rgba(255,255,255,.9); }
+/* un brillo diagonal muy suave, para que no parezca un recorte pegado */
+.barra-foto::after{ content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,0) 45%); }
+.barra-tx{ flex:1; min-width:0; }
+/* nombre y meta en una línea cada uno: si no cabe, se corta con puntos
+   suspensivos. Que la barra crezca de alto según el nombre del tour sería
+   peor que cortar. */
+.barra-tx b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:14.5px;
+  line-height:1.2; letter-spacing:-.018em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.barra-tx small{ display:block; font-size:12px; color:var(--muted); margin-top:3px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.barra-cifra{ text-align:right; flex-shrink:0; padding-left:4px; border-left:1px solid var(--line); }
+.barra-cifra .t{ display:block; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20.5px;
+  line-height:1.1; letter-spacing:-.025em; color:var(--g-d); }
+.barra-cifra .a{ display:block; font-size:10.5px; color:var(--muted); margin-top:3px; white-space:nowrap; }
+.barra-cifra .a b{ font-weight:800; color:var(--o-d); }
+@media(max-width:360px){
+  .barra-tour img{ width:42px; height:42px; }
+  .barra-cifra .t{ font-size:18px; }
 }
 
 /* ====== EL BOTÓN MIENTRAS PIENSA ======
    Apartar un cupo no puede sentirse como enviar un formulario cualquiera.
    El botón se queda trabajando un segundo — y ese segundo es, además, el
    hueco donde luego cabrá de verdad la llamada a la pasarela. */
-.nav .next.cargando{ pointer-events:none; opacity:.9; }
 .girando{ animation:girar .9s linear infinite; transform-origin:center; }
 @keyframes girar{ to{ transform:rotate(360deg); } }
 
-/* ====== EL AVISO QUE CAE DE ARRIBA (el "push") ======
-   Cae como la notificación de un teléfono: en el móvil arriba del todo,
-   en el escritorio arriba a la derecha. Dice las dos cosas que importan
-   en ese instante — que la reserva llegó, y que hay que ir al correo —
-   y se va sola en 8 segundos, con una barrita que lo va contando. */
-.push{ position:fixed; z-index:120; top:12px; left:50%; width:min(430px, calc(100vw - 22px));
-  transform:translateX(-50%) translateY(-150%); opacity:0; pointer-events:none;
-  transition:transform .6s cubic-bezier(.15,1.15,.35,1), opacity .4s; }
-.push.on{ transform:translateX(-50%) translateY(0); opacity:1; pointer-events:auto; }
-@media(min-width:901px){
-  .push{ left:auto; right:22px; top:20px; transform:translateY(-150%); }
-  .push.on{ transform:translateY(0); }
-}
-.push-card{ position:relative; overflow:hidden; background:rgba(255,255,255,.98);
-  -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
-  border:1px solid rgba(207,228,215,.9); border-radius:20px;
-  box-shadow:0 28px 55px -20px rgba(11,90,52,.5), 0 5px 14px -5px rgba(0,0,0,.14); }
-.push-row{ display:flex; gap:13px; align-items:flex-start; padding:15px 15px 14px; }
-.push-ico{ width:44px; height:44px; border-radius:13px; flex-shrink:0; display:grid; place-items:center;
-  background:linear-gradient(135deg,var(--g2),var(--g-d)); color:#fff;
-  box-shadow:0 10px 18px -9px rgba(18,133,76,.95); }
-.push-tx{ flex:1; min-width:0; }
-.push-h{ display:flex; align-items:center; gap:6px; margin-bottom:3px;
-  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:10px; letter-spacing:.13em;
-  text-transform:uppercase; color:var(--g-d); }
-.push-h em{ font-style:normal; font-weight:600; letter-spacing:0; text-transform:none; color:var(--muted); font-size:11px; }
-.push-t{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15.5px; line-height:1.25; letter-spacing:-.01em; }
-.push-b{ font-size:12.5px; color:var(--muted); line-height:1.45; margin-top:3px; }
-.push-b b{ color:var(--ink); font-weight:700; }
-.push-x{ width:26px; height:26px; border-radius:50%; border:none; background:var(--sand); color:var(--muted);
-  cursor:pointer; display:grid; place-items:center; flex-shrink:0; transition:.2s; }
-.push-x:hover{ background:var(--line); color:var(--ink); }
-.push-barra{ height:3px; background:#eaf3ed; }
-.push-barra i{ display:block; height:100%; width:100%; transform-origin:left;
-  background:linear-gradient(90deg,var(--g2),var(--g)); }
-.push.on .push-barra i{ animation:vaciar 8s linear forwards; }
-@keyframes vaciar{ from{ transform:scaleX(1); } to{ transform:scaleX(0); } }
-
 /* ====== PANTALLA DE "YA ESTÁ" ======
-   Cuando la reserva se manda, sobran los pasos, el resumen lateral y la
-   barra de abajo: ya no hay nada que decidir. La página se queda en una
-   sola columna con la confirmación. */
+   Cuando la reserva se manda sobran los pasos, el resumen lateral y la
+   barra: ya no hay nada que decidir. Antes el panel se quedaba
+   transparente y sin bordes y el resultado era un montón de cajas
+   flotando sobre el fondo, sin sensación de haber llegado a ningún sitio.
+
+   Ahora es UNA tarjeta cerrada: foto arriba, sello, titular, lo que hay
+   que hacer, y el resguardo. Se lee de arriba abajo y se acaba. */
 body.listo .stepwrap, body.listo .side{ display:none; }
 body.listo .layout{ grid-template-columns:1fr; padding-bottom:60px; }
-body.listo .panel{ border:none; box-shadow:none; background:transparent; padding-left:0; padding-right:0; }
-.ok-top{ text-align:center; padding:6px 0 4px; }
-.ok-check{ width:82px; height:82px; border-radius:50%; margin:0 auto 20px; display:grid; place-items:center;
-  background:linear-gradient(135deg,var(--g2),var(--g)); color:#fff; position:relative;
-  box-shadow:0 22px 44px -18px rgba(18,133,76,.95); animation:pop .55s cubic-bezier(.2,1.35,.4,1); }
-/* el aro que se abre alrededor, una sola vez: celebra sin hacer ruido */
-.ok-check::after{ content:''; position:absolute; inset:-6px; border-radius:50%; border:2px solid var(--g2);
-  animation:aro 1.1s cubic-bezier(.2,.8,.3,1) .25s forwards; opacity:0; }
-@keyframes pop{ from{ transform:scale(.4); opacity:0; } to{ transform:scale(1); opacity:1; } }
-@keyframes aro{ 0%{ transform:scale(.85); opacity:.9; } 100%{ transform:scale(1.45); opacity:0; } }
-.ok-top h2{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(24px,3.6vw,32px); letter-spacing:-.025em; margin-bottom:8px; }
-.ok-top p{ color:var(--muted); font-size:15px; max-width:48ch; margin:0 auto; }
+/* el panel deja de ser panel: la tarjeta de dentro es la que manda */
+body.listo .panel{ border:none; box-shadow:none; background:transparent; padding:0; min-height:0; }
 
-/* ── EL TICKET ────────────────────────────────────────────────
-   Lo que se lleva el cliente. Se corta por la línea de puntos, con sus
-   dos muescas a los lados, como el resguardo de un boleto de verdad. */
-.tk{ max-width:520px; margin:26px auto 22px; background:#fff; border:1px solid var(--line); border-radius:22px;
-  overflow:hidden; box-shadow:0 34px 60px -40px rgba(0,0,0,.5); animation:subir .55s .12s backwards cubic-bezier(.2,.9,.3,1); }
-@keyframes subir{ from{ transform:translateY(16px); opacity:0; } to{ transform:none; opacity:1; } }
-.tk-media{ position:relative; height:150px; background:#0d1a13; }
-.tk-media img{ width:100%; height:100%; object-fit:cover; }
-.tk-media::after{ content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(8,16,12,.06) 0%, rgba(8,16,12,.35) 52%, rgba(8,16,12,.9) 100%); }
-.tk-badge{ position:absolute; top:13px; left:13px; z-index:2; background:rgba(255,255,255,.94);
-  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--g-d); padding:6px 12px; border-radius:100px; }
-.tk-title{ position:absolute; left:18px; right:18px; bottom:14px; z-index:2; color:#fff;
-  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:21px; line-height:1.15; letter-spacing:-.02em;
-  text-shadow:0 2px 12px rgba(0,0,0,.5); }
+.ok-card{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--line);
+  border-radius:26px; overflow:hidden;
+  box-shadow:0 2px 4px rgba(16,24,20,.05), 0 48px 90px -50px rgba(16,40,28,.65);
+  animation:subir .6s cubic-bezier(.2,.9,.3,1) backwards; }
+@keyframes subir{ from{ transform:translateY(20px); opacity:0; } to{ transform:none; opacity:1; } }
+
+/* ── la foto de la excursión, arriba ── */
+.ok-hero{ position:relative; height:172px;
+  /* si la foto no carga, queda este degradado verde. Nunca un rectángulo
+     negro, que era lo que se veía antes y parecía un error de carga. */
+  background:linear-gradient(140deg,#0e5c37,#093f26 55%,#07301d); }
+.ok-hero img{ width:100%; height:100%; object-fit:cover; }
+.ok-hero.sinfoto img{ display:none; }
+/* el velo: deja legible el sello y ata la foto con el blanco de abajo */
+.ok-hero::after{ content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(7,32,20,.55) 0%, rgba(7,32,20,.35) 45%, rgba(7,32,20,.82) 100%); }
+.ok-hero-in{ position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:13px; }
+
+.ok-check{ width:66px; height:66px; border-radius:50%; display:grid; place-items:center;
+  background:linear-gradient(135deg,var(--g2),var(--g)); color:#fff; position:relative;
+  box-shadow:0 18px 36px -14px rgba(6,30,18,.95), 0 0 0 5px rgba(255,255,255,.16);
+  animation:pop .6s cubic-bezier(.2,1.35,.4,1); }
+/* el aro que se abre alrededor, una sola vez: celebra sin hacer ruido */
+.ok-check::after{ content:''; position:absolute; inset:-5px; border-radius:50%; border:2px solid #fff;
+  animation:aro 1.2s cubic-bezier(.2,.8,.3,1) .3s forwards; opacity:0; }
+@keyframes pop{ from{ transform:scale(.35); opacity:0; } to{ transform:scale(1); opacity:1; } }
+@keyframes aro{ 0%{ transform:scale(.9); opacity:.85; } 100%{ transform:scale(1.6); opacity:0; } }
+.ok-sello{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:#fff; background:rgba(255,255,255,.17);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.3); padding:7px 15px; border-radius:100px;
+  animation:subir .5s .25s backwards; }
+
+/* ── el cuerpo ── */
+.ok-body{ padding:clamp(22px,4vw,32px); }
+.ok-body h2{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:clamp(22px,3.4vw,29px);
+  letter-spacing:-.032em; line-height:1.18; text-align:center; margin-bottom:9px; }
+.ok-sub{ color:var(--muted); font-size:14.5px; line-height:1.55; text-align:center;
+  max-width:46ch; margin:0 auto 24px; }
+
+/* la caja del correo: lo único que le queda por hacer, y por eso va
+   arriba del todo y con más peso que el propio resguardo */
+.ok-mail{ display:flex; gap:14px; align-items:flex-start; text-align:left;
+  background:linear-gradient(135deg,#f3faf5,#e7f4ec); border:1.5px solid #bcdcc8;
+  border-radius:18px; padding:18px; margin-bottom:22px;
+  box-shadow:0 16px 32px -26px rgba(11,90,52,.9); }
+.ok-mail .ic{ width:46px; height:46px; border-radius:14px; background:#fff; color:var(--g);
+  display:grid; place-items:center; flex-shrink:0; box-shadow:0 8px 16px -10px rgba(18,133,76,.8); }
+.ok-mail .tx{ flex:1; min-width:0; }
+.ok-mail .paso{ display:block; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:9.5px;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--g); margin-bottom:4px; }
+.ok-mail b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:17px;
+  letter-spacing:-.02em; margin-bottom:5px; }
+.ok-mail p{ font-size:13px; color:var(--muted); line-height:1.55; }
+.ok-mail .correo{ color:var(--g-d); font-weight:700; word-break:break-all; }
+
+/* ── EL RESGUARDO ──────────────────────────────────────────────
+   Se corta por la línea de puntos, con sus dos muescas a los lados,
+   como el resguardo de un boleto de verdad. */
+.tk{ background:var(--sand); border:1px solid var(--line); border-radius:18px;
+  overflow:hidden; margin-bottom:16px; }
+.tk-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:15px 18px 13px; background:#fff; }
+.tk-badge{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:9.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--g-d); background:#e4f2ea; border:1px solid #cfe4d7;
+  padding:5px 11px; border-radius:100px; flex-shrink:0; }
+.tk-name{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16px; letter-spacing:-.025em;
+  line-height:1.2; flex:1; min-width:0; }
 .tk-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); }
-.tk-grid > div{ background:#fff; padding:15px 18px; }
-.tk-grid span{ display:block; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+.tk-grid > div{ background:#fff; padding:14px 18px; }
+.tk-grid span{ display:block; font-size:10px; letter-spacing:.11em; text-transform:uppercase;
   color:var(--muted); font-family:'Plus Jakarta Sans'; font-weight:700; margin-bottom:4px; }
-.tk-grid b{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; line-height:1.3; display:block; }
+.tk-grid b{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; line-height:1.3; display:block; }
 @media(max-width:420px){ .tk-grid{ grid-template-columns:1fr; } }
 /* la línea de corte, con las dos muescas */
 .tk-cut{ position:relative; height:22px; background:#fff; }
@@ -338,30 +708,34 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
 .tk-cut i{ position:absolute; top:50%; width:22px; height:22px; border-radius:50%; background:var(--sand);
   transform:translateY(-50%); border:1px solid var(--line); }
 .tk-cut i.l{ left:-12px; } .tk-cut i.r{ right:-12px; }
-.tk-foot{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:6px 18px 20px; flex-wrap:wrap; }
-.tk-cod span, .tk-pay span{ display:block; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+.tk-foot{ display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding:4px 18px 18px; background:#fff; flex-wrap:wrap; }
+.tk-cod span, .tk-pay span{ display:block; font-size:10px; letter-spacing:.11em; text-transform:uppercase;
   color:var(--muted); font-family:'Plus Jakarta Sans'; font-weight:700; margin-bottom:3px; }
-.tk-cod b{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:22px; letter-spacing:.07em; color:var(--g-d); }
+.tk-cod b{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:21px; letter-spacing:.07em; color:var(--g-d); }
 .tk-pay{ text-align:right; }
-.tk-pay b{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:22px; color:var(--o-d); }
+.tk-pay b{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:21px; color:var(--o-d); }
+/* con el tour pagado entero, la cifra va en verde: no queda deuda */
+.tk-pay.saldado b{ color:var(--g-d); }
 .tk-pay small{ display:block; font-size:11.5px; color:var(--muted); margin-top:2px; }
 
-/* la caja del correo: es lo que se le pide al cliente que haga ahora */
-.ok-mail{ display:flex; gap:14px; align-items:flex-start; text-align:left; background:linear-gradient(135deg,#f2f9f4,#eaf5ee);
-  border:1.5px solid #bcdcc8; border-radius:16px; padding:18px; margin:0 0 20px; }
-.ok-mail .ic{ width:44px; height:44px; border-radius:12px; background:#fff; color:var(--g); display:grid; place-items:center; flex-shrink:0;
-  box-shadow:0 8px 16px -10px rgba(18,133,76,.8); }
-.ok-mail b{ display:block; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; margin-bottom:4px; }
-.ok-mail small{ font-size:13px; color:var(--muted); line-height:1.55; }
-.ok-mail .correo{ color:var(--g-d); font-weight:700; word-break:break-all; }
-.ok-res{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:20px; }
-.ok-res h3{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:11.5px; text-transform:uppercase;
-  letter-spacing:.1em; color:var(--muted); margin-bottom:10px; }
+/* el desglose, plegado: está para quien lo busque, no estorbando */
+.ok-res{ border:1px solid var(--line); border-radius:16px; margin-bottom:20px; background:#fff; }
+.ok-res summary{ cursor:pointer; list-style:none; padding:14px 18px;
+  font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; color:var(--muted);
+  display:flex; align-items:center; justify-content:space-between; }
+.ok-res summary::-webkit-details-marker{ display:none; }
+.ok-res summary::after{ content:'+'; font-size:19px; font-weight:700; line-height:1; color:var(--g); }
+.ok-res[open] summary::after{ content:'−'; }
+.ok-res summary:hover{ color:var(--ink); }
+.ok-res > div{ padding:2px 18px 14px; }
 .ok-res .sumline{ border-bottom:1px dashed var(--line); }
 .ok-res .sumline:last-of-type{ border-bottom:none; }
+
 .ok-btns{ display:flex; gap:12px; flex-wrap:wrap; }
 .ok-btns a{ flex:1; min-width:200px; display:flex; align-items:center; justify-content:center; gap:9px;
-  text-decoration:none; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; padding:15px; border-radius:13px; transition:.25s; }
+  text-decoration:none; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px;
+  padding:15px; border-radius:14px; transition:.25s; }
 .ok-wa{ background:var(--g); color:#fff; box-shadow:0 16px 30px -14px rgba(18,133,76,.9); }
 .ok-wa:hover{ background:var(--g-d); transform:translateY(-2px); }
 .ok-home{ background:#fff; color:var(--ink); border:1.5px solid var(--line); }
@@ -388,7 +762,7 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
 
 <div class="topbar">
   <div class="wrap">
-    <a class="back" id="volver" href="index.html#excursiones"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Volver</a>
+    <a class="back" id="volver" href="index.html#excursiones"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span>Salir</span></a>
     <span class="brand">IVONNE TOUR RD</span>
     <span class="securebar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg> Pago seguro</span>
   </div>
@@ -410,16 +784,15 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
 
 <div class="wrap">
   <div class="stepwrap">
-    <div class="sA-top">
-      <span class="sA-lbl">Paso <span id="saNum">1</span> de 4 · <span id="saTitle">Fecha y personas</span></span>
-      <span class="sA-pct" id="saPct">25%</span>
+    <div class="sHead">
+      <span class="lbl">Paso <span id="saNum">1</span> de 4 · <span id="saTitle">Fecha y personas</span></span>
+      <span class="pct" id="saPct">25%</span>
     </div>
-    <div class="sA-bar"><div class="sA-fill" id="saFill" style="width:25%"></div></div>
-    <div class="sB" id="sB">
-      <button class="sB-tab on" data-tab="0"><span class="sB-n">1</span><span class="sB-t">Fecha<small>y personas</small></span></button>
-      <button class="sB-tab" data-tab="1"><span class="sB-n">2</span><span class="sB-t">Recogida<small>dónde te buscamos</small></span></button>
-      <button class="sB-tab" data-tab="2"><span class="sB-n">3</span><span class="sB-t">Extras<small>opcional</small></span></button>
-      <button class="sB-tab" data-tab="3"><span class="sB-n">4</span><span class="sB-t">Confirmar<small>tus datos</small></span></button>
+    <div class="steps" id="steps">
+      <button class="stp on" data-tab="0" aria-label="Paso 1: fecha y personas"><i></i><b>Fecha</b></button>
+      <button class="stp" data-tab="1" aria-label="Paso 2: dónde te recogemos"><i></i><b>Recogida</b></button>
+      <button class="stp" data-tab="2" aria-label="Paso 3: extras"><i></i><b>Extras</b></button>
+      <button class="stp" data-tab="3" aria-label="Paso 4: tus datos"><i></i><b>Confirmar</b></button>
     </div>
   </div>
 </div>
@@ -433,9 +806,10 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
         <h2 id="t1">¿Cuándo y cuántos van?</h2>
         <p class="sub" id="s1">Elige el día, la salida y a quiénes traes.</p>
         <div class="nota" id="notaSalida" hidden><b>A qué hora te recojo</b><span id="notaSalidaTx"></span></div>
-        <div class="field">
-          <label id="lblFecha">Fecha del tour</label>
+        <div class="field" data-campo="fecha">
+          <label id="lblFecha" for="fecha">Fecha del tour</label>
           <input type="date" id="fecha">
+          <p class="malmsg" id="mal-fecha"></p>
         </div>
         <div class="field" id="campoHora">
           <label>Horario de salida</label>
@@ -452,7 +826,7 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
           </div>
         </div>
         <div class="err" id="err0"></div>
-        <div class="nav"><button class="next" data-go="1">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="nav"><button class="cta next" data-go="1">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
 
       <!-- PASO 2: Recogida -->
@@ -463,18 +837,23 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
           <button class="pe-card on" data-pe="hotel"><span class="ic">🏨</span><b>En mi hotel</b><small>Te recogemos en la puerta</small></button>
           <button class="pe-card" data-pe="punto"><span class="ic">📍</span><b>Punto de encuentro</b><small>Nos vemos en un punto cercano</small></button>
         </div>
-        <div class="pe-field pe-hotel on">
+        <div class="pe-field pe-hotel on field" data-campo="hotel">
           <input type="text" id="hotel" placeholder="Nombre de tu hotel en Punta Cana / Bávaro">
+          <p class="malmsg" id="mal-hotel"></p>
           <p class="hint">Si no sabes el nombre exacto, escribe lo que recuerdes y te ayudamos.</p>
         </div>
-        <div class="pe-field pe-punto">
-          <select id="punto"></select>
+        <div class="pe-field pe-punto field" data-campo="punto">
+          <!-- las ubicaciones, en tarjetas. El valor elegido vive en el
+               input de abajo, que es lo que miran las validaciones. -->
+          <div class="ubis" id="ubis"></div>
+          <input type="hidden" id="punto" value="">
+          <p class="malmsg" id="mal-punto"></p>
           <p class="hint" id="hintPunto">Todos los puntos tienen sombra y dónde sentarte mientras esperas.</p>
         </div>
         <div class="err" id="err1"></div>
         <div class="nav">
           <button class="prev" data-go="0">Atrás</button>
-          <button class="next" data-go="2">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="cta next" data-go="2">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
       </div>
 
@@ -497,79 +876,143 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
         </div>
         <div class="nav">
           <button class="prev" data-go="1">Atrás</button>
-          <button class="next" data-go="3">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="cta next" data-go="3">Continuar <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
       </div>
 
-      <!-- PASO 4: Datos y confirmar -->
+      <!-- PASO 4: Cómo paga, y sus datos -->
       <div class="pane" data-p="3">
-        <h2>Ya casi. Cuéntanos de ti</h2>
+        <h2>Ya casi. ¿Cómo prefieres pagarlo?</h2>
+        <p class="sub">Las dos apartan tu cupo igual. La diferencia es lo que te toca hacer el día del tour.</p>
+
+        <!-- ====== LAS DOS FORMAS DE PAGAR ======
+             Pagar completo es lo que queremos que elija, y por eso va
+             primero, más grande y con los tres beneficios escritos. Pero
+             apartar sigue ahí, entera y sin castigo: quien no está listo
+             para pagar todo hoy tiene que poder reservar igual. -->
+        <div class="pagos" id="pagos">
+          <button class="pago on" data-pago="completo" type="button">
+            <span class="pago-flag">Lo que hace casi todo el mundo</span>
+            <span class="pago-top">
+              <span class="pago-ic">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19" stroke-linecap="round"/></svg>
+              </span>
+              <span class="pago-tx">
+                <b>Paga todo ahora</b>
+                <small>Y ya no piensas más en el dinero</small>
+              </span>
+              <span class="pago-num"><em id="pgCompleto">—</em></span>
+            </span>
+            <span class="pago-vent">
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Nada de filas ni de esperar turno</span>
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Sin buscar cajeros ni cargar efectivo</span>
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Llegas, saludas y te subes</span>
+            </span>
+          </button>
+
+          <button class="pago pago-simple" data-pago="abono" type="button">
+            <span class="pago-top">
+              <span class="pago-ic">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5z"/><path d="M9 6v12" stroke-linecap="round" stroke-dasharray="2 3"/></svg>
+              </span>
+              <span class="pago-tx">
+                <b>Aparta tu cupo</b>
+                <small id="pgAbonoTx">Y pagas el resto el día del tour</small>
+              </span>
+              <span class="pago-num"><em id="pgAbono">—</em></span>
+            </span>
+          </button>
+        </div>
+
+        <h2 class="pago-h2">Y ahora sí, cuéntanos de ti</h2>
         <p class="sub">Con esto te confirmamos y sabemos cómo cuidarte. Nada de spam, palabra de Ivonne.</p>
-        <div class="field">
-          <label>¿Cómo te llamas?</label>
-          <input type="text" id="cNombre" autocomplete="name" placeholder="Tu nombre completo, como en tu documento">
+        <div class="field" data-campo="cNombre">
+          <label for="cNombre">¿Cómo te llamas?</label>
+          <input type="text" id="cNombre" autocomplete="name" spellcheck="false" placeholder="Tu nombre completo, como en tu documento">
+          <p class="malmsg" id="mal-cNombre"></p>
         </div>
         <div class="row2">
-          <div class="field">
-            <label>Tu WhatsApp</label>
-            <input type="tel" id="cWa" autocomplete="tel" placeholder="+1 809 000 0000">
+          <div class="field" data-campo="cWa">
+            <label for="cWa">Tu WhatsApp</label>
+            <input type="tel" id="cWa" autocomplete="tel" inputmode="tel" placeholder="+1 809 000 0000">
+            <p class="malmsg" id="mal-cWa"></p>
             <p class="hint">Por aquí te mandamos la confirmación y te avisamos el día del tour.</p>
           </div>
-          <div class="field">
-            <label>Otro número <span class="opt">(opcional)</span></label>
-            <input type="tel" id="cWa2" placeholder="Otro WhatsApp o de un familiar">
+          <div class="field" data-campo="cWa2">
+            <label for="cWa2">Otro número <span class="opt">(opcional)</span></label>
+            <input type="tel" id="cWa2" inputmode="tel" placeholder="Otro WhatsApp o de un familiar">
+            <p class="malmsg" id="mal-cWa2"></p>
             <p class="hint">Por si se te descarga el teléfono o algo — así siempre te ubicamos.</p>
           </div>
         </div>
-        <div class="field">
-          <label>Tu correo</label>
-          <input type="email" id="cEmail" autocomplete="email" placeholder="tu@correo.com">
+        <div class="field" data-campo="cEmail">
+          <label for="cEmail">Tu correo</label>
+          <input type="email" id="cEmail" autocomplete="email" inputmode="email" spellcheck="false" placeholder="tu@correo.com">
+          <p class="malmsg" id="mal-cEmail"></p>
           <p class="hint">Aquí te enviamos el voucher con todos los detalles de tu reserva.</p>
         </div>
         <div class="err" id="err3"></div>
         <div class="nav">
           <button class="prev" data-go="2">Atrás</button>
-          <button class="next" id="btnReserve"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg> Apartar mi cupo</button>
+          <button class="cta next" id="btnReserve"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg> Apartar mi cupo</button>
         </div>
       </div>
 
-      <!-- PASO 5: ya está -->
+      <!-- PASO 5: ya está.
+           Es el final del camino y tiene que sentirse como tal: una sola
+           tarjeta, con la foto de la excursión arriba, el sello de la
+           reserva encima, y debajo lo único que el cliente tiene que hacer
+           ahora — mirar su correo. -->
       <div class="pane" data-p="4">
-        <div class="ok-top">
-          <div class="ok-check"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <h2 id="okTitulo">¡Listo! Tu cupo está apartado</h2>
-          <p id="okSub"></p>
-        </div>
+        <div class="ok-card">
+          <!-- la foto de la excursión, con el sello encima -->
+          <div class="ok-hero">
+            <img id="okFoto" alt="">
+            <div class="ok-hero-in">
+              <div class="ok-check"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="ok-sello" id="okSello">Reserva confirmada</span>
+            </div>
+          </div>
 
-        <!-- el ticket: es lo que se lleva puesto el cliente -->
-        <div class="tk">
-          <div class="tk-media">
-            <img id="tkFoto" src="" alt="" onerror="this.style.visibility='hidden'">
-            <span class="tk-badge" id="tkTipo">Excursión</span>
-            <div class="tk-title" id="tkNombre"></div>
-          </div>
-          <div class="tk-grid" id="tkGrid"></div>
-          <div class="tk-cut"><i class="l"></i><i class="r"></i></div>
-          <div class="tk-foot">
-            <div class="tk-cod"><span>Tu código</span><b id="okCodigo">—</b></div>
-            <div class="tk-pay"><span>Apartaste</span><b id="tkAbono">—</b><small id="tkResto"></small></div>
-          </div>
-        </div>
+          <div class="ok-body">
+            <h2 id="okTitulo">Listo</h2>
+            <p class="ok-sub" id="okSub"></p>
 
-        <div class="ok-mail">
-          <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6 8.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div>
-            <b>Te enviamos un correo con todo</b>
-            <small>Búscalo en <span class="correo" id="okCorreo"></span> — ahí va la fecha, la hora, dónde te recojo y cuánto falta por pagar. Si no aparece en unos minutos, mira en la carpeta de spam.</small>
+            <!-- LO QUE HAY QUE HACER AHORA. Va lo primero después del
+                 titular porque es la única acción que le queda al cliente. -->
+            <div class="ok-mail">
+              <div class="ic"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6 8.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="tx">
+                <span class="paso">Lo único que te queda por hacer</span>
+                <b>Mira tu correo</b>
+                <p>Te mandamos todo a <span class="correo" id="okCorreo"></span>: la fecha, la hora, dónde te recojo y tu código. Si no llega en unos minutos, míralo en la carpeta de spam.</p>
+              </div>
+            </div>
+
+            <!-- el resguardo, con el código y lo pagado -->
+            <div class="tk">
+              <div class="tk-head">
+                <span class="tk-badge" id="tkTipo">Excursión</span>
+                <span class="tk-name" id="tkNombre"></span>
+              </div>
+              <div class="tk-grid" id="tkGrid"></div>
+              <div class="tk-cut"><i class="l"></i><i class="r"></i></div>
+              <div class="tk-foot">
+                <div class="tk-cod"><span>Tu código</span><b id="okCodigo">—</b></div>
+                <div class="tk-pay"><span id="tkPagoL">Pagaste</span><b id="tkAbono">—</b><small id="tkResto"></small></div>
+              </div>
+            </div>
+
+            <details class="ok-res">
+              <summary>Ver el desglose completo</summary>
+              <div id="okResumen"></div>
+            </details>
+
+            <div class="ok-btns">
+              <a class="ok-wa" id="okWa" href="#" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg> Mandarle el resumen a Ivonne</a>
+              <a class="ok-home" href="index.html">Volver al inicio</a>
+            </div>
           </div>
-        </div>
-        <div class="ok-res">
-          <h3>El desglose</h3>
-          <div id="okResumen"></div>
-        </div>
-        <div class="ok-btns">
-          <a class="ok-wa" id="okWa" href="#" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg> Mandarle el resumen a Ivonne</a>
-          <a class="ok-home" href="index.html">Volver al inicio</a>
         </div>
       </div>
 
@@ -578,7 +1021,7 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
     <!-- ===== resumen lateral ===== -->
     <aside class="side">
       <div class="summary">
-        <div class="sum-media"><img id="vFoto" src="" alt=""><span class="badge" id="vRate"></span></div>
+        <div class="sum-media"><img id="vFoto" alt=""><span class="badge" id="vRate"></span></div>
         <div class="sum-body">
           <h3 id="vNombre"></h3>
           <p class="z" id="vZona"></p>
@@ -591,8 +1034,12 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
           <div class="total"><span class="k">Total</span><span class="v" id="vTotal"></span></div>
           <p class="taxnote">Precio final con impuestos incluidos (ITBIS).</p>
           <div class="pay20">
-            <div class="a"><span class="l">Apartas ahora (<span id="vPct">20</span>%)</span><span class="r" id="vAbono"></span></div>
-            <div class="s">El resto (<span id="vResto"></span>) <span id="vRestoTx">lo pagas al subir a la guagua</span>.</div>
+            <div class="a"><span class="l" id="vPagoL">Pagas ahora (todo)</span><span class="r" id="vAbono"></span></div>
+            <div class="s" id="vRestoLinea">El resto (<span id="vResto"></span>) <span id="vRestoTx">lo pagas al subir a la guagua</span>.</div>
+            <div class="s ok" id="vPagoOk">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              El día del tour no pagas nada. Solo te subes.
+            </div>
           </div>
           <p class="sum-cancela" id="vCancela"></p>
         </div>
@@ -606,20 +1053,28 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
   </div>
 </div>
 
-<!-- El aviso que cae al apartar. Va suelto y en position:fixed: así no le
-     afecta ni el scroll ni el modo confirmación, que esconde media página. -->
-<div class="push" id="push" role="status" aria-live="polite">
-  <div class="push-card">
-    <div class="push-row">
-      <div class="push-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6 8.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="push-tx">
-        <div class="push-h">Ivonne Tour RD <em>ahora</em></div>
-        <div class="push-t" id="pushT">Reserva recibida</div>
-        <div class="push-b" id="pushB"></div>
+<!-- ====== LA BARRA DE ABAJO (solo en el teléfono) ======
+     Qué se reserva, para quién y cuánto — y el botón. Va suelta y fija,
+     fuera del layout, para que ni el scroll ni el modo confirmación
+     (que esconde media página) le afecten. -->
+<div class="barra" id="barra">
+  <div class="barra-in">
+    <div class="barra-tour">
+      <span class="barra-foto">
+        <i id="bInicial"></i>
+        <!-- sin src y sin onerror aquí a propósito: ver ponerFoto() -->
+        <img id="bFoto" alt="">
+      </span>
+      <div class="barra-tx">
+        <b id="bNombre">—</b>
+        <small id="bMeta">—</small>
       </div>
-      <button class="push-x" id="pushX" type="button" aria-label="Cerrar el aviso"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg></button>
+      <div class="barra-cifra" aria-live="polite">
+        <span class="t" id="bTotal">—</span>
+        <span class="a"><span id="bAbonoL">pagas hoy</span> <b id="bAbono">—</b></span>
+      </div>
     </div>
-    <div class="push-barra"><i></i></div>
+    <button class="cta" id="ctaMovil" type="button">Continuar</button>
   </div>
 </div>
 
@@ -662,6 +1117,30 @@ function fotoDe(tipo, t){
   if(tipo === 'paquete') return PIC(t.img);
   const img = (t.media || []).find(m => m.t === 'img');
   return img ? img.s : '';
+}
+
+/* ── PONER UNA FOTO, BIEN ─────────────────────────────────────
+   Esto parece de más y no lo es. Un <img src=""> en el HTML dispara
+   `error` NADA MÁS PARSEARLO, antes de que este script exista: la cadena
+   vacía no es una URL válida. Si ese <img> lleva un onerror escrito en el
+   atributo, se ejecuta ahí mismo, contra una foto que aún no se le había
+   asignado. Costó dos fallos reales:
+
+     · con onerror="this.style.visibility='hidden'" la foto se ocultaba al
+       parsear y ya no volvía, aunque después se le pusiera una buena.
+     · con onerror="this.remove()" el <img> desaparecía del DOM, y la línea
+       que le asignaba la foto reventaba contra null — llevándose por
+       delante TODO el arranque que venía detrás, la barra incluida.
+
+   Así que: en el HTML el <img> va sin src y sin onerror, y el respaldo se
+   engancha aquí, después de tener una URL de verdad. */
+function ponerFoto(id, url, alt, alFallar){
+  const img = document.getElementById(id);
+  if(!img) return;
+  if(!url){ if(alFallar) alFallar(); img.remove(); return; }
+  img.onerror = () => { if(alFallar) alFallar(); img.remove(); };
+  img.alt = alt || '';
+  img.src = url;
 }
 
 function pintarElegir(){
@@ -724,6 +1203,9 @@ const st = {
   recogida: P.paradas ? 'punto' : 'hotel',
   hotel:'', punto:'',
   peticion:'',
+  // arranca en 'completo' a propósito: es lo que le conviene al cliente el
+  // día del tour y lo que nos conviene a nosotros. Cambiarlo cuesta un toque.
+  pago:'completo',
   cliente:{ nombre:'', wa:'', wa2:'', email:'' }
 };
 if(P.soloAdultos) st.ni = 0;
@@ -757,18 +1239,46 @@ function recuperar(){
    PINTAR LO QUE NO CAMBIA: quién es esta reserva
    ============================================================ */
 document.title = 'Reservar ' + P.nombre + ' — IVONNE TOUR RD';
-document.getElementById('volver').href = 'index.html#' + (esPaquete ? 'planes' : 'excursiones');
-document.getElementById('vFoto').src = P.foto;
-document.getElementById('vFoto').alt = P.nombre;
+/* ── EL "VOLVER" DE ARRIBA ────────────────────────────────────
+   Era un enlace fijo a index.html: dijeras lo que dijeras y estuvieras en
+   el paso que estuvieras, te sacaba de la reserva entera. Desde el paso 3
+   eso se siente roto — pulsas "Volver" esperando el paso 2 y pierdes todo
+   lo escrito.
+
+   Ahora mira dónde está el cliente:
+     · paso 1  → sale de la reserva (no hay paso anterior)
+     · pasos 2-4 → retrocede un paso, como se espera
+     · confirmación → sale al inicio, y NO deja volver al formulario: esa
+       reserva ya se mandó. Cuando entre la pasarela, este es el punto
+       donde habrá que bloquear también la vuelta atrás del navegador.  */
+const elVolver = document.getElementById('volver');
+const SALIDA   = 'index.html#' + (esPaquete ? 'planes' : 'excursiones');
+elVolver.href  = SALIDA;
+elVolver.onclick = e => {
+  if(step > 0 && step < 4){
+    e.preventDefault();
+    irA(step - 1);
+  }
+  // en el paso 1 y en la confirmación se deja pasar: el enlace hace su trabajo
+};
+function textoVolver(){
+  elVolver.querySelector('span').textContent =
+    (step > 0 && step < 4) ? 'Atrás' : 'Salir';
+  elVolver.href = step === 4 ? 'index.html' : SALIDA;
+}
+ponerFoto('vFoto', P.foto, P.nombre);
 document.getElementById('vNombre').textContent = P.nombre;
+// la barra del teléfono lleva la misma foto y el mismo nombre: que no haya
+// duda de qué se está apartando ni un segundo. Si la foto falla, debajo
+// está la inicial sobre el degradado verde.
+document.getElementById('bInicial').textContent = (P.nombre || '?').trim()[0].toUpperCase();
+ponerFoto('bFoto', P.foto, P.nombre);
+document.getElementById('bNombre').textContent = P.nombre;
 document.getElementById('vZona').textContent = '📍 ' + P.zona + (P.duracion ? ' · ' + P.duracion : '');
 document.getElementById('vRate').textContent = P.rating ? '⭐ ' + P.rating + (P.reviews ? ' (' + P.reviews + ')' : '') : '';
 document.getElementById('vCancela').innerHTML = P.cancela
   ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>' + P.cancela + '</span>'
   : '';
-// el porcentaje del abono no es siempre 20%: sale del propio tour
-// (una excursion de US$89 aparta con US$18; el Tour del Sur, RD$1,500 de RD$5,900)
-document.getElementById('vPct').textContent = Math.round(P.abono / P.precio * 100);
 document.getElementById('vRestoTx').textContent = esPaquete ? 'lo pagas al llegar' : 'lo pagas al subir a la guagua';
 
 /* PASO 1 — el titulo y los horarios cambian segun lo que sea */
@@ -799,6 +1309,27 @@ if(P.soloAdultos) document.getElementById('contNinos').hidden = true;
 
 /* PASO 2 — dónde se recoge */
 const puntoSelect = document.getElementById('punto');
+
+/* los iconos de las ubicaciones. Cada clase de sitio tiene el suyo, para
+   que se distingan de un vistazo sin tener que leer los cuatro. */
+const ICO_UBI = {
+  plaza:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 21h18M5 21V8l7-4 7 4v13" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 21v-5h5v5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  ciudad:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 21h18" stroke-linecap="round"/><path d="M5 21V6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v15" stroke-linejoin="round"/><path d="M12 21V11a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v10" stroke-linejoin="round"/><path d="M8 8.5v0M8 12v0M8 15.5v0M15.5 13.5v0M15.5 17v0" stroke-linecap="round" stroke-width="2.2"/></svg>',
+  playa:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 18.5c1.6 0 1.6 1.2 3.2 1.2s1.6-1.2 3.2-1.2 1.6 1.2 3.2 1.2 1.6-1.2 3.2-1.2 1.6 1.2 3.2 1.2 1.6-1.2 3.2-1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="6.5" r="3"/><path d="M4 15V9M4 9c0-2.5 2-4 4.5-4M4 9c0-2.5-1-4-2.5-4.5" stroke-linecap="round"/></svg>',
+  pueblo:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6"/></svg>',
+  wa:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20.5 11.5a8.4 8.4 0 0 1-11.9 7.7L4 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z" stroke-linejoin="round"/></svg>'
+};
+
+/* los puntos de encuentro de Punta Cana. Cada uno con qué clase de sitio
+   es y una pista de cómo se reconoce: eso es lo que ayuda a elegir. */
+const PUNTOS_PC = [
+  { v:'Plaza Bávaro — Cruce de Friusa', ic:'plaza',  d:'Junto al cruce, fácil de encontrar' },
+  { v:'Downtown Punta Cana',            ic:'ciudad', d:'En la entrada principal' },
+  { v:'Cortecito — frente a la playa',  ic:'playa',  d:'A pie de arena' },
+  { v:'Otro — lo coordinamos por WhatsApp', ic:'wa', d:'Dinos dónde estás y lo vemos' }
+];
+
+let UBIS = [];
 if(P.paradas){
   // El Tour del Sur no recoge en hoteles: pasa por los pueblos del sur.
   document.getElementById('peCards').hidden = true;
@@ -807,107 +1338,275 @@ if(P.paradas){
   document.getElementById('t2').textContent = '¿En qué pueblo te monto?';
   document.getElementById('s2').textContent = 'La guagua va parando pueblo por pueblo. Dime dónde te espero.';
   document.getElementById('hintPunto').textContent = 'De vuelta te dejo en el mismo sitio donde te monté.';
-  puntoSelect.innerHTML = '<option value="">Elige tu pueblo</option>' +
-    P.paradas.map(p => `<option>${p}</option>`).join('');
+  UBIS = P.paradas.map((p,i) => ({ v:p, ic:'pueblo', d:'Parada ' + (i+1) + ' de la ruta' }));
 }else{
-  puntoSelect.innerHTML = '<option value="">Elige el punto de encuentro más cercano</option>' +
-    ['Plaza Bávaro — Cruce de Friusa','Downtown Punta Cana','Cortecito — frente a la playa','Otro — lo coordinamos por WhatsApp']
-      .map(p => `<option>${p}</option>`).join('');
+  UBIS = PUNTOS_PC;
 }
+
+function pintarUbis(){
+  document.getElementById('ubis').innerHTML = UBIS.map(u => `
+    <button type="button" class="ubi${u.v === st.punto ? ' on' : ''}" data-ubi="${u.v.replace(/"/g,'&quot;')}">
+      <span class="ubi-ic">${ICO_UBI[u.ic]}</span>
+      <span class="ubi-tx"><b>${u.v}</b><small>${u.d}</small></span>
+      <span class="ubi-ck"></span>
+    </button>`).join('');
+  document.querySelectorAll('.ubi').forEach(b => {
+    b.onclick = () => {
+      st.punto = b.dataset.ubi;
+      puntoSelect.value = st.punto;
+      document.querySelectorAll('.ubi').forEach(x => x.classList.toggle('on', x === b));
+      pintarCampo('punto', REVISAR.punto(st.punto), true);
+      avisar(1, ''); guardar();
+    };
+  });
+}
+pintarUbis();
 
 /* ============================================================
    MOVERSE POR LOS PASOS
    ============================================================ */
+/* el icono de la flecha y el del candado, para el botón principal */
+const FLECHA  = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CANDADO = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg>';
+
+/* Lo que dice el botón en cada momento. En el último paso lleva la cifra
+   dentro: nadie tiene que bajar a buscar cuánto le van a cobrar antes de
+   pulsar — y el texto cambia solo al cambiar la forma de pago. */
+function textoBoton(){
+  const T = totales();
+  const txt = step < 3
+    ? 'Continuar ' + FLECHA
+    : CANDADO + (st.pago === 'completo'
+        ? ' Pagar todo · ' + $$(T.total)
+        : ' Apartar mi cupo · ' + $$(T.abono));
+  document.getElementById('ctaMovil').innerHTML = txt;
+  document.getElementById('btnReserve').innerHTML = txt;
+}
+
 function verPaso(n){
   step = Math.max(0, Math.min(4, n));
   document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', +p.dataset.p === step));
   document.body.classList.toggle('listo', step === 4);
+  // la barra acompaña al formulario y se retira en la confirmación
+  document.getElementById('barra').classList.toggle('on', step < 4);
+  textoVolver();
   if(step < 4){
     document.getElementById('saNum').textContent = step + 1;
     document.getElementById('saTitle').textContent = TITULOS[step];
-    const pct = (step + 1) * 25;
-    document.getElementById('saPct').textContent = pct + '%';
-    document.getElementById('saFill').style.width = pct + '%';
-    document.querySelectorAll('.sB-tab').forEach((t,i) => {
+    document.getElementById('saPct').textContent = (step + 1) * 25 + '%';
+    document.querySelectorAll('.stp').forEach((t,i) => {
       t.classList.toggle('on', i === step);
       t.classList.toggle('done', i < step);
     });
+    textoBoton();
   }
   window.scrollTo({ top:0, behavior:'smooth' });
   guardar();
 }
 
-/* Qué le falta a un paso para darse por bueno. Devuelve el aviso que hay
-   que enseñar, o cadena vacía si está completo. El paso 3 (extras) no
-   aparece: es opcional entero, se puede saltar. */
-function faltaEn(p){
-  if(p === 0){
-    if(!st.fecha) return esPaquete ? 'Dinos qué día quieres salir.' : 'Elige el día del tour.';
-    if(P.salidas.length && !st.hora) return 'Elige a qué hora quieres salir.';
-    if(st.ad < 1) return 'Tiene que ir al menos un adulto.';
+/* ============================================================
+   LAS VALIDACIONES
+
+   Una regla por campo. Cada una devuelve el aviso que hay que enseñar
+   DEBAJO DE ESE CAMPO, o cadena vacía si el dato está bien.
+
+   Los avisos dicen qué le pasa al dato, no "campo inválido": el cliente
+   tiene que poder arreglarlo con solo leer el aviso. Por eso hay varios
+   por campo — no es lo mismo un correo sin @ que uno a medio escribir.
+   ============================================================ */
+
+/* letras de cualquier idioma (con sus tildes y su ñ), espacios y los tres
+   signos que sí salen en un nombre: O'Brien, Jean-Pierre, Jr. Números no. */
+const SOLO_LETRAS = /^[\p{L}][\p{L}\p{M}\s'’.\-]*$/u;
+const digitos = t => (t || '').replace(/\D/g, '');
+
+const REVISAR = {
+  fecha(v){
+    if(!v) return esPaquete ? 'Dinos qué día quieres salir.' : 'Elige el día del tour.';
+    if(v < iso(new Date())) return 'Ese día ya pasó. Elige una fecha de hoy en adelante.';
+    return '';
+  },
+  nombre(v){
+    const t = (v || '').trim();
+    if(!t) return 'Dinos cómo te llamas.';
+    if(/\d/.test(t)) return 'Un nombre no lleva números. Escríbelo como aparece en tu documento.';
+    if(!SOLO_LETRAS.test(t)) return 'Ahí hay algún signo que no va en un nombre. Usa solo letras.';
+    if(t.replace(/[^\p{L}]/gu, '').length < 2) return 'Ese nombre es muy corto. Escribe el tuyo completo.';
+    return '';
+  },
+  /* el segundo teléfono es opcional: vacío está bien, pero si escribe algo,
+     tiene que ser un teléfono de verdad */
+  tel(v, opcional){
+    const t = (v || '').trim();
+    if(!t) return opcional ? '' : 'Necesitamos un WhatsApp para poder confirmarte.';
+    if(/[a-zA-ZÀ-ÿ]/.test(t)) return 'Un teléfono solo lleva números. Puedes usar +, espacios o guiones.';
+    const d = digitos(t);
+    if(d.length < 8)  return 'Faltan números: un WhatsApp tiene 8 dígitos o más.';
+    if(d.length > 15) return 'Ese número tiene demasiados dígitos. Repásalo.';
+    return '';
+  },
+  email(v){
+    const t = (v || '').trim();
+    if(!t) return 'Escribe tu correo: ahí es donde te mandamos el voucher.';
+    if(/\s/.test(t)) return 'Un correo no lleva espacios.';
+    if(!t.includes('@')) return 'A ese correo le falta la @.';
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t)) return 'Ese correo está a medias. Tiene que ser algo como tu@correo.com.';
+    return '';
+  },
+  hotel(v){
+    const t = (v || '').trim();
+    if(!t) return 'Escribe el nombre de tu hotel para saber dónde buscarte.';
+    if(t.length < 3) return 'Con eso no sabemos cuál es. Escribe un poco más.';
+    return '';
+  },
+  punto(v){
+    if(v) return '';
+    return P.paradas ? 'Dinos en qué pueblo te montas.' : 'Elige dónde nos vemos.';
   }
-  if(p === 1){
-    if(st.recogida === 'hotel' && !st.hotel.trim()) return 'Escribe el nombre de tu hotel para saber dónde buscarte.';
-    if(st.recogida === 'punto' && !st.punto) return P.paradas ? 'Dinos en qué pueblo te montas.' : 'Elige dónde nos vemos.';
-  }
-  if(p === 3){
-    if(!st.cliente.nombre.trim()) return 'Dinos cómo te llamas.';
-    if(!telOK(st.cliente.wa))     return 'Necesitamos un WhatsApp para confirmarte (con 8 números o más).';
-    if(!emailOK(st.cliente.email))return 'Escribe un correo válido: ahí te llega el voucher.';
-  }
-  return '';
+};
+
+/* qué campos con regla tiene cada paso. El 2 (extras) no sale: es opcional
+   entero y se puede saltar sin escribir nada. */
+function camposDe(p){
+  if(p === 0) return [{ id:'fecha', v:st.fecha, r:REVISAR.fecha }];
+  if(p === 1) return st.recogida === 'hotel'
+    ? [{ id:'hotel', v:st.hotel, r:REVISAR.hotel }]
+    : [{ id:'punto', v:st.punto, r:REVISAR.punto }];
+  if(p === 3) return [
+    { id:'cNombre', v:st.cliente.nombre, r:REVISAR.nombre },
+    { id:'cWa',     v:st.cliente.wa,     r:REVISAR.tel },
+    { id:'cWa2',    v:st.cliente.wa2,    r:v => REVISAR.tel(v, true) },
+    { id:'cEmail',  v:st.cliente.email,  r:REVISAR.email }
+  ];
+  return [];
 }
-const telOK   = t => (t || '').replace(/\D/g,'').length >= 8;
-const emailOK = e => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((e || '').trim());
+
+/* Qué le falta a un paso. Devuelve {msg, campo} — `campo` es el input que
+   hay que señalar, o null si el problema no es de un campo de texto (la
+   hora, el número de adultos). O null entero si el paso está completo. */
+function faltaEn(p){
+  for(const c of camposDe(p)){
+    const m = c.r(c.v);
+    if(m) return { msg:m, campo:c.id };
+  }
+  if(p === 0){
+    if(P.salidas.length && !st.hora) return { msg:'Elige a qué hora quieres salir.', campo:null };
+    if(st.ad < 1) return { msg:'Tiene que ir al menos un adulto.', campo:null };
+  }
+  return null;
+}
+
+const ICO_MAL = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.4v.2" stroke-linecap="round"/></svg>';
+
+/* Pintar un campo. `insistir` separa las dos situaciones que no son iguales:
+   mientras escribe no se le grita (solo se le quita el rojo en cuanto lo
+   arregla); al salir del campo o al darle a Continuar, sí. */
+function pintarCampo(id, msg, insistir){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const caja  = document.getElementById('mal-' + id);
+  const campo = el.closest('[data-campo]');
+  const vacio = !(el.value || '').trim();
+  const gritar = !!msg && insistir;
+
+  el.classList.toggle('mal', gritar);
+  el.classList.toggle('bien', !msg && !vacio);   // la palomita, solo si escribió algo
+  if(campo) campo.classList.toggle('malo', gritar);
+  if(caja){
+    if(gritar) caja.innerHTML = ICO_MAL + '<span>' + msg + '</span>';
+    caja.classList.toggle('on', gritar);
+  }
+}
+
+/* ── MIENTRAS TECLEA ──────────────────────────────────────────
+   Hay dos clases de error y no merecen el mismo trato:
+
+   · "todavía no has terminado" (el correo va por `mar`, el teléfono por
+     tres dígitos). Callarse: aún lo está escribiendo, y saltarle encima
+     mientras teclea es insoportable.
+
+   · "eso que acabas de escribir NO PUEDE IR AHÍ" (un número en el nombre,
+     una letra en el teléfono). Avisar en el acto, en la tecla siguiente.
+     Esperar al final para decírselo es dejarle escribir algo que nunca
+     iba a valer.
+
+   `INMEDIATOS` son los avisos de la segunda clase. */
+const INMEDIATOS = [
+  'Un nombre no lleva números',
+  'Ahí hay algún signo que no va',
+  'Un teléfono solo lleva números',
+  'Un correo no lleva espacios'
+];
+const esInmediato = msg => INMEDIATOS.some(x => msg.startsWith(x));
+
+function alEscribir(id, msg){
+  const el = document.getElementById(id);
+  if(!el) return;
+  // se insiste si el aviso es de los que no esperan, o si ya estaba marcado
+  // (así el rojo desaparece en el momento exacto en que lo arregla)
+  pintarCampo(id, msg, esInmediato(msg) || el.classList.contains('mal'));
+}
+
+function marcarMalos(p){
+  camposDe(p).forEach(c => pintarCampo(c.id, c.r(c.v), true));
+}
 
 function avisar(p, texto){
   const caja = document.getElementById('err' + p);
   if(!caja) return;
   if(texto){
-    caja.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.4v.2" stroke-linecap="round"/></svg><span>' + texto + '</span>';
+    caja.innerHTML = ICO_MAL + '<span>' + texto + '</span>';
     caja.classList.add('on');
   }else{
     caja.classList.remove('on');
   }
 }
 
-/* Ir a un paso. Hacia atras se pasa siempre; hacia adelante hay que tener
-   completo lo de antes — y se dice CUAL es el problema, no un "no puedes". */
-function irA(destino){
-  if(destino > step){
-    for(let p = 0; p < destino; p++){
-      const falta = faltaEn(p);
-      if(falta){
-        // si el problema esta en el paso que se esta viendo, se avisa ahi mismo;
-        // si esta en uno anterior, se le lleva de vuelta a arreglarlo
-        if(p !== step) verPaso(p);
-        avisar(p, falta);
-        marcarMalos(p);
-        return;
-      }
+/* llevar el ojo (y el cursor) al campo que hay que arreglar */
+function enfocar(id){
+  if(!id) return;
+  const el = document.getElementById(id);
+  if(!el) return;
+  // esperar a que el paso termine de pintarse y de subir al principio
+  setTimeout(() => {
+    el.focus({ preventScroll:true });
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 320);
+}
+
+/* ¿tropieza en algún paso antes de `hasta`? Si tropieza, lleva al cliente
+   al sitio, lo señala y dice qué falta. Lo usan Continuar y Apartar. */
+function tropieza(hasta){
+  for(let p = 0; p < hasta; p++){
+    const falta = faltaEn(p);
+    if(falta){
+      // si el problema está en el paso que se está viendo, se avisa ahí
+      // mismo; si está en uno anterior, se le lleva de vuelta a arreglarlo
+      if(p !== step) verPaso(p);
+      marcarMalos(p);
+      // el aviso del final solo para lo que no es un campo: los campos ya
+      // llevan el suyo debajo, y decirlo dos veces suena a regaño
+      avisar(p, falta.campo ? '' : falta.msg);
+      enfocar(falta.campo);
+      return true;
     }
   }
+  return false;
+}
+
+/* Ir a un paso. Hacia atrás se pasa siempre; hacia adelante hay que tener
+   completo lo de antes — y se dice CUÁL es el problema, no un "no puedes". */
+function irA(destino){
+  if(destino > step && tropieza(destino)) return;
   avisar(step, '');
   verPaso(destino);
 }
 
-/* pintar de rojo el campo que falta, que el aviso solo no siempre se ve */
-function marcarMalos(p){
-  if(p === 0) document.getElementById('fecha').classList.toggle('mal', !st.fecha);
-  if(p === 1){
-    document.getElementById('hotel').classList.toggle('mal', st.recogida === 'hotel' && !st.hotel.trim());
-    puntoSelect.classList.toggle('mal', st.recogida === 'punto' && !st.punto);
-  }
-  if(p === 3){
-    document.getElementById('cNombre').classList.toggle('mal', !st.cliente.nombre.trim());
-    document.getElementById('cWa').classList.toggle('mal', !telOK(st.cliente.wa));
-    document.getElementById('cEmail').classList.toggle('mal', !emailOK(st.cliente.email));
-  }
-}
-
 document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => irA(+b.dataset.go));
-document.querySelectorAll('.sB-tab').forEach(t => t.onclick = () => irA(+t.dataset.tab));
+document.querySelectorAll('.stp').forEach(t => t.onclick = () => irA(+t.dataset.tab));
 document.getElementById('btnReserve').onclick = apartar;
+// el botón de la barra hace lo que toque según dónde esté el cliente
+document.getElementById('ctaMovil').onclick = () => { if(step >= 3) apartar(); else irA(step + 1); };
 
 /* ============================================================
    LOS CAMPOS
@@ -915,10 +1614,29 @@ document.getElementById('btnReserve').onclick = apartar;
 document.querySelectorAll('.cbtn').forEach(btn => {
   btn.onclick = () => {
     const c = btn.dataset.c, d = +btn.dataset.d;
+    const antes = st[c];
     st[c] = Math.max(c === 'ad' ? 1 : 0, st[c] + d);
-    document.getElementById(c).textContent = st[c];
+    const cel = document.getElementById(c);
+    cel.textContent = st[c];
+    // el rebote solo si de verdad cambió: al chocar con el mínimo, nada
+    if(st[c] !== antes){ cel.classList.remove('salta'); void cel.offsetWidth; cel.classList.add('salta'); }
     upd();
   };
+});
+
+/* ── LA ONDA DEL BOTÓN ────────────────────────────────────────
+   Nace donde cayó el dedo, no en el centro: es lo que hace que se sienta
+   como una respuesta al toque y no como una animación que corre sola. */
+document.addEventListener('pointerdown', e => {
+  const btn = e.target.closest('.cta');
+  if(!btn || SIN_MOVIMIENTO) return;
+  const r = btn.getBoundingClientRect();
+  const d = Math.max(r.width, r.height) * 2.2;
+  const o = document.createElement('span');
+  o.className = 'onda';
+  o.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left}px;top:${e.clientY - r.top}px`;
+  btn.appendChild(o);
+  o.addEventListener('animationend', () => o.remove());
 });
 document.getElementById('horas').onclick = e => {
   const p = e.target.closest('.opt-pill');
@@ -930,7 +1648,7 @@ document.getElementById('horas').onclick = e => {
 };
 document.getElementById('fecha').onchange = e => {
   st.fecha = e.target.value;
-  e.target.classList.remove('mal');
+  pintarCampo('fecha', REVISAR.fecha(e.target.value), true);
   avisar(0, ''); upd();
 };
 document.querySelectorAll('.pe-card').forEach(c => {
@@ -943,16 +1661,83 @@ document.querySelectorAll('.pe-card').forEach(c => {
     avisar(1, ''); guardar();
   };
 });
-document.getElementById('hotel').oninput = e => { st.hotel = e.target.value; e.target.classList.remove('mal'); avisar(1,''); guardar(); };
-puntoSelect.onchange  = e => { st.punto = e.target.value; e.target.classList.remove('mal'); avisar(1,''); guardar(); };
+const elHotel = document.getElementById('hotel');
+elHotel.oninput = e => { st.hotel = e.target.value; alEscribir('hotel', REVISAR.hotel(e.target.value)); avisar(1,''); guardar(); };
+elHotel.onblur  = () => pintarCampo('hotel', REVISAR.hotel(elHotel.value), true);
 document.getElementById('peticion').oninput = e => { st.peticion = e.target.value; guardar(); armarWaCustom(); };
-[['cNombre','nombre'],['cWa','wa'],['cWa2','wa2'],['cEmail','email']].forEach(([id,campo]) => {
-  document.getElementById(id).oninput = e => {
+
+/* elegir cómo paga. Cambia el resumen, la barra y lo que dice el botón */
+document.querySelectorAll('.pago').forEach(b => {
+  b.onclick = () => { st.pago = b.dataset.pago; upd(); textoBoton(); };
+});
+
+/* los datos del cliente, cada uno con su regla. Se revisa mientras escribe
+   (para que el rojo se vaya solo al arreglarlo) y al salir del campo. */
+[
+  ['cNombre','nombre', v => REVISAR.nombre(v)],
+  ['cWa',    'wa',     v => REVISAR.tel(v)],
+  ['cWa2',   'wa2',    v => REVISAR.tel(v, true)],
+  ['cEmail', 'email',  v => REVISAR.email(v)]
+].forEach(([id, campo, regla]) => {
+  const el = document.getElementById(id);
+  el.oninput = e => {
     st.cliente[campo] = e.target.value;
-    e.target.classList.remove('mal');
+    alEscribir(id, regla(e.target.value));
     avisar(3, ''); guardar();
   };
+  el.onblur = () => pintarCampo(id, regla(el.value), true);
 });
+
+/* ── LA TERCERA CAPA: no dejar que entre lo que no puede ir ───
+   Escribir "000000" en el nombre y que el campo lo acepte tan campante ya
+   es una mentira: ese dato nunca iba a valer. Aquí el carácter prohibido
+   se rechaza en la tecla, y — esto es lo importante — se DICE POR QUÉ en
+   el mismo momento. Un campo que no responde y no explica se siente roto;
+   uno que explica, enseña.
+
+   Solo bloquea lo que es imposible por naturaleza del dato (un dígito en
+   un nombre, una letra en un teléfono). Lo demás —que esté a medias, que
+   sea corto— se avisa al final, sin estorbar mientras escribe. */
+const PROHIBIDO = {
+  cNombre:{ re:/[0-9]/,        msg:'Un nombre no lleva números. Escríbelo como aparece en tu documento.' },
+  cWa    :{ re:/[a-zA-ZÀ-ÿ]/,  msg:'Un teléfono solo lleva números. Puedes usar +, espacios o guiones.' },
+  cWa2   :{ re:/[a-zA-ZÀ-ÿ]/,  msg:'Un teléfono solo lleva números. Puedes usar +, espacios o guiones.' }
+};
+Object.entries(PROHIBIDO).forEach(([id, { re, msg }]) => {
+  const el = document.getElementById(id);
+
+  // al teclear: se corta el carácter antes de que aparezca
+  el.addEventListener('beforeinput', e => {
+    if(e.data && re.test(e.data)){
+      e.preventDefault();
+      pintarCampo(id, msg, true);
+      sacudir(el);
+    }
+  });
+
+  // al pegar: no se bloquea (pegar un nombre entero es legítimo), se limpia
+  // lo que sobra y se explica qué se quitó
+  el.addEventListener('paste', e => {
+    const txt = (e.clipboardData || window.clipboardData).getData('text') || '';
+    if(!re.test(txt)) return;
+    e.preventDefault();
+    const limpio = txt.replace(new RegExp(re.source, 'g'), '');
+    const ini = el.selectionStart ?? el.value.length, fin = el.selectionEnd ?? ini;
+    el.value = el.value.slice(0, ini) + limpio + el.value.slice(fin);
+    el.setSelectionRange(ini + limpio.length, ini + limpio.length);
+    el.dispatchEvent(new Event('input'));
+    pintarCampo(id, msg, true);
+    sacudir(el);
+  });
+});
+
+/* el temblorcito: el aviso escrito puede pasar desapercibido si el dedo
+   está sobre el teclado, el movimiento no */
+function sacudir(el){
+  el.classList.remove('sacude');
+  void el.offsetWidth;
+  el.classList.add('sacude');
+}
 
 /* ============================================================
    LAS CUENTAS
@@ -965,7 +1750,10 @@ function totales(){
   // El abono es por persona y sale del tour, no un 20% inventado. Los extras
   // no se abonan: se pagan el día, que es cuando se entregan.
   const abono    = P.abono * personas;
-  return { personas, subtotal, extras, total, abono, resto: total - abono };
+  // lo que se cobra HOY depende de cómo eligió pagar; lo que queda pendiente
+  // es la diferencia. Con pago completo, el día del tour no debe nada.
+  const hoy   = st.pago === 'completo' ? total : abono;
+  return { personas, subtotal, extras, total, abono, hoy, resto: total - hoy };
 }
 
 function fmtFecha(f){
@@ -973,11 +1761,61 @@ function fmtFecha(f){
   const d = new Date(f + 'T00:00');
   return d.toLocaleDateString('es-DO', { weekday:'short', day:'numeric', month:'short' });
 }
+/* la corta vale para la barra y el resguardo, donde hay que ahorrar sitio.
+   En el titular de la confirmación no: ahí la fecha es la información
+   importante de la frase y se escribe entera. */
+function fmtFechaLarga(f){
+  if(!f) return '';
+  const d = new Date(f + 'T00:00');
+  return d.toLocaleDateString('es-DO', { weekday:'long', day:'numeric', month:'long' });
+}
 function txPersonas(){
   let t = st.ad + ' adulto' + (st.ad > 1 ? 's' : '');
   if(st.ni > 0) t += ', ' + st.ni + ' niño' + (st.ni > 1 ? 's' : '');
   return t;
 }
+
+/* ============================================================
+   LOS NÚMEROS QUE CUENTAN
+
+   Un precio que salta de $178 a $267 de un fotograma se lee como un
+   error de la página. Contando la diferencia en cuatro décimas, el ojo
+   SIGUE el cambio: ve de dónde salió y a dónde fue, y entiende que lo
+   provocó el botón que acaba de tocar.
+
+   Se guarda el valor anterior en el propio elemento (`data-v`), así la
+   animación siempre sale del número que había puesto, no de cero.
+   ============================================================ */
+const SIN_MOVIMIENTO = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+/* Los navegadores tienen requestAnimationFrame desde hace más de una
+   década, pero un precio es información: si por lo que sea no estuviera,
+   el número tiene que salir igual — sin animar, pero correcto. Nunca al
+   revés. */
+const rAF = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : null;
+const cAF = window.cancelAnimationFrame  ? window.cancelAnimationFrame.bind(window)  : () => {};
+
+function animarNum(el, hasta, fmt){
+  if(!el) return;
+  const desde = el.dataset.v === undefined ? hasta : +el.dataset.v;
+  el.dataset.v = hasta;
+  cAF(+el.dataset.raf || 0);
+
+  if(desde === hasta || SIN_MOVIMIENTO || !rAF){ el.textContent = fmt(hasta); return; }
+
+  // el latido: el número se hincha un pelo mientras cuenta
+  el.classList.remove('late'); void el.offsetWidth; el.classList.add('late');
+
+  const t0 = performance.now(), dur = 430;
+  const paso = t => {
+    const k = Math.min(1, (t - t0) / dur);
+    const e = 1 - Math.pow(1 - k, 3);            // easeOutCubic: rápido y frena
+    el.textContent = fmt(desde + (hasta - desde) * e);
+    if(k < 1) el.dataset.raf = rAF(paso);
+  };
+  el.dataset.raf = rAF(paso);
+}
+const num = (id, v) => animarNum(document.getElementById(id), v, $$);
 
 function upd(){
   const T = totales();
@@ -985,15 +1823,37 @@ function upd(){
   document.getElementById('vHora').textContent  = st.hora || 'Elige la hora';
   document.getElementById('vPers').textContent  = txPersonas();
   document.getElementById('vUnit').textContent  = $$(P.precio) + ' × ' + T.personas;
-  document.getElementById('vSub').textContent   = $$(T.subtotal);
+  num('vSub', T.subtotal);
   const linea = document.getElementById('vExtrasLine');
   if(T.extras > 0){
     linea.style.display = 'flex';
-    document.getElementById('vExtras').textContent = $$(T.extras);
+    num('vExtras', T.extras);
   }else linea.style.display = 'none';
-  document.getElementById('vTotal').textContent = $$(T.total);
-  document.getElementById('vAbono').textContent = $$(T.abono);
-  document.getElementById('vResto').textContent = $$(T.resto);
+  num('vTotal', T.total);
+  num('vAbono', T.hoy);
+  num('vResto', T.resto);
+
+  /* las dos tarjetas de pago y el resumen lateral cambian con la elección */
+  const completo = st.pago === 'completo';
+  num('pgCompleto', T.total);
+  num('pgAbono', T.abono);
+  document.getElementById('pgAbonoTx').textContent  =
+    'Y el día del tour pagas los ' + $$(T.total - T.abono) + ' que faltan';
+  document.querySelectorAll('.pago').forEach(b => b.classList.toggle('on', b.dataset.pago === st.pago));
+
+  document.getElementById('vPagoL').textContent = completo ? 'Pagas ahora (todo)' : 'Apartas ahora';
+  document.getElementById('vRestoLinea').style.display = completo ? 'none' : '';
+  document.getElementById('vPagoOk').style.display     = completo ? '' : 'none';
+  /* la barra del teléfono: lo mismo, en tres líneas. La meta cuenta la
+     fecha solo cuando ya se eligió — antes de eso diría "Elige el día",
+     que en una barra de resumen no pinta nada. */
+  const meta = [ st.fecha ? fmtFecha(st.fecha) : '', st.hora, txPersonas() ].filter(Boolean);
+  document.getElementById('bMeta').textContent = meta.join(' · ');
+  num('bTotal', T.total);
+  num('bAbono', T.hoy);
+  // "aparta $28" solo vale si de verdad está apartando. Pagando completo,
+  // lo de hoy ES el total, y llamarlo "aparta" sería mentir.
+  document.getElementById('bAbonoL').textContent = completo ? 'pagas hoy' : 'aparta';
   guardar();
 }
 
@@ -1175,7 +2035,10 @@ function armarReserva(){
       whatsapp2: st.cliente.wa2.trim(),
       email   : st.cliente.email.trim()
     },
-    totales: { subtotal:T.subtotal, extras:T.extras, total:T.total, abono:T.abono, resto:T.resto }
+    // cómo eligió pagar. Es lo que la pasarela va a necesitar saber: cuánto
+    // se cobra ahora y cuánto queda pendiente para el día del tour.
+    pago   : { modo:st.pago, hoy:T.hoy, pendiente:T.resto },
+    totales: { subtotal:T.subtotal, extras:T.extras, total:T.total, abono:T.abono, hoy:T.hoy, resto:T.resto }
   };
 }
 
@@ -1198,67 +2061,65 @@ function enviarReserva(reserva){
 const GIRANDO = '<svg class="girando" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 3a9 9 0 1 0 9 9" stroke-linecap="round"/></svg>';
 
 function apartar(){
-  // repasar los tres pasos que piden datos antes de dar nada por hecho
-  for(let p = 0; p <= 3; p++){
-    const falta = faltaEn(p);
-    if(falta){ verPaso(p); avisar(p, falta); marcarMalos(p); return; }
-  }
+  // repasar los cuatro pasos enteros antes de dar nada por hecho
+  if(tropieza(4)) return;
   // el boton se queda trabajando: apartar un cupo tiene que pesar. Y este
   // respiro es justo donde despues cabra la llamada de verdad a la pasarela.
-  const btn = document.getElementById('btnReserve');
-  const antes = btn.innerHTML;
-  btn.classList.add('cargando'); btn.innerHTML = GIRANDO + ' Apartando tu cupo...';
+  // Son dos botones (el del panel y el de la barra) segun donde se toque,
+  // pero el cliente ve uno: los dos tienen que quedarse quietos a la vez.
+  const botones = [document.getElementById('btnReserve'), document.getElementById('ctaMovil')];
+  const antes = botones.map(b => b.innerHTML);
+  botones.forEach(b => { b.classList.add('cargando'); b.innerHTML = GIRANDO + ' Apartando tu cupo...'; });
 
   setTimeout(() => {
     enviada = enviarReserva(armarReserva());
     pintarConfirmacion(enviada);
     verPaso(4);
-    mostrarPush(enviada);
-    btn.classList.remove('cargando'); btn.innerHTML = antes;
+    botones.forEach((b,i) => { b.classList.remove('cargando'); b.innerHTML = antes[i]; });
     try{ sessionStorage.removeItem(CLAVE); }catch(e){}
   }, 900);
 }
 
 function primerNombre(n){ return (n || '').trim().split(/\s+/)[0] || ''; }
 
-/* ── EL AVISO QUE CAE ─────────────────────────────────────────
-   Se va solo a los 8 segundos — lo que tarda la barrita en vaciarse —
-   o antes si lo cierran. */
-let pushReloj = null;
-function mostrarPush(r){
-  const caja = document.getElementById('push');
-  document.getElementById('pushT').textContent = 'Reserva ' + r.codigo + ' recibida';
-  document.getElementById('pushB').innerHTML =
-    (primerNombre(r.cliente.nombre) ? primerNombre(r.cliente.nombre) + ', busca' : 'Busca') +
-    ' tu correo en <b>' + r.cliente.email + '</b>: ahí está toda la información de tu reserva.';
-  // reiniciar la barrita, que si no la segunda vez saldría ya vacía
-  caja.classList.remove('on');
-  void caja.offsetWidth;
-  caja.classList.add('on');
-  clearTimeout(pushReloj);
-  pushReloj = setTimeout(cerrarPush, 8000);
+/* "para ti" / "para los dos" / "para los 4": la reserva se siente de quien
+   la hizo, no de un formulario */
+function paraQuien(n){
+  if(n <= 1) return 'para ti';
+  if(n === 2) return 'para los dos';
+  return 'para los ' + n;
 }
-function cerrarPush(){
-  clearTimeout(pushReloj);
-  document.getElementById('push').classList.remove('on');
-}
-document.getElementById('pushX').onclick = cerrarPush;
 
 function pintarConfirmacion(r){
-  const nombre = primerNombre(r.cliente.nombre);
-  document.getElementById('okTitulo').textContent = nombre
-    ? '¡Listo, ' + nombre + '! Tu cupo está apartado'
-    : '¡Listo! Tu cupo está apartado';
-  document.getElementById('okSub').textContent =
-    'Guardé tu ' + P.nombre + ' para el ' + fmtFecha(r.fecha) + '. Yo misma reviso cada reserva.';
+  const nombre   = primerNombre(r.cliente.nombre);
+  const completo = r.pago.modo === 'completo';
 
-  /* el ticket */
-  document.getElementById('tkFoto').src = P.foto;
+  /* El titular dice lo que pasó, no una exclamación: la reserva está
+     guardada, para tal día. Eso es lo que el cliente necesita leer. */
+  document.getElementById('okTitulo').textContent =
+    (nombre ? 'Listo, ' + nombre + '. ' : 'Listo. ') +
+    'Guardamos tu reserva para el ' + fmtFechaLarga(r.fecha);
+
+  document.getElementById('okSello').textContent = completo ? 'Pagado y confirmado' : 'Cupo apartado';
+
+  /* y debajo, la consecuencia práctica: qué pasa el día del tour */
+  document.getElementById('okSub').textContent = completo
+    ? P.nombre + ' ' + paraQuien(r.personas.total) + ', ya pagado entero. El día del tour no tienes que pagar '
+      + 'nada ni llevar efectivo: llegas, saludas y te subes.'
+    : P.nombre + ' ' + paraQuien(r.personas.total) + '. Tu cupo queda guardado; los ' + $$(r.totales.resto)
+      + ' que faltan los pagas ' + (esPaquete ? 'al llegar' : 'al subir a la guagua') + '.';
+
+  /* el resguardo. Si la foto no está, el hero se queda con su degradado
+     verde — nunca un rectángulo negro ni un icono roto. */
+  ponerFoto('okFoto', P.foto, P.nombre,
+    () => document.querySelector('.ok-hero').classList.add('sinfoto'));
   document.getElementById('tkTipo').textContent = esPaquete ? 'Plan de varios días' : 'Excursión';
   document.getElementById('tkNombre').textContent = P.nombre;
   document.getElementById('okCodigo').textContent = r.codigo;
-  document.getElementById('tkAbono').textContent = $$(r.totales.abono);
-  document.getElementById('tkResto').textContent = 'faltan ' + $$(r.totales.resto);
+  document.getElementById('tkPagoL').textContent = completo ? 'Pagaste' : 'Apartaste';
+  document.getElementById('tkAbono').textContent = $$(r.pago.hoy);
+  document.getElementById('tkResto').textContent = completo ? 'Todo pagado' : 'faltan ' + $$(r.totales.resto);
+  document.querySelector('.tk-pay').classList.toggle('saldado', completo);
   const dato = (k, v) => `<div><span>${k}</span><b>${v}</b></div>`;
   document.getElementById('tkGrid').innerHTML =
       dato('Fecha', fmtFecha(r.fecha))
@@ -1277,10 +2138,35 @@ function pintarConfirmacion(r){
   });
   if(r.peticion) filas += linea('Tu petición', r.peticion);
   filas += linea('<b>Total</b>', '<b>' + $$(r.totales.total) + '</b>')
-        +  linea('Apartaste ahora', $$(r.totales.abono))
-        +  linea(esPaquete ? 'Pagas al llegar' : 'Pagas al subir a la guagua', $$(r.totales.resto));
+        +  linea(r.pago.modo === 'completo' ? 'Pagaste ahora (todo)' : 'Apartaste ahora', $$(r.pago.hoy))
+        +  linea(esPaquete ? 'Pagas al llegar' : 'Pagas al subir a la guagua',
+                 r.pago.modo === 'completo' ? 'Nada — ya está pagado' : $$(r.totales.resto));
   document.getElementById('okResumen').innerHTML = filas;
   document.getElementById('okWa').href = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(textoWa(r));
+  chispas();
+}
+
+/* ── LOS DESTELLOS DE LA CONFIRMACIÓN ─────────────────────────
+   Ocho puntitos que salen de la palomita y se apagan. Es lo único de
+   toda la página que no informa de nada: está para que el momento en
+   que la reserva queda hecha se sienta como un momento. Una vez, un
+   segundo, y no vuelve a pasar. */
+function chispas(){
+  if(SIN_MOVIMIENTO) return;
+  const cuna = document.querySelector('.ok-check');
+  if(!cuna) return;
+  cuna.querySelectorAll('.chispa').forEach(c => c.remove());
+  for(let i = 0; i < 8; i++){
+    const a = (Math.PI * 2 * i) / 8 + Math.random() * .4;
+    const dist = 46 + Math.random() * 26;
+    const s = document.createElement('span');
+    s.className = 'chispa';
+    s.style.cssText =
+      `left:50%;top:50%;--dx:${Math.cos(a) * dist}px;--dy:${Math.sin(a) * dist}px;` +
+      `animation-delay:${.34 + i * .035}s`;
+    cuna.appendChild(s);
+    s.addEventListener('animationend', () => s.remove());
+  }
 }
 
 /* El resumen en texto, para mandárselo a Ivonne por WhatsApp */
@@ -1296,7 +2182,10 @@ function textoWa(r){
     t += 'Extra: ' + e.nombre + (det ? ' (' + det + ')' : '') + ' — ' + $$(e.precio) + '\n';
   });
   if(r.peticion) t += 'Petición: ' + r.peticion + '\n';
-  t += '\nTotal: ' + $$(r.totales.total) + ' · Aparto ahora: ' + $$(r.totales.abono) + '\n';
+  t += '\nTotal: ' + $$(r.totales.total) + '\n';
+  t += r.pago.modo === 'completo'
+    ? 'Pagado completo: ' + $$(r.pago.hoy) + ' (no debo nada el día del tour)\n'
+    : 'Aparté: ' + $$(r.pago.hoy) + ' · Me faltan: ' + $$(r.totales.resto) + '\n';
   t += 'A nombre de: ' + r.cliente.nombre;
   return t;
 }
@@ -1324,6 +2213,7 @@ document.getElementById('ad').textContent = st.ad;
 document.getElementById('ni').textContent = st.ni;
 document.getElementById('hotel').value = st.hotel;
 puntoSelect.value = st.punto;
+pintarUbis();   // otra vez, ya con lo que se hubiera recuperado
 document.getElementById('peticion').value = st.peticion;
 document.getElementById('cNombre').value = st.cliente.nombre;
 document.getElementById('cWa').value     = st.cliente.wa;
@@ -1361,11 +2251,8 @@ if(params.get('ver') === 'confirmacion'){
   st.cliente = { nombre:'María Fernández', wa:'+1 809 555 1234', wa2:'', email:'maria@correo.com' };
   // ojo: NO pasa por enviarReserva(), que una reserva de mentira no tiene
   // por que quedarse guardada entre las de verdad
-  const demo = armarReserva();
-  pintarConfirmacion(demo);
+  pintarConfirmacion(armarReserva());
   verPaso(4);
-  // medio segundo de espera: si cae a la vez que carga la página no se ve caer
-  setTimeout(() => mostrarPush(demo), 500);
 }
 
 }

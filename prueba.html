@@ -3,14 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Probar — IVONNE TOUR RD</title>
+<title>⚠️ ATAJOS DE PRUEBA — no es la web</title>
 <meta name="robots" content="noindex">
 <!--
    ===========================================================
-   PÁGINA DE PRUEBAS — no es parte de la web
-   Está aquí solo para abrir cada pantalla de un toque desde el
-   teléfono, sin escribir direcciones largas.
-   Cuando ya no haga falta, se borra este archivo y ya está.
+   ESTO NO ES LA WEB. NO ES UNA PÁGINA DEL SITIO.
+
+   Es una chuleta: una lista de enlaces para abrir cada pantalla
+   de un toque desde el teléfono, sin escribir a mano direcciones
+   largas como  reservar.html?id=saona&ver=confirmacion
+
+   NADIE ENLAZA AQUÍ. Ningún cliente llega nunca a este archivo:
+   hay que escribir "prueba.html" a mano en la barra del navegador.
+   Borrarlo no rompe nada de la web.
+
+   El test de verdad NO se hace desde aquí: se hace entrando por
+   index.html y tocando "Apartar mi cupo", como haría un cliente.
+   Eso es lo primero que sale abajo.
    ===========================================================
 -->
 <style>
@@ -41,30 +50,47 @@ a.b.destaca .ic{ background:var(--g); color:#fff; }
 .avisito{ background:#fff6ef; border:1.5px solid #f3d9c2; border-left:4px solid var(--o);
   border-radius:14px; padding:15px 16px; margin-top:26px; font-size:13.5px; color:var(--muted); }
 .avisito b{ color:var(--o-d); display:block; margin-bottom:4px; font-size:13px; }
+
+/* la cinta de arriba: que no haya forma de confundir esta chuleta con la web */
+.cinta{ background:var(--o-d); color:#fff; border-radius:14px; padding:14px 16px; margin-bottom:22px; }
+.cinta b{ display:block; font-size:12px; font-weight:800; letter-spacing:.13em; margin-bottom:5px; }
+.cinta small{ display:block; font-size:13px; line-height:1.5; color:rgba(255,255,255,.9); }
+/* el camino de verdad, el que hay que usar */
+a.b.real{ border-color:var(--g-d); background:var(--g-d); }
+a.b.real b, a.b.real .ch{ color:#fff; }
+a.b.real small{ color:rgba(255,255,255,.82); }
+a.b.real .ic{ background:rgba(255,255,255,.16); }
+h2.dest{ color:var(--g-d); }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="marca">IVONNE TOUR RD</div>
-  <h1>Probar el flujo de reserva</h1>
-  <p class="lead">Cada botón abre una pantalla directamente. Es una página de pruebas: cuando ya no la necesites, borra este archivo.</p>
 
-  <h2>La pantalla final, sin rellenar nada</h2>
+  <div class="cinta">
+    <b>⚠️ ESTO NO ES LA WEB</b>
+    <small>Es una chuleta de enlaces, para no escribir direcciones largas en el teléfono. Ningún cliente llega aquí: hay que teclear <em>prueba.html</em> a mano. Se puede borrar el archivo cuando quieras y la web sigue igual.</small>
+  </div>
 
-  <a class="b destaca" href="reservar.html?id=saona&ver=confirmacion">
-    <span class="ic">🎟️</span>
-    <span class="tx"><b>Ya está — excursión</b><small>Isla Saona · el aviso cae solo, en dólares</small></span>
+  <h1>Atajos para probar</h1>
+  <p class="lead">El test de verdad es el primero: entrar por la web y apartar un cupo como haría un cliente. Lo de abajo son solo atajos para no repetir los cuatro pasos cada vez.</p>
+
+  <h2 class="dest">👉 El test de verdad — empieza aquí</h2>
+
+  <a class="b real" href="index.html#excursiones">
+    <span class="ic">🏝️</span>
+    <span class="tx"><b>La web, por la puerta grande</b><small>Baja a las excursiones, toca "Apartar mi cupo" y haz los 4 pasos hasta el final</small></span>
     <span class="ch">›</span>
   </a>
 
-  <a class="b" href="reservar.html?tipo=paquete&id=tour-del-sur&ver=confirmacion">
-    <span class="ic">🚌</span>
-    <span class="tx"><b>Ya está — plan de varios días</b><small>Tour del Sur · en pesos, con las paradas del sur</small></span>
+  <a class="b" href="index.html#planes">
+    <span class="ic">🗓️</span>
+    <span class="tx"><b>Lo mismo, con un plan de varios días</b><small>Sus botones también llevan a la reserva</small></span>
     <span class="ch">›</span>
   </a>
 
-  <h2>El recorrido completo, como lo hace un cliente</h2>
+  <h2>Saltarse la web y caer en el formulario</h2>
 
   <a class="b" href="reservar.html?id=saona">
     <span class="ic">1️⃣</span>
@@ -90,17 +116,17 @@ a.b.destaca .ic{ background:var(--g); color:#fff; }
     <span class="ch">›</span>
   </a>
 
-  <h2>La web</h2>
+  <h2>Ver la pantalla final sin rellenar nada</h2>
 
-  <a class="b" href="index.html#excursiones">
-    <span class="ic">🏝️</span>
-    <span class="tx"><b>Las excursiones</b><small>Toca "Apartar mi cupo" en cualquier tarjeta</small></span>
+  <a class="b" href="reservar.html?id=saona&ver=confirmacion">
+    <span class="ic">🎟️</span>
+    <span class="tx"><b>Ya está — excursión</b><small>Isla Saona · el aviso cae solo, en dólares. Con datos de mentira: no se guarda</small></span>
     <span class="ch">›</span>
   </a>
 
-  <a class="b" href="index.html#planes">
-    <span class="ic">🗓️</span>
-    <span class="tx"><b>Los planes de varios días</b><small>Ahora sus botones también llevan a la reserva</small></span>
+  <a class="b" href="reservar.html?tipo=paquete&id=tour-del-sur&ver=confirmacion">
+    <span class="ic">🚌</span>
+    <span class="tx"><b>Ya está — plan de varios días</b><small>Tour del Sur · en pesos, con las paradas del sur</small></span>
     <span class="ch">›</span>
   </a>
 

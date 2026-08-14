@@ -1820,13 +1820,21 @@ img{ display:block; max-width:100%; }
   border-radius:5px; background:linear-gradient(90deg,var(--g2),var(--o)); }
 .dest-head p{ color:var(--muted); font-size:16px; margin-top:14px; max-width:52ch; margin-inline:auto; }
 
-/* ===== TABS por destino ===== */
+/* ===== TABS por destino =====
+   Cuatro botones que se eligen entre sí: tienen que medir SIEMPRE lo mismo,
+   en todos sus estados. El que está activo se distingue por color, no por
+   tamaño — nada de crecer, de moverse ni de engordar el borde, que es lo
+   que hacía que el elegido pareciera de otra familia que los demás.
+   El borde se queda en 1.6px en los tres estados; solo cambia de color. */
 .dtabs{ display:flex; gap:9px; flex-wrap:wrap; justify-content:center; margin-bottom:clamp(28px,4vw,42px); }
 .dtab{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; color:var(--muted);
   background:#fff; border:1.6px solid var(--line); padding:11px 24px; border-radius:100px;
-  cursor:pointer; transition:color .25s, background .25s, border-color .25s, transform .2s; }
-.dtab:hover{ color:var(--ink); border-color:#d9cfbe; transform:translateY(-2px); }
-.dtab.on{ color:#fff; background:var(--g); border-color:var(--g); box-shadow:0 12px 24px -12px rgba(18,133,76,.8); }
+  cursor:pointer; white-space:nowrap; -webkit-tap-highlight-color:transparent;
+  transition:color .25s, background .25s, border-color .25s, box-shadow .25s; }
+.dtab:hover{ color:var(--ink); border-color:#d9cfbe; }
+.dtab.on{ color:#fff; background:var(--g); border-color:var(--g);
+  box-shadow:0 10px 20px -12px rgba(18,133,76,.75); }
+.dtab.on:hover{ border-color:var(--g); }
 
 /* ===== CARRUSEL horizontal de tarjetas ===== */
 .dcarousel{ position:relative; display:flex; align-items:center; gap:12px; }
@@ -2951,10 +2959,21 @@ img{ display:block; max-width:100%; }
    Antes se dejaba asomar un pedazo de la pagina siguiente para avisar que
    habia mas; se veia cortado en el telefono y no hace falta: los puntitos y
    el contador de abajo ya dicen que hay mas paginas. */
+/* TRES FILAS IGUALES, SIEMPRE.
+   Antes era una columna flex y cada tarjeta media lo que midiera su
+   contenido: una excursion con el nombre de dos lineas salia mas alta que
+   la de al lado, y al cambiar de destino la lista entera daba un salto. Se
+   veia descuadrado, como si una tarjeta se hubiera agrandado sola.
+
+   Con `repeat(3,1fr)` las tres filas valen lo mismo — la mas alta manda y
+   las otras dos se igualan a ella. Y como las paginas se estiran entre si
+   dentro del carrusel, TODAS las tarjetas de TODOS los destinos acaban
+   midiendo igual. Es lo unico que garantiza que Punta Cana y Samana se
+   vean como la misma lista. */
 .ivm-mobpage{
   flex:0 0 100%;
   scroll-snap-align:start;
-  display:flex;flex-direction:column;gap:12px;
+  display:grid; grid-template-rows:repeat(3,1fr); gap:12px;
 }
 .ivm-mini{
   display:flex;align-items:stretch;gap:13px;
@@ -2964,9 +2983,12 @@ img{ display:block; max-width:100%; }
   box-shadow:0 4px 18px -8px rgba(0,0,0,.18);
   padding:13px;
   cursor:pointer;
+  min-width:0;              /* deja que el texto se corte en vez de estirar la fila */
   -webkit-tap-highlight-color:transparent;
-  transition:transform .15s, box-shadow .15s;
+  transition:transform .15s, box-shadow .15s, border-color .2s;
 }
+/* el toque se responde con un hundido de nada: se nota en el dedo y no
+   descoloca la fila */
 .ivm-mini:active{ transform:scale(.985); box-shadow:0 2px 8px -4px rgba(0,0,0,.12); }
 
 /* foto */
@@ -3133,7 +3155,14 @@ img{ display:block; max-width:100%; }
    de texto de 175px, 8px son casi un carácter por renglón. */
 #ivm-mobgrid .ivm-mini{ padding:12px; gap:11px; }
 #ivm-mobgrid .ivm-mini-img{ width:118px; min-height:142px; }
-#ivm-mobgrid .ivm-mini-name{ font-size:17px; line-height:1.22; margin-bottom:6px; }
+/* el nombre, cortado a dos renglones: con las filas ya igualadas, un
+   nombre de tres líneas empujaría el precio y el botón fuera de sitio.
+   Va solo aquí, en las excursiones — los paquetes tienen su propia medida. */
+#ivm-mobgrid .ivm-mini-name{
+  font-size:17px; line-height:1.22; margin-bottom:6px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
 #ivm-mobgrid .ivm-mini-meta{ font-size:13px; gap:5px; margin-bottom:8px; }
 #ivm-mobgrid .ivm-mini-deal span{ font-size:12.5px; }
 #ivm-mobgrid .ivm-mini-rest{ font-size:11.5px; margin-top:5px; }
@@ -3506,17 +3535,32 @@ img{ display:block; max-width:100%; }
     margin-top:0;
   }
 
-  /* Tabs y puntos en el mismo turquesa para que no vuelva el verde */
-  .dtabs{ margin-bottom:20px; }
+  /* Tabs y puntos en el mismo turquesa para que no vuelva el verde.
+     En el teléfono, además, la fila deja de partirse en dos renglones
+     descuadrados: se desliza de lado y los cuatro quedan en una línea,
+     todos del mismo alto. */
+  .dtabs{
+    margin-bottom:20px;
+    flex-wrap:nowrap; justify-content:flex-start;
+    overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+    /* el aire de los lados va dentro del scroll, para que el primero y el
+       último no queden pegados al borde de la pantalla */
+    padding:4px 2px 6px; margin-inline:-2px;
+    scroll-snap-type:x proximity;
+  }
+  .dtabs::-webkit-scrollbar{ display:none; }
   .dtab{
     font-size:13px; padding:9px 18px;
     color:#64748b;
     border-color:rgba(15,23,42,.09);
+    flex:0 0 auto; scroll-snap-align:center;
   }
   .dtab.on{
     color:#fff;
     background:linear-gradient(100deg,#0d9488,#14b8a6);
-    border-color:transparent;
+    /* el borde NO se vuelve transparente: se tiñe. Un borde transparente
+       sobre fondo claro se ve más fino y el botón parece encoger. */
+    border-color:#0d9488;
     box-shadow:0 10px 22px -12px rgba(13,148,136,.85);
   }
   .ivm-mobdot.on{ background:#0d9488; }

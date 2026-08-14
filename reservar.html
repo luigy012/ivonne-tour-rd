@@ -253,6 +253,44 @@ input.mal, select.mal{ border-color:var(--mal); background:#fdf3f2; }
 .girando{ animation:girar .9s linear infinite; transform-origin:center; }
 @keyframes girar{ to{ transform:rotate(360deg); } }
 
+/* ====== EL AVISO QUE CAE DE ARRIBA (el "push") ======
+   Cae como la notificación de un teléfono: en el móvil arriba del todo,
+   en el escritorio arriba a la derecha. Dice las dos cosas que importan
+   en ese instante — que la reserva llegó, y que hay que ir al correo —
+   y se va sola en 8 segundos, con una barrita que lo va contando. */
+.push{ position:fixed; z-index:120; top:12px; left:50%; width:min(430px, calc(100vw - 22px));
+  transform:translateX(-50%) translateY(-150%); opacity:0; pointer-events:none;
+  transition:transform .6s cubic-bezier(.15,1.15,.35,1), opacity .4s; }
+.push.on{ transform:translateX(-50%) translateY(0); opacity:1; pointer-events:auto; }
+@media(min-width:901px){
+  .push{ left:auto; right:22px; top:20px; transform:translateY(-150%); }
+  .push.on{ transform:translateY(0); }
+}
+.push-card{ position:relative; overflow:hidden; background:rgba(255,255,255,.98);
+  -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+  border:1px solid rgba(207,228,215,.9); border-radius:20px;
+  box-shadow:0 28px 55px -20px rgba(11,90,52,.5), 0 5px 14px -5px rgba(0,0,0,.14); }
+.push-row{ display:flex; gap:13px; align-items:flex-start; padding:15px 15px 14px; }
+.push-ico{ width:44px; height:44px; border-radius:13px; flex-shrink:0; display:grid; place-items:center;
+  background:linear-gradient(135deg,var(--g2),var(--g-d)); color:#fff;
+  box-shadow:0 10px 18px -9px rgba(18,133,76,.95); }
+.push-tx{ flex:1; min-width:0; }
+.push-h{ display:flex; align-items:center; gap:6px; margin-bottom:3px;
+  font-family:'Plus Jakarta Sans'; font-weight:800; font-size:10px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--g-d); }
+.push-h em{ font-style:normal; font-weight:600; letter-spacing:0; text-transform:none; color:var(--muted); font-size:11px; }
+.push-t{ font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15.5px; line-height:1.25; letter-spacing:-.01em; }
+.push-b{ font-size:12.5px; color:var(--muted); line-height:1.45; margin-top:3px; }
+.push-b b{ color:var(--ink); font-weight:700; }
+.push-x{ width:26px; height:26px; border-radius:50%; border:none; background:var(--sand); color:var(--muted);
+  cursor:pointer; display:grid; place-items:center; flex-shrink:0; transition:.2s; }
+.push-x:hover{ background:var(--line); color:var(--ink); }
+.push-barra{ height:3px; background:#eaf3ed; }
+.push-barra i{ display:block; height:100%; width:100%; transform-origin:left;
+  background:linear-gradient(90deg,var(--g2),var(--g)); }
+.push.on .push-barra i{ animation:vaciar 8s linear forwards; }
+@keyframes vaciar{ from{ transform:scaleX(1); } to{ transform:scaleX(0); } }
+
 /* ====== PANTALLA DE "YA ESTÁ" ======
    Cuando la reserva se manda, sobran los pasos, el resumen lateral y la
    barra de abajo: ya no hay nada que decidir. La página se queda en una
@@ -565,6 +603,23 @@ body.listo .panel{ border:none; box-shadow:none; background:transparent; padding
         <a class="wa" href="#" id="waIvonne" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg> Escríbeme por WhatsApp</a>
       </div>
     </aside>
+  </div>
+</div>
+
+<!-- El aviso que cae al apartar. Va suelto y en position:fixed: así no le
+     afecta ni el scroll ni el modo confirmación, que esconde media página. -->
+<div class="push" id="push" role="status" aria-live="polite">
+  <div class="push-card">
+    <div class="push-row">
+      <div class="push-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6 8.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="push-tx">
+        <div class="push-h">Ivonne Tour RD <em>ahora</em></div>
+        <div class="push-t" id="pushT">Reserva recibida</div>
+        <div class="push-b" id="pushB"></div>
+      </div>
+      <button class="push-x" id="pushX" type="button" aria-label="Cerrar el aviso"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="push-barra"><i></i></div>
   </div>
 </div>
 
@@ -1158,12 +1213,36 @@ function apartar(){
     enviada = enviarReserva(armarReserva());
     pintarConfirmacion(enviada);
     verPaso(4);
+    mostrarPush(enviada);
     btn.classList.remove('cargando'); btn.innerHTML = antes;
     try{ sessionStorage.removeItem(CLAVE); }catch(e){}
   }, 900);
 }
 
 function primerNombre(n){ return (n || '').trim().split(/\s+/)[0] || ''; }
+
+/* ── EL AVISO QUE CAE ─────────────────────────────────────────
+   Se va solo a los 8 segundos — lo que tarda la barrita en vaciarse —
+   o antes si lo cierran. */
+let pushReloj = null;
+function mostrarPush(r){
+  const caja = document.getElementById('push');
+  document.getElementById('pushT').textContent = 'Reserva ' + r.codigo + ' recibida';
+  document.getElementById('pushB').innerHTML =
+    (primerNombre(r.cliente.nombre) ? primerNombre(r.cliente.nombre) + ', busca' : 'Busca') +
+    ' tu correo en <b>' + r.cliente.email + '</b>: ahí está toda la información de tu reserva.';
+  // reiniciar la barrita, que si no la segunda vez saldría ya vacía
+  caja.classList.remove('on');
+  void caja.offsetWidth;
+  caja.classList.add('on');
+  clearTimeout(pushReloj);
+  pushReloj = setTimeout(cerrarPush, 8000);
+}
+function cerrarPush(){
+  clearTimeout(pushReloj);
+  document.getElementById('push').classList.remove('on');
+}
+document.getElementById('pushX').onclick = cerrarPush;
 
 function pintarConfirmacion(r){
   const nombre = primerNombre(r.cliente.nombre);
@@ -1285,6 +1364,8 @@ if(params.get('ver') === 'confirmacion'){
   const demo = armarReserva();
   pintarConfirmacion(demo);
   verPaso(4);
+  // medio segundo de espera: si cae a la vez que carga la página no se ve caer
+  setTimeout(() => mostrarPush(demo), 500);
 }
 
 }

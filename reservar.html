@@ -2465,7 +2465,24 @@ window.verCola = () => leerCola();
    escribir otro adaptador aquí abajo y cambiar PAGO.proveedor.
    ═══════════════════════════════════════════════════════════════════ */
 const PAGO = {
-  proveedor : 'simulado',        // 'simulado' | 'azul' | 'cardnet' | 'stripe'
+  /* 'azul'     → el de verdad. Manda al cliente a la página del banco.
+                  Necesita el servidor de /api funcionando.
+     'simulado' → el de pruebas. Se queda en el navegador con las
+                  tarjetas de mentira, y NO crea ninguna reserva en el
+                  servidor ni manda ningún correo. Es una maqueta.
+
+     Se elige solo, y en caso de duda gana 'simulado': mejor no cobrar
+     por error que cobrar por error. Se queda en simulado si la página
+     se abre como archivo suelto, desde el enlace de pruebas del
+     teléfono, en local, o si se pide a mano con ?simulado=1 — que sirve
+     para enseñar el recorrido a alguien sin moverle un peso.
+
+     La cinta naranja de MODO DE PRUEBA sale siempre en ese caso, para
+     que nadie se crea que reservó algo.                              */
+  proveedor : (params.get('simulado') === '1' ||
+               !location.protocol.startsWith('http') ||
+               /githack|raw\.github|localhost|127\.0\.0\.1/.test(location.host))
+                ? 'simulado' : 'azul',
   moneda    : (bruto.cur === 'RD$' ? 'DOP' : 'USD'),
   comercio  : 'IVONNE TOUR RD'
 };
@@ -2504,23 +2521,88 @@ const ADAPTADORES = {
     };
   }
 
-  /* ── AZUL (Banco Popular) — el día que se contrate ───────────
-     Azul no deja que el número de tarjeta pase por nuestra página: se
-     manda al cliente a SU formulario y vuelve con la respuesta. O sea
-     que este adaptador NO recibirá `tarjeta`; en su lugar guardará la
-     reserva, redirigirá, y la vuelta se atenderá al cargar la página.
+  ,
 
-     async azul(r){
-       guardarPendiente(r);                    // para reconocerla al volver
-       const f = document.createElement('form');
-       f.method = 'POST';
-       f.action = 'https://pagos.azul.com.do/PaymentPage/Default.aspx';
-       // MerchantId, OrderNumber, Amount, ITBIS, ApprovedUrl, DeclinedUrl,
-       // AuthHash — la firma se calcula EN EL SERVIDOR, nunca aquí.
-       f.submit();
-       return { ok:'redirige' };
-     }                                                              */
+  /* ── AZUL: la redirección de verdad ─────────────────────────
+     Azul no deja que el número de tarjeta pase por nuestra página. Se
+     manda al cliente a SU formulario y vuelve con la respuesta.
+
+     Este adaptador NO recibe tarjeta y nunca la pedirá. Lo que hace:
+       1. le manda al servidor lo que el cliente eligió
+       2. el servidor calcula el precio (no se fía del navegador),
+          guarda la reserva y devuelve los campos firmados
+       3. se arma un formulario invisible y se envía → el cliente sale
+          de nuestra web
+
+     No devuelve {ok:true}: devuelve {redirige:true}, porque a partir de
+     aquí esta página deja de existir. El resultado del cobro y los dos
+     correos los atiende /api/pago-retorno, en el servidor.          */
+  async azul(reserva){
+    const r = await fetch('/api/pago-iniciar', {
+      method : 'POST',
+      headers: { 'Content-Type':'application/json' },
+      body   : JSON.stringify(paraElServidor(reserva))
+    });
+
+    if(!r.ok){
+      const e = await r.json().catch(() => ({}));
+      if(['azul-sin-configurar','azul-sin-llave','falta-url-base'].includes(e.error))
+        return { ok:false, mensaje:'El cobro con tarjeta todavía no está activado. Escríbenos por WhatsApp y lo apartamos contigo.' };
+      if(e.error === 'excursion-no-existe')
+        return { ok:false, mensaje:'Esa excursión ya no está disponible. Recarga la página, por favor.' };
+      return { ok:false, mensaje:'No pudimos empezar el pago. Inténtalo otra vez en un momento.' };
+    }
+
+    const { url, campos } = await r.json();
+
+    // el formulario que saca al cliente de aquí
+    const f = document.createElement('form');
+    f.method = 'POST';
+    f.action = url;
+    Object.entries(campos).forEach(([k, v]) => {
+      const i = document.createElement('input');
+      i.type = 'hidden'; i.name = k; i.value = v;
+      f.appendChild(i);
+    });
+    document.body.appendChild(f);
+    f.submit();
+
+    return { redirige:true };
+  }
 };
+
+/* Lo que se le manda al servidor. Va lo que el cliente ELIGIÓ, no lo
+   que cuesta: los precios los pone el servidor mirando el catálogo. Si
+   mandáramos el importe, cualquiera podría cambiarlo antes de enviarlo
+   y pagar un dólar por una excursión de doscientos. */
+function paraElServidor(r){
+  return {
+    tipo    : r.producto.tipo,
+    id      : r.producto.id,
+    fecha   : r.fecha,
+    hora    : r.hora,
+    adultos : r.personas.adultos,
+    ninos   : r.personas.ninos,
+    recogida: r.recogida,
+    peticion: r.peticion,
+    pago    : r.pago.modo,
+    cliente : r.cliente,
+    extras  : r.extras.map(e => ({
+      id      : e.id,
+      cantidad: e.cantidad,
+      opciones: e.opciones,
+      indices : exIndices(e.id)
+    }))
+  };
+}
+/* qué opción eligió en cada grupo del extra, por su número: es lo que
+   el servidor necesita para volver a calcular el precio por su cuenta */
+function exIndices(id){
+  const s = exState[id];
+  const out = {};
+  if(s) Object.entries(s.choice).forEach(([k, v]) => { if(typeof v === 'number') out[k] = v; });
+  return out;
+}
 
 /* Lo que llama el resto de la página. Nada más sabe qué proveedor hay. */
 async function cobrar(reserva, tarjeta){
@@ -2659,6 +2741,14 @@ function pintarTarjeta(){
     document.getElementById('tjNombre').value || 'TU NOMBRE';
 }
 
+/* CON AZUL NO SE PIDE LA TARJETA AQUÍ.
+   La pide el banco, en su página. Así que la hoja se queda con lo que
+   sí es nuestro —el monto, el resumen y la promesa de seguridad— y en
+   vez de cuatro campos pone un botón que avisa de que se va al banco.
+   Es lo honesto: prometer un formulario propio y luego mandarlo fuera
+   es justo lo que hace que la gente abandone el pago. */
+const CON_TARJETA_AQUI = PAGO.proveedor === 'simulado';
+
 function abrirPago(){
   const T = totales();
   const completo = st.pago === 'completo';
@@ -2666,7 +2756,9 @@ function abrirPago(){
   document.getElementById('pagoMonto').textContent  = $$(T.hoy);
   document.getElementById('pagoDetalle').textContent = P.nombre + ' · ' + txPersonas() + ' · ' +
     (completo ? 'no queda nada pendiente' : 'quedan ' + $$(T.resto) + ' para el día del tour');
-  document.getElementById('btnPagar').textContent = (completo ? 'Pagar ' : 'Apartar con ') + $$(T.hoy);
+  document.getElementById('btnPagar').innerHTML = CON_TARJETA_AQUI
+    ? (completo ? 'Pagar ' : 'Apartar con ') + $$(T.hoy)
+    : CANDADO + ' Ir a pagar de forma segura';
   avisar('Pago', '');
 
   const hoja = document.getElementById('hojaPago');
@@ -2707,6 +2799,20 @@ function pintarTarjetasPrueba(){
 }
 
 function armarHojaPago(){
+  /* con Azul se esconden los campos de tarjeta, la tarjeta dibujada y
+     la lista de pruebas: nada de eso es nuestro, lo pone el banco */
+  if(!CON_TARJETA_AQUI){
+    ['tjNum','tjExp','tjCvv','tjNombre'].forEach(id =>
+      document.getElementById(id).closest('[data-campo]').hidden = true);
+    document.querySelector('.row2:has(#tjExp)')?.setAttribute('hidden', '');
+    document.getElementById('tarjetaVisual').hidden = true;
+    document.querySelector('.hoja-tarjetas').hidden = true;
+    document.querySelector('.hoja-prueba').innerHTML =
+      '<b>🔒 PAGO SEGURO</b><span>Te llevamos a la página del banco para que pongas tu tarjeta. ' +
+      'Nosotros no la vemos ni la guardamos. Al terminar vuelves aquí solo.</span>';
+    document.querySelector('.hoja-prueba').style.background = 'linear-gradient(120deg,#12854c,#0b5a34)';
+  }
+
   pintarTarjetasPrueba();
 
   const num = document.getElementById('tjNum'), exp = document.getElementById('tjExp'),
@@ -2725,30 +2831,36 @@ function armarHojaPago(){
   document.getElementById('hojaFondo').onclick = cerrarPago;
 
   document.getElementById('btnPagar').onclick = async () => {
-    // repasar la tarjeta entera antes de molestar al banco
-    let primerMalo = null;
-    CAMPOS_TJ.forEach(id => {
-      const m = REVISAR_TJ[id](document.getElementById(id).value);
-      pintarCampo(id, m, true);
-      if(m && !primerMalo) primerMalo = id;
-    });
-    if(primerMalo){ document.getElementById(primerMalo).focus(); return; }
+    // la tarjeta solo se repasa si la pedimos nosotros
+    if(CON_TARJETA_AQUI){
+      let primerMalo = null;
+      CAMPOS_TJ.forEach(id => {
+        const m = REVISAR_TJ[id](document.getElementById(id).value);
+        pintarCampo(id, m, true);
+        if(m && !primerMalo) primerMalo = id;
+      });
+      if(primerMalo){ document.getElementById(primerMalo).focus(); return; }
+    }
 
     const btn = document.getElementById('btnPagar');
-    const antes = btn.textContent;
+    const antes = btn.innerHTML;
     btn.classList.add('cargando');
-    btn.innerHTML = GIRANDO + ' Hablando con el banco...';
+    btn.innerHTML = GIRANDO + (CON_TARJETA_AQUI ? ' Hablando con el banco...' : ' Llevándote al banco...');
     avisar('Pago', '');
 
-    const res = await cobrarYConfirmar({
+    const res = await cobrarYConfirmar(CON_TARJETA_AQUI ? {
       numero : num.value,
       exp    : exp.value,
       cvv    : cvv.value,
       nombre : nom.value
-    });
+    } : null);
+
+    // con Azul la página se está yendo: dejar el botón girando es lo
+    // correcto, porque tocarlo otra vez cobraría dos veces
+    if(res.redirige) return;
 
     btn.classList.remove('cargando');
-    btn.textContent = antes;
+    btn.innerHTML = antes;
 
     if(res.ok){
       cerrarPago();
@@ -2913,6 +3025,79 @@ upd();
 // si volvió a mitad del formulario, se le deja donde estaba (menos en la
 // pantalla de "ya está": esa reserva ya se mandó, empieza una nueva)
 verPaso(guardado && guardado.step < 4 ? guardado.step : 0);
+
+/* ═══════════════════════════════════════════════════════════════════
+   LA VUELTA DEL BANCO
+
+   El cliente se fue a Azul y ha vuelto. Esta página se ha cargado de
+   cero y no se acuerda de nada: lo único que trae es el número de
+   reserva en la dirección. Con eso se le piden los datos al servidor y
+   se pinta la confirmación.
+
+   Los correos NO se mandan aquí — ya salieron del servidor cuando Azul
+   avisó del cobro, antes de que el cliente llegara a ver esta pantalla.
+   ═══════════════════════════════════════════════════════════════════ */
+const RESULTADO = params.get('pago');
+
+if(RESULTADO) atenderVuelta();
+
+async function atenderVuelta(){
+  const codigo = (params.get('codigo') || '').toUpperCase();
+
+  /* ── el banco cobró ── */
+  if(RESULTADO === 'ok' && codigo){
+    try{
+      const r = await fetch('/api/reserva?codigo=' + encodeURIComponent(codigo));
+      if(!r.ok) throw new Error('no-se-pudo-leer');
+      const reserva = await r.json();
+      // el servidor no devuelve los teléfonos: la confirmación no los usa
+      reserva.cliente.whatsapp = reserva.cliente.whatsapp || '';
+      pintarConfirmacion(reserva);
+      verPaso(4);
+      try{ sessionStorage.removeItem(CLAVE); }catch(e){}
+    }catch(e){
+      /* Se cobró —de eso no hay duda, Azul nos devolvió aprobado— pero
+         no hemos podido leer los datos para pintar el resguardo. Lo
+         peor sería decirle que algo salió mal: su dinero está cobrado y
+         su correo va de camino. Se le dice la verdad. */
+      verPaso(3);
+      avisar(3, 'Tu pago se completó y tu reserva es ' + codigo + '. No pudimos cargar el resguardo en pantalla, ' +
+                'pero ya te enviamos el correo con todos los detalles. Guarda este número.');
+    }
+    limpiarDireccion();
+    return;
+  }
+
+  /* ── el banco no cobró ──
+     Se le deja en el último paso, con TODO lo que había escrito intacto
+     (sigue en sessionStorage), para que reintente sin repetir nada. */
+  if(RESULTADO === 'fallo'){
+    verPaso(3);
+    avisar(3, 'El banco no aprobó el pago, así que tu cupo no quedó reservado. ' +
+              'Suele ser cosa del banco y no de la tarjeta: prueba otra vez o con otra tarjeta. ' +
+              'Si vuelve a fallar, escríbenos por WhatsApp y lo apartamos contigo.');
+    limpiarDireccion();
+    return;
+  }
+
+  /* ── ni una cosa ni la otra ── */
+  verPaso(3);
+  avisar(3, RESULTADO === 'no-encontrada'
+    ? 'No encontramos esa reserva. Si te cobraron, escríbenos por WhatsApp con el número y lo resolvemos hoy mismo.'
+    : 'Algo se torció al volver del banco. Si te cobraron, escríbenos por WhatsApp y lo miramos ahora mismo.');
+  limpiarDireccion();
+}
+
+/* Quitar el resultado de la barra de direcciones. Si se queda, recargar
+   la página volvería a entrar por aquí — y en el peor caso el cliente
+   guardaría en favoritos una dirección que dice "pago fallido". */
+function limpiarDireccion(){
+  try{
+    const q = new URLSearchParams(location.search);
+    q.delete('pago'); q.delete('codigo');
+    history.replaceState({}, '', location.pathname + (q.toString() ? '?' + q : ''));
+  }catch(e){}
+}
 
 /* ── ATAJO PARA MIRAR CÓMO QUEDA ──────────────────────────────
    Añadiendo  &ver=confirmacion  a la direccion, la pagina se salta el

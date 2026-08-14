@@ -1,0 +1,12 @@
+{
+  "name": "ivonne-tour-rd",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web de reservas de IVONNE TOUR RD. La web es HTML suelto; en /api viven las funciones del servidor (cobro con Azul y los correos).",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "test": "node pruebas/servidor.test.js"
+  },
+  "engines": { "node": ">=18" }
+}

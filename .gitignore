@@ -2,3 +2,21 @@
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# ═══════════════════════════════════════════════════════════════
+#  LAS LLAVES NUNCA SUBEN
+#  Este repositorio es PÚBLICO. Una clave de Azul o de correo subida
+#  aquí la puede leer cualquiera, y ya no se puede borrar de verdad:
+#  queda en el historial. Si pasa, hay que dar de baja esa clave y
+#  pedir otra.
+#  .env.example SÍ sube — no lleva valores, solo dice qué hace falta.
+# ═══════════════════════════════════════════════════════════════
+.env
+.env.*
+!.env.example
+
+# Dependencias y restos de las herramientas
+node_modules/
+.vercel/
+.netlify/
+npm-debug.log*
